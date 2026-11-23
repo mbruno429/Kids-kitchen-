@@ -4,6 +4,7 @@
   const { V, VESSEL, OVEN, chef, E } = window.ART;
   const RECIPES = window.RECIPES;
   const SFX = window.SFX;
+  const LINES = window.LINES;
 
   const $ = (s, root) => (root || document).querySelector(s);
   const $$ = (s, root) => [...(root || document).querySelectorAll(s)];
@@ -55,23 +56,26 @@
     $('#win').hidden = true; stopConfetti();
     buildMenu(); show('menu');
   }
-  $('#playBtn').addEventListener('click', () => { SFX.unlock(); SFX.play('yay'); SFX.say('What shall we cook?'); toMenu(); });
+  $('#playBtn').addEventListener('click', () => { SFX.unlock(); SFX.play('yay'); SFX.say(LINES.hello); toMenu(); });
   $('#homeBtn').addEventListener('click', () => { SFX.play('pick'); toMenu(); });
   $('#winMenu').addEventListener('click', () => { SFX.play('pick'); toMenu(); });
   $('#winAgain').addEventListener('click', () => { SFX.play('pick'); startRecipe(G.r); });
   $('#winNext').addEventListener('click', () => { SFX.play('pick'); startRecipe(RECIPES[(RECIPES.indexOf(G.r) + 1) % RECIPES.length]); });
-  $('#bubble').addEventListener('click', () => SFX.say($('#say').textContent));
+  $('#bubble').addEventListener('click', () => SFX.say(G.said || $('#say').textContent));
 
   function paintSnd() { $$('.snd').forEach(b => { b.textContent = SFX.muted ? '🔇' : '🔊'; }); }
   $$('.snd').forEach(b => b.addEventListener('click', () => { SFX.setMuted(!SFX.muted); paintSnd(); if (!SFX.muted) { SFX.unlock(); SFX.play('yay'); } }));
   paintSnd();
 
   /* ---------- running a recipe ---------- */
-  const DEFAULT_SAY = { eat: 'Yummy! Tap, tap, tap to eat it up!' };
-  const PRAISE = ['Great job!', 'Yay!', 'Wow!', 'Super!', 'Nice work!', 'You did it!'];
+  const DEFAULT_SAY = { eat: LINES.eat };
+  const pickOne = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const pause = (ms) => new Promise(r => setTimeout(r, ms));
+  SFX.preload(LINES.common());
 
   function startRecipe(r) {
     G.r = r; G.pieces = [];
+    SFX.preload(LINES.forRecipe(r, V), LINES.common());
     $('#win').hidden = true; stopConfetti();
     show('kitchen');
     $('#dots').innerHTML = r.steps.map(() => '<i></i>').join('');
@@ -79,8 +83,10 @@
   }
   function setSay(text, spoken) {
     $('#say').textContent = text;
-    SFX.say(spoken || text);
+    G.said = text;
+    const done = SFX.say(spoken || text);
     const b = $('#bubble'); b.classList.remove('talk'); void b.offsetWidth; b.classList.add('talk');
+    return done;
   }
   function endStep() {
     G.cleanup.forEach(f => { try { f(); } catch (e) { /* ignore */ } });
@@ -98,7 +104,7 @@
     stage.className = 'stage'; stage.innerHTML = '';
     tray.className = 'tray'; tray.innerHTML = '';
     const text = s.say || DEFAULT_SAY[s.t] || '';
-    setSay(text, i === 0 ? `Let's make ${G.r.name}! ${text}` : text);
+    setSay(text, i === 0 ? [LINES.intro(G.r), text] : text);
     $$('#dots i').forEach((d, k) => { d.className = k < i ? 'done' : k === i ? 'now' : ''; });
     STEPS[s.t](s, tok);
   }
@@ -107,10 +113,12 @@
     clearHint();
     SFX.play('yay');
     sparkle(stage, 50, 45, 9);
-    const p = PRAISE[Math.floor(Math.random() * PRAISE.length)];
-    setSay(p);
+    const s = G.r.steps[G.i];
+    const said = setSay(pickOne(LINES.praise[s.t === 'rub' ? s.tool : s.t] || LINES.praise.add));
     $$('#dots i')[G.i].className = 'done';
-    setTimeout(() => { if (tok === G.run && G.i + 1 < G.r.steps.length) goStep(G.i + 1); }, 1250 * FAST);
+    // move on once the chef has finished cheering (but never keep a child waiting long)
+    Promise.all([pause(1250 * FAST), FAST < 1 ? null : Promise.race([said, pause(3200)])])
+      .then(() => { if (tok === G.run && G.i + 1 < G.r.steps.length) goStep(G.i + 1); });
   }
 
   /* ---------- pieces + vessels ---------- */
@@ -349,7 +357,7 @@
       G.pieces.push(p);
       const e = pieceEl(p); e.classList.add('pop'); ves.vin.append(e);
       wobble(ves, 'bump');
-      SFX.play('plop');
+      SFX.play(V[it.v].s || 'plop');
       it.left--;
       const cnt = $('.cnt', it.tile);
       if (cnt) { cnt.textContent = it.left; if (it.left <= 1) cnt.remove(); }
@@ -363,7 +371,7 @@
       it.tile.setAttribute('aria-label', look.n || it.v);
       draggable(it.tile, {
         ghost: () => pic,
-        start: () => { if (look.n && !SFX.talking()) SFX.say(look.n); },
+        start: () => { if (look.n && !SFX.talking()) SFX.say(LINES.name(look.n)); },
         move: (x, y) => ves.classList.toggle('over', hit(ves, x, y, 24)),
         end: () => ves.classList.remove('over'),
         drop: (x, y) => { if (!hit(ves, x, y, 24)) { SFX.play('nope'); return false; } place(it, x, y); return true; },
@@ -487,6 +495,7 @@
     function begin() {
       state = 'on';
       ves.classList.add('hot');
+      SFX.play('ignite');
       SFX.loop(boil ? 'boil' : 'sizzle');
       last = performance.now();
       raf = requestAnimationFrame(tick);
@@ -505,7 +514,7 @@
     }
     function askFlip() {
       SFX.stopLoop();
-      setSay('Flip it over!');
+      setSay(LINES.flip);
       spat = mkTile(V.spatula.h);
       spat.classList.add('next', 'pop');
       draggable(spat, {
@@ -575,10 +584,11 @@
       setTimeout(() => {
         if (tok !== G.run) return;
         oven.classList.remove('open', 'over');
+        SFX.play('door');
         setTimeout(() => {
           if (tok !== G.run) return;
           oven.classList.add('on');
-          SFX.loop('tick');
+          SFX.loop('oven');
           const t0 = performance.now();
           const tick = (now) => {
             if (tok !== G.run) return;
@@ -587,6 +597,7 @@
             if (pr < 1) { raf = requestAnimationFrame(tick); return; }
             SFX.stopLoop();
             SFX.play('ding');
+            SFX.play('door');
             oven.classList.remove('on');
             oven.classList.add('open');
             G.pieces.forEach((p, i) => setCook(p, 1));
@@ -656,9 +667,11 @@
       e.preventDefault();
       SFX.unlock();
       n++;
-      SFX.play('munch');
+      SFX.play(G.r.eat || 'munch');
       wobble(ves, 'bump');
-      const yum = el(`<i class="yum" style="left:${rand(25, 60)}%;top:${rand(15, 45)}%">${['Yum!', 'Nom!', 'Mmm!', 'Yum!'][n - 1] || 'Yum!'}</i>`);
+      const word = LINES.bites[n - 1] || LINES.bites[0];
+      SFX.say(word);
+      const yum = el(`<i class="yum" style="left:${rand(8, 40)}%;top:${rand(12, 40)}%">${word}</i>`);
       stage.append(yum);
       yum.addEventListener('animationend', () => yum.remove());
       if (n <= BITES.length) {
@@ -669,7 +682,10 @@
       } else {
         ves.food.classList.add('eaten');
         clearHint();
-        setTimeout(() => win(tok), 650 * FAST);
+        setTimeout(() => SFX.play('gulp'), 260);
+        // let the chef finish "All gone!" before the party starts
+        const quiet = new Promise(r => { const t = setInterval(() => { if (!SFX.talking()) { clearInterval(t); r(); } }, 80); });
+        Promise.all([pause(650 * FAST), FAST < 1 ? null : Promise.race([quiet, pause(2600)])]).then(() => win(tok));
       }
     });
     hint(() => (n <= BITES.length ? [ves, ves] : null));
@@ -683,11 +699,12 @@
     persist();
     $('#winDish').innerHTML = dishPic(r);
     $('#winName').textContent = `You made ${r.name}!`;
+    [250, 450, 650].forEach(ms => setTimeout(() => SFX.play('star'), ms));
     const w = $('#win');
     w.hidden = false;
     wobble($('.win-card', w), 'in');
     SFX.play('win');
-    SFX.say(`Yummy! You made ${r.name}!`);
+    SFX.say(LINES.win(r));
     startConfetti();
   }
   let confRaf = 0;

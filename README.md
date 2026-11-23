@@ -36,12 +36,13 @@ The layout is tuned for the iPhone 16 (393 × 852 pt, portrait) and respects the
 and home-indicator safe areas. For a full-screen, app-like game: open the site in Safari →
 Share → **Add to Home Screen**.
 
-If there is no sound, check the ring/silent switch — iOS mutes web games when it is on silent.
+Sound plays even when the phone's ring/silent switch is on silent; use the 🔊 button in the game to mute.
 
 ## Publishing (GitHub Pages)
 
-`.github/workflows/pages.yml` publishes the site every time `main` changes.
-One-time setup: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+The site is plain static files, so GitHub Pages serves it straight from the repository:
+**Settings → Pages → Source: Deploy from a branch → `main` / `(root)`**. Every push to `main`
+republishes it a minute or so later. `.github/workflows/check.yml` only checks the files.
 
 ## Run it locally
 
@@ -52,8 +53,20 @@ python3 -m http.server 8000
 # then open http://localhost:8000
 ```
 
+## The chef's voice and the sounds
+
+- **Voice:** every line the chef says is a small recording in `assets/voice/`, made ahead of time with
+  [Kokoro](https://github.com/hexgrad/kokoro) (an open, Apache-2.0 text-to-speech model) using a warm,
+  upbeat, slightly slowed-down voice in the style of a preschool teacher. It is a synthetic voice, not a
+  recording or imitation of any real person. If a recording is missing, the phone's own voice reads the line.
+- **Changing what the chef says:** edit `js/lines.js`, the `say:` lines in `js/recipes.js` or the names in
+  `js/art.js`, then run `tools/make-voice.py` (instructions at the top of that file) to record the new lines.
+- **Sound effects** (sizzling, boiling, the oven, chopping, pouring, egg cracks, crunching, slurping,
+  applause and more) are generated in the browser by `js/audio.js` — there are no sound files.
+
 ## Adding a dish
 
 Recipes are data in `js/recipes.js` — a list of steps (`add`, `rub`, `chop`, `cook`, `bake`, `eat`).
 Pictures live in `js/art.js` (inline SVG and emoji, no image files). The game engine is `js/game.js`,
-sounds and the talking chef are `js/audio.js`.
+sounds and the talking chef are `js/audio.js`. Give a recipe `sp:` (how the chef says its name) and,
+if you like, `eat:` (`crunch`, `slurp` or `munch`).

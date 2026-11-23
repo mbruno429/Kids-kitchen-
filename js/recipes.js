@@ -9,11 +9,12 @@
    Item fields: v picture, n how many, as what it looks like once dropped,
    at where it lands (scatter | center | free | fill | slot | stack), raw = needs cooking,
    w width in %, pos exact spot {x, y, z}.
+   Recipe fields: sp = how the chef says the name, eat = the eating sound (crunch | slurp | munch).
    seq: true = strict order, a number = first N in order, 'ends' = first first and last last. */
 window.RECIPES = [
   /* ---------------- Breakfast ---------------- */
   {
-    id: 'pancakes', name: 'Pancakes', icon: '🥞', cat: 'Breakfast',
+    id: 'pancakes', sp: 'pancakes', name: 'Pancakes', icon: '🥞', cat: 'Breakfast',
     steps: [
       { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['flour', { v: 'egg', n: 2 }, 'milk'] },
       { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'batter', w: 96 }] },
@@ -24,7 +25,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'waffles', name: 'Waffles', icon: '🧇', cat: 'Breakfast',
+    id: 'waffles', sp: 'waffles', eat: 'crunch', name: 'Waffles', icon: '🧇', cat: 'Breakfast',
     steps: [
       { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['flour', 'egg', 'milk', 'butter'] },
       { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'batter', w: 96 }] },
@@ -35,7 +36,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'eggs', name: 'Bacon & Eggs', icon: '🍳', cat: 'Breakfast',
+    id: 'eggs', sp: 'bacon and eggs', name: 'Bacon & Eggs', icon: '🍳', cat: 'Breakfast',
     steps: [
       { t: 'add', on: 'pan', say: 'Crack the eggs! Add the bacon!', w: 40, items: [{ v: 'egg', n: 2 }, { v: 'bacon', n: 2, raw: true }] },
       { t: 'cook', on: 'pan', say: 'Sizzle, sizzle! Turn on the heat!' },
@@ -46,7 +47,7 @@ window.RECIPES = [
 
   /* ---------------- Lunch ---------------- */
   {
-    id: 'pbj', name: 'PB & J', icon: '🥪', cat: 'Lunch',
+    id: 'pbj', sp: 'a peanut butter and jelly sandwich', name: 'PB & J', icon: '🥪', cat: 'Lunch',
     steps: [
       { t: 'chop', say: 'Slice the banana!', items: [{ v: 'banana', out: 'bananaCoins' }] },
       { t: 'add', on: 'side', seq: true, say: 'Build your sandwich!', w: 84, items: [{ v: 'slice', tileRaw: true }, 'pb', 'bananaCoins', 'jelly', { v: 'slice', tileRaw: true }] },
@@ -54,7 +55,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'grilledcheese', name: 'Grilled Cheese', icon: '🧀', art: 'grilledCheese', cat: 'Lunch',
+    id: 'grilledcheese', sp: 'a grilled cheese sandwich', eat: 'crunch', name: 'Grilled Cheese', icon: '🧀', art: 'grilledCheese', cat: 'Lunch',
     steps: [
       { t: 'add', on: 'pan', seq: true, say: 'Build a sandwich in the pan!', items: [
         { v: 'butter', as: 'butterMelt', at: 'center', w: 84 },
@@ -66,7 +67,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'hotdog', name: 'Hot Dog', icon: '🌭', cat: 'Lunch',
+    id: 'hotdog', sp: 'a hot dog', name: 'Hot Dog', icon: '🌭', cat: 'Lunch',
     steps: [
       { t: 'add', on: 'pan', say: 'Put the hot dogs in the pan!', w: 66, items: [{ v: 'sausage', n: 2, raw: true }] },
       { t: 'cook', on: 'pan', flip: true, say: 'Cook the hot dogs!' },
@@ -75,7 +76,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'mac', name: 'Mac & Cheese', icon: '🧀', art: 'macCheese', cat: 'Lunch',
+    id: 'mac', sp: 'mac and cheese', eat: 'slurp', name: 'Mac & Cheese', icon: '🧀', art: 'macCheese', cat: 'Lunch',
     steps: [
       { t: 'add', on: 'pot', say: 'Water and noodles in the pot!', w: 44, items: ['water', { v: 'macBox', n: 2 }, 'salt'] },
       { t: 'cook', on: 'pot', say: 'Boil the noodles!', out: [{ v: 'mac', w: 46, x: 34, y: 38 }, { v: 'mac', w: 46, x: 66, y: 44 }, { v: 'mac', w: 46, x: 46, y: 68 }] },
@@ -85,7 +86,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'soup', name: 'Chicken Noodle Soup', icon: '🍲', cat: 'Lunch',
+    id: 'soup', sp: 'chicken noodle soup', eat: 'slurp', name: 'Chicken Noodle Soup', icon: '🍲', cat: 'Lunch',
     steps: [
       { t: 'chop', say: 'Chop the veggies!', items: [{ v: 'carrot', out: 'carrotCoins' }, { v: 'onion', out: 'onionBits' }] },
       { t: 'add', on: 'pot', say: 'Everything in the pot!', w: 38, items: ['water', { v: 'chickenRaw', n: 2, raw: true, w: 30 }, 'carrotCoins', 'onionBits', 'noodleBox'] },
@@ -94,7 +95,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'salad', name: 'Garden Salad', icon: '🥗', cat: 'Lunch',
+    id: 'salad', sp: 'a garden salad', eat: 'crunch', name: 'Garden Salad', icon: '🥗', cat: 'Lunch',
     steps: [
       { t: 'chop', say: 'Chop the veggies!', items: [{ v: 'lettuce', out: 'lettuceBits' }, { v: 'tomato', out: 'tomatoBits' }, { v: 'cucumber', out: 'cucumberSlices' }, { v: 'carrot', out: 'carrotCoins' }] },
       { t: 'add', on: 'bowl', say: 'Fill the salad bowl!', w: 40, items: [{ v: 'lettuceBits', n: 2 }, 'tomatoBits', 'cucumberSlices', 'carrotCoins', 'dressing'] },
@@ -105,7 +106,7 @@ window.RECIPES = [
 
   /* ---------------- Dinner ---------------- */
   {
-    id: 'burger', name: 'Cheeseburger', icon: '🍔', cat: 'Dinner',
+    id: 'burger', sp: 'a cheeseburger', name: 'Cheeseburger', icon: '🍔', cat: 'Dinner',
     steps: [
       { t: 'add', on: 'pan', say: 'Put the burgers in the pan!', w: 42, items: [{ v: 'patty', n: 2, as: 'patty', raw: true }] },
       { t: 'cook', on: 'pan', flip: true, say: 'Cook the burgers!' },
@@ -114,7 +115,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'fries', name: 'French Fries', icon: '🍟', cat: 'Dinner',
+    id: 'fries', sp: 'french fries', eat: 'crunch', name: 'French Fries', icon: '🍟', cat: 'Dinner',
     steps: [
       { t: 'chop', say: 'Chop the potatoes!', items: [{ v: 'potato', out: 'fries', raw: true }, { v: 'potato', out: 'fries', raw: true }] },
       { t: 'add', on: 'sheet', say: 'Put the fries on the tray!', w: 44, items: [{ v: 'fries', n: 3, raw: true }, 'oil', 'salt'] },
@@ -124,7 +125,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'pizza', name: 'Pizza', icon: '🍕', cat: 'Dinner',
+    id: 'pizza', sp: 'a pizza', name: 'Pizza', icon: '🍕', cat: 'Dinner',
     steps: [
       { t: 'add', on: 'board', say: 'Put the dough on the board!', items: [{ v: 'doughBall', at: 'center', w: 44 }] },
       { t: 'rub', on: 'board', tool: 'pin', fx: 'grow', say: 'Roll, roll, roll the dough!', out: [{ v: 'crust', w: 100, raw: true }] },
@@ -134,7 +135,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'spaghetti', name: 'Spaghetti & Meatballs', icon: '🍝', cat: 'Dinner',
+    id: 'spaghetti', sp: 'spaghetti and meatballs', eat: 'slurp', name: 'Spaghetti & Meatballs', icon: '🍝', cat: 'Dinner',
     steps: [
       { t: 'add', on: 'pot', say: 'Water and spaghetti in the pot!', items: ['water', { v: 'spaghettiBox', at: 'center', w: 82 }, 'salt'] },
       { t: 'cook', on: 'pot', say: 'Boil the spaghetti!', out: [{ v: 'noodleNest', w: 92 }] },
@@ -145,7 +146,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'tacos', name: 'Tacos', icon: '🌮', cat: 'Dinner',
+    id: 'tacos', sp: 'tacos', eat: 'crunch', name: 'Tacos', icon: '🌮', cat: 'Dinner',
     steps: [
       { t: 'add', on: 'pan', say: 'Put the meat in the pan!', w: 50, items: [{ v: 'beef', n: 2 }, 'spice'] },
       { t: 'cook', on: 'pan', say: 'Cook the meat!' },
@@ -160,7 +161,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'nuggets', name: 'Chicken Nuggets', icon: '🍗', art: 'nugget', cat: 'Dinner',
+    id: 'nuggets', sp: 'chicken nuggets', eat: 'crunch', name: 'Chicken Nuggets', icon: '🍗', art: 'nugget', cat: 'Dinner',
     steps: [
       { t: 'add', on: 'bowl', say: 'Chicken, egg and crumbs in the bowl!', items: [{ v: 'chickenRaw', n: 3, raw: true }, 'egg', 'crumbs'] },
       { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Mix it all up!', out: [{ v: 'nugget', w: 34, raw: true, x: 32, y: 34 }, { v: 'nugget', w: 34, raw: true, x: 68, y: 36 }, { v: 'nugget', w: 34, raw: true, x: 50, y: 62 }, { v: 'nugget', w: 30, raw: true, x: 26, y: 66 }, { v: 'nugget', w: 30, raw: true, x: 74, y: 68 }] },
@@ -171,7 +172,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'corn', name: 'Corn on the Cob', icon: '🌽', cat: 'Dinner',
+    id: 'corn', sp: 'corn on the cob', eat: 'crunch', name: 'Corn on the Cob', icon: '🌽', cat: 'Dinner',
     steps: [
       { t: 'add', on: 'pot', say: 'Water and corn in the pot!', w: 46, items: ['water', { v: 'corn', n: 3, raw: true }, 'salt'] },
       { t: 'cook', on: 'pot', say: 'Boil the corn!' },
@@ -180,7 +181,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'potato', name: 'Baked Potato', icon: '🥔', cat: 'Dinner',
+    id: 'potato', sp: 'a baked potato', name: 'Baked Potato', icon: '🥔', cat: 'Dinner',
     steps: [
       { t: 'add', on: 'sheet', say: 'Potatoes on the tray!', w: 46, items: [{ v: 'potato', n: 2 }, 'oil', 'salt'] },
       { t: 'bake', on: 'sheet', say: 'Bake them in the oven!', turn: { potato: 'potatoOpen' } },
@@ -191,7 +192,7 @@ window.RECIPES = [
 
   /* ---------------- Treats ---------------- */
   {
-    id: 'cookies', name: 'Chocolate Chip Cookies', icon: '🍪', cat: 'Treats',
+    id: 'cookies', sp: 'chocolate chip cookies', eat: 'crunch', name: 'Chocolate Chip Cookies', icon: '🍪', cat: 'Treats',
     steps: [
       { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['flour', 'sugar', 'butter', 'egg', 'chocolate'] },
       { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'cookieDough', w: 96 }] },
@@ -201,7 +202,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'cupcakes', name: 'Cupcakes', icon: '🧁', cat: 'Treats',
+    id: 'cupcakes', sp: 'cupcakes', name: 'Cupcakes', icon: '🧁', cat: 'Treats',
     steps: [
       { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['flour', 'sugar', 'egg', 'milk', 'butter'] },
       { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'batter', w: 96 }] },
@@ -217,7 +218,7 @@ window.RECIPES = [
     ],
   },
   {
-    id: 'pie', name: 'Apple Pie', icon: '🥧', cat: 'Treats',
+    id: 'pie', sp: 'an apple pie', name: 'Apple Pie', icon: '🥧', cat: 'Treats',
     steps: [
       { t: 'chop', say: 'Slice the apples!', items: [{ v: 'apple', out: 'appleSlices' }, { v: 'apple', out: 'appleSlices' }] },
       { t: 'add', on: 'pie', seq: 'ends', say: 'Fill the pie!', w: 40, items: [
