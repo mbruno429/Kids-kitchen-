@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Kids Kitchen</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="description" content="A drag-and-drop cooking game for little chefs. Pick a dish, add the ingredients, cook it, bake it and eat it!">
+<meta name="theme-color" content="#FFE9B8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Kids Kitchen">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- Title screen -->
+  <section id="home" class="screen on">
+    <div class="floaters" aria-hidden="true"></div>
+    <div class="home-mid">
+      <div class="logo-chef" id="homeChef"></div>
+      <h1 class="logo"><span>Kids</span><span>Kitchen</span></h1>
+      <button id="playBtn" class="big-btn" aria-label="Play">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M36 24 L78 50 L36 76Z" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Dish picker -->
+  <section id="menu" class="screen">
+    <header class="menu-head">
+      <div class="menu-chef" id="menuChef"></div>
+      <h2>What shall we cook?</h2>
+      <button class="round-btn snd" aria-label="Sound on or off"></button>
+    </header>
+    <div id="dishes" class="dishes"></div>
+  </section>
+
+  <!-- Kitchen -->
+  <section id="kitchen" class="screen">
+    <header class="topbar">
+      <button id="homeBtn" class="round-btn" aria-label="Back to the cookbook">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M18 52 L50 22 L82 52 M28 46 V80 H72 V46" fill="none" stroke="currentColor" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div id="dots" class="dots"></div>
+      <button class="round-btn snd" aria-label="Sound on or off"></button>
+    </header>
+    <button class="bubble" id="bubble" aria-live="polite">
+      <span class="bubble-chef" id="bubbleChef"></span>
+      <span class="bubble-txt" id="say"></span>
+    </button>
+    <div id="stage" class="stage"></div>
+    <div id="tray" class="tray"></div>
+    <div id="hand" class="hand" aria-hidden="true">👆</div>
+  </section>
+
+  <!-- You did it! -->
+  <div id="win" class="win" hidden>
+    <canvas id="confetti"></canvas>
+    <div class="win-card">
+      <div class="win-stars"><i>⭐</i><i>⭐</i><i>⭐</i></div>
+      <div class="win-dish" id="winDish"></div>
+      <h2>Yummy!</h2>
+      <p id="winName"></p>
+      <div class="win-btns">
+        <button id="winMenu" class="pill-btn alt" aria-label="Cookbook">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M18 52 L50 22 L82 52 M28 46 V80 H72 V46" fill="none" stroke="currentColor" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="winAgain" class="pill-btn alt" aria-label="Cook it again">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M76 50 A26 26 0 1 1 62 27" fill="none" stroke="currentColor" stroke-width="11" stroke-linecap="round"/><path d="M58 10 L66 28 L46 32" fill="none" stroke="currentColor" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="winNext" class="pill-btn" aria-label="Next dish">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M20 50 H76 M54 26 L78 50 L54 74" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/art.js"></script>
+<script src="js/recipes.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+# Builds the game and publishes it to GitHub Pages every time main changes.
+# One-time setup: repo Settings -> Pages -> Build and deployment -> Source: "GitHub Actions".
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - name: Check the game files
+        run: |
+          for f in js/art.js js/recipes.js js/audio.js js/game.js; do node --check "$f"; done
+          node -e "
+            global.window = {};
+            require('./js/art.js'); require('./js/recipes.js');
+            const { V, VESSEL } = window.ART;
+            let bad = 0;
+            const need = (id, where) => { if (!V[id]) { console.error('Missing picture', id, 'in', where); bad++; } };
+            for (const r of window.RECIPES) for (const s of r.steps) {
+              if (s.on && !VESSEL[s.on]) { console.error('Missing vessel', s.on, 'in', r.id); bad++; }
+              for (let it of s.items || []) { if (typeof it === 'string') it = { v: it }; need(it.v, r.id); if (it.as) need(it.as, r.id); if (it.out) need(it.out, r.id); }
+              for (const o of s.out || []) need(o.v, r.id);
+              for (const k in s.turn || {}) need(s.turn[k], r.id);
+            }
+            console.log(window.RECIPES.length + ' recipes checked');
+            process.exit(bad ? 1 : 0);
+          "
+      - name: Build the site
+        run: |
+          mkdir _site
+          cp -r index.html manifest.webmanifest css js assets _site/
+          touch _site/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,15 @@
+{
+  "name": "Kids Kitchen",
+  "short_name": "Kids Kitchen",
+  "description": "A drag-and-drop cooking game for little chefs.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffe2a6",
+  "theme_color": "#ffe9b8",
+  "icons": [
+    { "src": "assets/icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
