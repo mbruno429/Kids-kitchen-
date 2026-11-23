@@ -1,7 +1,7 @@
 # Kids Kitchen
 
-A drag-and-drop cooking game for little chefs aged 3–7. Pick a dish, drag the raw
-ingredients into the bowl, stir, chop, cook on the stove, bake in the oven — then eat it all up.
+A tap-to-cook game for little chefs aged 3–7. Pick a dish, tap the raw ingredients into the
+bowl, stir, chop, cook on the stove, bake in the oven — then eat it all up.
 
 ![Kids Kitchen screenshots](assets/preview.png)
 
@@ -23,12 +23,14 @@ if a child gets stuck, and nothing can burn or go wrong.
 
 ## How to play
 
-- **Drag** ingredients from the tray onto the bowl, pot, pan, tray or plate.
-- **Stir / roll** by dragging the spoon or rolling pin around.
-- **Chop** by dragging the knife back and forth over the food (tapping the food works too).
-- **Cook** by dragging the 🔥 onto the stove; drag the spatula on to flip.
-- **Bake** by dragging the tray into the oven.
-- **Eat** by tapping the finished dish. Every finished dish earns a ⭐ in the cookbook.
+Everything is one tap — no dragging, no swiping.
+
+- **Add:** tap an ingredient and it hops into the bowl, pot, pan, tray or plate.
+- **Stir / roll:** tap, tap, tap the spoon or rolling pin (or the bowl).
+- **Chop:** tap, tap, tap the knife (or the food).
+- **Cook:** tap the 🔥 to turn on the stove; tap the spatula to flip.
+- **Bake:** tap the tray and it slides into the oven.
+- **Eat:** tap the finished dish. Every finished dish earns a ⭐ in the cookbook.
 
 ## Play it on an iPhone
 

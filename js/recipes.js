@@ -1,10 +1,10 @@
 /* Kids Kitchen — the cookbook.
    Step types:
-     add   drag ingredients onto a bowl / pot / pan / board / sheet / plate
-     rub   drag a tool around (stir with a spoon, roll with a rolling pin)
-     chop  drag the knife over the food
-     cook  drag the heat onto the stove (and flip with the spatula)
-     bake  drag the tray into the oven
+     add   tap ingredients and they hop onto a bowl / pot / pan / board / sheet / plate
+     rub   tap to stir with a spoon or roll with a rolling pin
+     chop  tap to chop with the knife
+     cook  tap the heat to turn on the stove (and tap the spatula to flip)
+     bake  tap the tray and it slides into the oven
      eat   tap to eat it all up
    Item fields: v picture, n how many, as what it looks like once dropped,
    at where it lands (scatter | center | free | fill | slot | stack), raw = needs cooking,
@@ -212,7 +212,7 @@ window.RECIPES = [
         { v: 'cupcake', pos: { x: 50, y: 68, z: 1 }, w: 62 },
         { v: 'frostPink', pos: { x: 50, y: 37, z: 2 }, w: 66 },
         { v: 'frostBlue', pos: { x: 50, y: 37, z: 2 }, w: 66 },
-        { v: 'sprinkles', n: 3, at: 'free', w: 26, z: 4, box: [28, 18, 72, 50] },
+        { v: 'sprinkles', n: 3, at: 'free', w: 26, z: 4, box: [35, 27, 65, 48] },
         { v: 'cherry', pos: { x: 50, y: 8, z: 5 }, w: 24 }] },
       { t: 'eat', on: 'side' },
     ],

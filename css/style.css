@@ -180,6 +180,18 @@ svg { display: block; }
 .yum { position: absolute; z-index: 30; font-style: normal; font-size: 30px; white-space: nowrap; font-weight: 900; color: var(--tomato); text-shadow: 0 3px 0 #fff, 3px 0 0 #fff, -3px 0 0 #fff, 0 -3px 0 #fff; pointer-events: none; animation: yum 1.2s ease-out forwards; }
 @keyframes yum { 0% { opacity: 0; scale: .5; } 15% { opacity: 1; scale: 1.1; } 75% { opacity: 1; } 100% { opacity: 0; translate: 0 -50px; } }
 
+/* the spoon / rolling pin / knife that moves when you tap */
+.tool-fx { position: absolute; left: 50%; top: 50%; width: 40%; margin: -34% 0 0 -8%; pointer-events: none; opacity: 0; z-index: 8; filter: drop-shadow(0 6px 4px #0004); }
+.tool-fx svg { width: 100%; height: auto; overflow: visible; }
+.tool-fx.on { opacity: 1; }
+.tool-fx.spoon.go { animation: stirgo .45s ease-in-out; }
+@keyframes stirgo { 0% { translate: 0 0; } 25% { translate: -34% -22%; } 50% { translate: -62% 6%; } 75% { translate: -30% 30%; } 100% { translate: 0 0; } }
+.tool-fx.pin { width: 62%; margin: -31% 0 0 -31%; }
+.tool-fx.pin.go { animation: pingo .45s ease-in-out; }
+@keyframes pingo { 0% { translate: 0 0; } 30% { translate: -22% -18%; } 70% { translate: 22% 18%; } 100% { translate: 0 0; } }
+.tool-fx.knife { width: 46%; margin: -52% 0 0 -6%; opacity: 1; transform-origin: 10% 90%; animation: chopgo .26s ease-in forwards; }
+@keyframes chopgo { 0% { rotate: -34deg; translate: 0 -30%; opacity: 1; } 55% { rotate: 0deg; translate: 0 0; opacity: 1; } 80% { opacity: 1; } 100% { rotate: 0deg; translate: 0 0; opacity: 0; } }
+
 /* progress bar */
 .bar { position: absolute; top: 10px; left: 50%; width: 62%; height: 22px; margin-left: -31%; background: #fff; border: 3px solid #e7c98d; border-radius: 99px; z-index: 20; }
 .bar i { display: block; width: 0; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--sun), #ff9f1c); transition: width .12s linear; }
@@ -188,8 +200,9 @@ svg { display: block; }
 
 /* oven */
 .stage.baking { justify-content: space-evenly; }
-.stage.baking .vessel { width: min(60vw, 30vh); width: min(60cqw, 47cqh); margin-top: 34px; z-index: 6; touch-action: none; cursor: grab; }
-.vessel.carry.held { filter: drop-shadow(0 14px 10px #0004); }
+.stage.baking .vessel { width: min(60vw, 30vh); width: min(60cqw, 47cqh); margin-top: 34px; z-index: 6; touch-action: none; cursor: pointer; }
+.stage.baking .vessel.carry:not([style]) { animation: bob 1s ease-in-out infinite; }
+.oven { cursor: pointer; }
 .oven { flex: none; width: min(80vw, 34vh); width: min(84cqw, 50cqh); transition: filter .15s; }
 .oven svg { width: 100%; height: auto; overflow: visible; }
 .oven .door { transform-origin: 150px 198px; transition: transform .45s cubic-bezier(.4, 1.3, .6, 1); }
@@ -214,7 +227,8 @@ svg { display: block; }
 .ti { position: absolute; inset: 7%; pointer-events: none; }
 .ti svg { width: 100%; height: 100%; }
 .cnt { position: absolute; top: -9px; right: -9px; min-width: 28px; height: 28px; padding: 0 6px; border-radius: 14px; background: var(--tomato); color: #fff; font-size: 18px; line-height: 28px; text-align: center; box-shadow: 0 2px 0 #c93a30; pointer-events: none; }
-.tile.held { opacity: .35; }
+.tile.tapped { animation: tapped .22s; }
+@keyframes tapped { 40% { scale: .86; } }
 .tile.off { filter: grayscale(.85); opacity: .4; }
 .tile.gone { scale: 0; opacity: 0; pointer-events: none; }
 .tile.next { animation: bob .9s ease-in-out infinite; border-color: var(--mint); box-shadow: 0 5px 0 #24967f, 0 0 0 4px #3dccb055; }
@@ -224,7 +238,6 @@ svg { display: block; }
 
 .ghost { position: absolute; left: 0; top: 0; z-index: 50; pointer-events: none; filter: drop-shadow(0 10px 6px #0005); will-change: transform; }
 .ghost svg { width: 100%; height: 100%; }
-.ghost.back { transition: transform .22s ease-in, opacity .22s; opacity: .2; }
 .hand { position: absolute; left: 0; top: 0; z-index: 60; font-size: 46px; line-height: 1; pointer-events: none; opacity: 0; filter: drop-shadow(0 4px 3px #0005); }
 .hand.show { opacity: 1; }
 

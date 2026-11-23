@@ -22,7 +22,6 @@
 
   /* ---------- game state ---------- */
   const G = { r: null, i: 0, pieces: [], top: 97, z: 10, run: 0, cleanup: [] };
-  let dragging = false;
 
   function show(id) { $$('.screen').forEach(s => s.classList.toggle('on', s.id === id)); }
 
@@ -92,7 +91,6 @@
     G.cleanup.forEach(f => { try { f(); } catch (e) { /* ignore */ } });
     G.cleanup = [];
     clearHint();
-    dragging = false;
     $$('.ghost', kitchen).forEach(g => g.remove());
     SFX.stopLoop();
   }
@@ -170,10 +168,6 @@
     tray.append(t);
     return t;
   }
-  const hit = (node, x, y, pad) => {
-    const r = node.getBoundingClientRect(); pad = pad || 0;
-    return x > r.left - pad && x < r.right + pad && y > r.top - pad && y < r.bottom + pad;
-  };
   const mid = (node) => { const r = node.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
 
   /* ---------- little effects ---------- */
@@ -203,7 +197,7 @@
   }
   function clearHint() { hintFn = null; nudge(); }
   function showHint() {
-    const pair = hintFn && !dragging && hintFn();
+    const pair = hintFn && hintFn();
     if (!pair || !pair[0] || !pair[1] || !hand.animate) { if (hintFn) hintT = setTimeout(showHint, 2500); return; }
     const kr = kitchen.getBoundingClientRect(), a = mid(pair[0]), b = mid(pair[1]);
     const A = `translate(${a[0] - kr.left - 14}px,${a[1] - kr.top - 4}px)`, B = `translate(${b[0] - kr.left - 14}px,${b[1] - kr.top - 4}px)`;
@@ -217,69 +211,44 @@
   }
   kitchen.addEventListener('pointerdown', () => nudge(), true);
 
-  /* ---------- drag and drop ---------- */
-  function draggable(src, o) {
-    src.addEventListener('pointerdown', (e) => {
-      if (e.button > 0 || dragging) return;
+  /* ---------- tapping ---------- */
+  // Every action in the game is one tap. We react the moment a finger touches the screen
+  // (little fingers wobble and slide), and also to a keyboard or switch-control "click".
+  function tappable(node, fn) {
+    let last = 0;
+    node.addEventListener('pointerdown', (e) => {
+      if (e.button > 0) return;
       e.preventDefault();
       SFX.unlock();
-      if (src.classList.contains('off')) { wobble(src, 'no'); SFX.play('nope'); return; }
-      if (src.classList.contains('gone')) return;
-      dragging = true;
-      const id = e.pointerId, lift = e.pointerType === 'mouse' ? 0 : 34;
-      const kr = kitchen.getBoundingClientRect();
-      const size = clamp(src.offsetWidth * 1.3, 84, 116);
-      const g = el(`<div class="ghost" style="width:${size}px;height:${size}px">${o.ghost()}</div>`);
-      kitchen.append(g);
-      let x = e.clientX, y = e.clientY - lift, moved = 0;
-      const put = () => { g.style.transform = `translate(${x - kr.left - size / 2}px,${y - kr.top - size / 2}px)`; };
-      put();
-      src.classList.add('held');
-      SFX.play('pick');
-      if (o.start) o.start();
-      const mv = (ev) => {
-        if (ev.pointerId !== id) return;
-        const nx = ev.clientX, ny = ev.clientY - lift, d = Math.hypot(nx - x, ny - y);
-        moved += d; x = nx; y = ny; put();
-        if (o.move) o.move(x, y, d);
-      };
-      const up = (ev) => {
-        if (ev.pointerId !== id) return;
-        window.removeEventListener('pointermove', mv);
-        window.removeEventListener('pointerup', up);
-        window.removeEventListener('pointercancel', up);
-        dragging = false;
-        src.classList.remove('held');
-        const ok = ev.type === 'pointerup' && o.drop ? o.drop(x, y, moved) : false;
-        if (o.end) o.end();
-        if (ok) { g.remove(); return; }
-        const c = mid(src);
-        g.classList.add('back');
-        g.style.transform = `translate(${c[0] - kr.left - size / 2}px,${c[1] - kr.top - size / 2}px) scale(.6)`;
-        setTimeout(() => g.remove(), 240);
-        if (moved < 10 && o.tap) o.tap();
-      };
-      window.addEventListener('pointermove', mv);
-      window.addEventListener('pointerup', up);
-      window.addEventListener('pointercancel', up);
+      last = performance.now();
+      fn(e);
     });
+    node.addEventListener('click', (e) => { if (performance.now() - last > 700) fn(e); });
+  }
+  // a picture hops from one thing to a spot on the screen, then `done` runs
+  function fly(from, to, html, done) {
+    const kr = kitchen.getBoundingClientRect(), a = mid(from), size = clamp(from.offsetWidth * 1.15, 72, 104);
+    const g = el(`<div class="ghost" style="width:${size}px;height:${size}px">${html}</div>`);
+    kitchen.append(g);
+    const at = (x, y, sc) => `translate(${x - kr.left - size / 2}px,${y - kr.top - size / 2}px) scale(${sc})`;
+    const ms = FAST < 1 ? 90 : 420;
+    let ended = false;
+    const end = () => { if (ended) return; ended = true; g.remove(); done(); };
+    if (g.animate) {
+      g.animate([
+        { transform: at(a[0], a[1], 0.8) },
+        { transform: at((a[0] + to[0]) / 2, Math.min(a[1], to[1]) - 46, 1.25), offset: 0.55 },
+        { transform: at(to[0], to[1], 0.85) },
+      ], { duration: ms, easing: 'ease-in-out' }).onfinish = end;
+    }
+    setTimeout(end, ms + 150);
   }
 
-  // find an empty-ish spot for a scattered ingredient
-  function freeSpot(round, single) {
-    if (single) return [50, 50];
-    const c = [];
-    if (round) {
-      c.push([50, 50]);
-      for (let i = 0; i < 5; i++) { const a = i * 1.2566 + 0.4; c.push([50 + Math.cos(a) * 14, 50 + Math.sin(a) * 14]); }
-      for (let i = 0; i < 10; i++) { const a = i * 0.6283; c.push([50 + Math.cos(a) * 27, 50 + Math.sin(a) * 27]); }
-    } else {
-      for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) c.push([23 + i * 18, 23 + j * 18]);
-    }
-    const taken = G.pieces.filter(p => p.w < 60);
-    if (!taken.length) return c[round ? 6 + Math.floor(Math.random() * 10) : Math.floor(Math.random() * 16)];
-    let best = c[0], bd = -1;
-    c.forEach(pt => {
+  // pick the emptiest of some candidate spots
+  function emptiest(cands, taken) {
+    if (!taken.length) return cands[Math.floor(Math.random() * cands.length)];
+    let best = cands[0], bd = -1;
+    cands.forEach(pt => {
       let d = 1e9;
       taken.forEach(p => { d = Math.min(d, Math.hypot(p.x - pt[0], p.y - pt[1])); });
       d += Math.random() * 3;
@@ -287,10 +256,28 @@
     });
     return best;
   }
+  const ring = (n, r, a0) => Array.from({ length: n }, (_, i) => [50 + Math.cos(a0 + i * 6.2832 / n) * r, 50 + Math.sin(a0 + i * 6.2832 / n) * r]);
+  const grid = (x0, y0, x1, y1, nx, ny) => { const c = []; for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) c.push([x0 + (x1 - x0) * i / (nx - 1), y0 + (y1 - y0) * j / (ny - 1)]); return c; };
+  // a spot for an ingredient that is scattered in a bowl / pot / pan / tray
+  function freeSpot(round, single) {
+    if (single) return [50, 50];
+    const c = round ? [[50, 50]].concat(ring(5, 14, 0.4), ring(10, 27, 0)) : grid(23, 23, 77, 77, 4, 4);
+    const taken = G.pieces.filter(p => p.w < 60);
+    if (!taken.length) return c[round ? 6 + Math.floor(Math.random() * 10) : Math.floor(Math.random() * 16)];
+    return emptiest(c, taken);
+  }
+  // a spot for a topping (pepperoni on the pizza, sprinkles on the cupcake ...): spread them out nicely
+  function toppingSpot(it, round) {
+    const m = it.max || 34;
+    const c = it.box ? grid(it.box[0], it.box[1], it.box[2], it.box[3], 5, 4)
+      : round ? [[50, 50]].concat(ring(6, m * 0.52, 0.5), ring(11, m, 0)) : grid(18, 18, 82, 82, 5, 5);
+    const sp = emptiest(c, G.pieces.filter(p => p.free));
+    return [sp[0] + rand(-2, 2), sp[1] + rand(-2, 2)];
+  }
 
   const STEPS = {};
 
-  /* ---------- ADD: drag ingredients onto the bowl / pan / plate ---------- */
+  /* ---------- ADD: tap an ingredient and it hops into the bowl / pan / plate ---------- */
   STEPS.add = (s, tok) => {
     const ves = mkVessel(s.on), d = ves.def;
     paint(ves);
@@ -315,6 +302,7 @@
       if (q === 'ends') return i === 0 ? true : i === items.length - 1 ? before(i) : items[0].left === 0;
       return i < q ? before(i) : before(q);
     };
+    let flying = 0;
     function refresh() {
       let first = true;
       items.forEach((it, i) => {
@@ -324,27 +312,21 @@
         if (it.left > 0 && on) first = false;
       });
     }
-    function place(it, x, y) {
-      const r = ves.vin.getBoundingClientRect();
-      let px = (x - r.left) / r.width * 100, py = (y - r.top) / r.height * 100;
+    // decide where the ingredient will land
+    function landing(it) {
       const look = V[it.as];
       const p = { v: it.as, w: it.w, cook: it.raw ? 0 : 1, rot: 0, z: it.z != null ? it.z : it.pos && it.pos.z != null ? it.pos.z : G.z++ };
       if (it.at === 'pos') { p.x = it.pos.x; p.y = it.pos.y; }
       else if (it.at === 'center') { p.x = 50; p.y = 50; }
       else if (it.at === 'fill') { p.x = 50; p.y = 50; p.w = 100; p.z = 1; }
       else if (it.at === 'free') {
-        if (it.box) { px = clamp(px, it.box[0], it.box[2]); py = clamp(py, it.box[1], it.box[3]); }
-        else if (d.round) {
-          const m = it.max || 36, dx = px - 50, dy = py - 50, rr = Math.hypot(dx, dy);
-          if (rr > m) { px = 50 + dx / rr * m; py = 50 + dy / rr * m; }
-        } else { px = clamp(px, 14, 86); py = clamp(py, 14, 86); }
-        p.x = px; p.y = py; p.rot = rand(-22, 22);
+        const sp = toppingSpot(it, d.round);
+        p.x = sp[0]; p.y = sp[1]; p.rot = rand(-22, 22); p.free = true;
       } else if (it.at === 'slot') {
         const used = G.pieces.map(q => q.slot);
-        let best = -1, bd = 1e9;
-        d.slots.forEach((sl, k) => { if (used.includes(k)) return; const dd = Math.hypot(sl[0] - px, sl[1] - py); if (dd < bd) { bd = dd; best = k; } });
-        if (best < 0) best = 0;
-        p.x = d.slots[best][0]; p.y = d.slots[best][1]; p.slot = best;
+        let k = d.slots.findIndex((sl, i) => !used.includes(i));
+        if (k < 0) k = 0;
+        p.x = d.slots[k][0]; p.y = d.slots[k][1]; p.slot = k;
       } else if (it.at === 'stack') {
         const h = p.w * (look.ar || 1), first = G.top >= 97;
         const bottom = G.top + (first ? 0 : (look.sink == null ? 0.1 : look.sink) * h);
@@ -354,89 +336,97 @@
         const sp = freeSpot(d.round, scatterTotal === 1);
         p.x = sp[0]; p.y = sp[1]; p.rot = rand(-18, 18);
       }
+      return p;
+    }
+    function send(it, i, pic) {
+      if (tok !== G.run || it.left <= 0) return;
+      if (!enabled(i)) { wobble(it.tile, 'no'); SFX.play('nope'); return; }
+      const look = V[it.v];
+      if (look.n && !SFX.talking()) SFX.say(LINES.name(look.n));
+      SFX.play('pick');
+      const p = landing(it);
       G.pieces.push(p);
-      const e = pieceEl(p); e.classList.add('pop'); ves.vin.append(e);
-      wobble(ves, 'bump');
-      SFX.play(V[it.v].s || 'plop');
       it.left--;
       const cnt = $('.cnt', it.tile);
       if (cnt) { cnt.textContent = it.left; if (it.left <= 1) cnt.remove(); }
-      if (it.left === 0) it.tile.classList.add('gone');
+      if (it.left === 0) it.tile.classList.add('gone'); else wobble(it.tile, 'tapped');
       refresh();
-      if (items.every(q => q.left === 0)) stepDone(tok);
+      flying++;
+      const r = ves.vin.getBoundingClientRect();
+      fly(it.tile, [r.left + p.x / 100 * r.width, r.top + p.y / 100 * r.height], pic, () => {
+        flying--;
+        if (tok !== G.run) return;
+        const e = pieceEl(p); e.classList.add('pop'); ves.vin.append(e);
+        wobble(ves, 'bump');
+        SFX.play(look.s || 'plop');
+        if (flying === 0 && items.every(q => q.left === 0)) stepDone(tok);
+      });
     }
-    items.forEach((it) => {
+    items.forEach((it, i) => {
       const look = V[it.v], pic = (it.raw || it.tileRaw) && look.r ? look.r : look.h;
       it.tile = mkTile(pic, it.left);
       it.tile.setAttribute('aria-label', look.n || it.v);
-      draggable(it.tile, {
-        ghost: () => pic,
-        start: () => { if (look.n && !SFX.talking()) SFX.say(LINES.name(look.n)); },
-        move: (x, y) => ves.classList.toggle('over', hit(ves, x, y, 24)),
-        end: () => ves.classList.remove('over'),
-        drop: (x, y) => { if (!hit(ves, x, y, 24)) { SFX.play('nope'); return false; } place(it, x, y); return true; },
-        tap: () => nudge(300),
-      });
+      tappable(it.tile, () => send(it, i, pic));
     });
     refresh();
-    hint(() => { const it = items.find((q, i) => q.left > 0 && enabled(i)); return it ? [it.tile, ves] : null; });
+    hint(() => { const it = items.find((q, i) => q.left > 0 && enabled(i)); return it ? [it.tile, it.tile] : null; });
   };
 
-  /* ---------- RUB: stir with the spoon / roll with the rolling pin ---------- */
+  /* ---------- RUB: tap, tap, tap to stir with the spoon / roll with the rolling pin ---------- */
   STEPS.rub = (s, tok) => {
-    const ves = mkVessel(s.on);
+    const ves = mkVessel(s.on), TAPS = 5;
     paint(ves);
     const olds = G.pieces.map(p => p.el);
     const outs = (s.out || []).map(mkPiece);
     const news = outs.map(p => { const e = pieceEl(p); e.style.opacity = 0; ves.vin.append(e); return e; });
     const bar = mkBar(), grow = s.fx === 'grow';
-    let dist = 0, tick = 0, fin = false, need = 1400;
+    let n = 0, fin = false;
     const tile = mkTile(V[s.tool].h);
     tile.classList.add('next');
-    function upd(pr) {
-      bar.set(pr);
-      olds.forEach(e => { e.style.opacity = grow ? clamp(1 - pr * 5, 0, 1) : 1 - pr; });
-      news.forEach(e => { e.style.opacity = grow ? clamp(pr * 5, 0, 1) : pr; if (grow) e.style.scale = 0.42 + 0.58 * pr; });
-      if (!grow) ves.vin.style.transform = `rotate(${dist * 0.4}deg)`;
-    }
+    tile.setAttribute('aria-label', V[s.tool].n);
+    const tool = el(`<div class="tool-fx ${grow ? 'pin' : 'spoon'}">${V[s.tool].h}</div>`);
+    ves.append(tool);
+    olds.concat(news).forEach(e => { e.style.transition = 'opacity .4s, scale .4s'; });
+    if (!grow) ves.vin.style.transition = 'transform .45s ease-out';
     function finish() {
-      fin = true;
+      if (tok !== G.run) return;
       G.pieces = outs;
       olds.forEach(e => e.remove());
-      news.forEach(e => { e.style.opacity = 1; e.style.scale = ''; });
-      if (!grow) {
-        ves.vin.style.transition = 'transform .45s ease-out';
-        ves.vin.style.transform = `rotate(${Math.ceil(dist * 0.4 / 360) * 360}deg)`;
-        setTimeout(() => { if (tok === G.run) { ves.vin.style.transition = ''; ves.vin.style.transform = ''; } }, 480);
-      }
+      news.forEach(e => { e.style.transition = ''; e.style.opacity = 1; e.style.scale = ''; });
+      ves.vin.style.transition = ''; ves.vin.style.transform = ''; // 5 taps x 144 degrees = two full turns
+      tool.remove();
       tile.classList.add('gone');
       wobble(ves, 'bump');
       stepDone(tok);
     }
-    draggable(tile, {
-      ghost: () => V[s.tool].h,
-      start: () => { need = ves.getBoundingClientRect().width * 4.6; },
-      move: (x, y, d) => {
-        if (fin || !hit(ves, x, y, 8)) return;
-        dist += d; tick += d;
-        if (tick > 90) { tick = 0; SFX.play(grow ? 'roll' : 'stir'); }
-        const pr = Math.min(1, dist / need);
-        upd(pr);
-        if (pr >= 1) finish();
-      },
-      drop: () => fin,
-      tap: () => nudge(300),
-    });
-    hint(() => (fin ? null : [tile, ves]));
+    function tap() {
+      if (fin || tok !== G.run) return;
+      n++;
+      const pr = n / TAPS;
+      SFX.play(grow ? 'roll' : 'stir');
+      setTimeout(() => SFX.play(grow ? 'roll' : 'stir'), 190);
+      tool.classList.add('on');
+      wobble(tool, 'go');
+      wobble(tile, 'tapped');
+      bar.set(pr);
+      olds.forEach(e => { e.style.opacity = grow ? clamp(1 - pr * 2.5, 0, 1) : 1 - pr; });
+      news.forEach(e => { e.style.opacity = grow ? clamp(pr * 2.5, 0, 1) : pr; if (grow) e.style.scale = 0.42 + 0.58 * pr; });
+      if (!grow) ves.vin.style.transform = `rotate(${n * 144}deg)`;
+      if (n >= TAPS) { fin = true; setTimeout(finish, 520 * FAST); }
+    }
+    tappable(tile, tap);
+    tappable(ves, tap);
+    hint(() => (fin ? null : [tile, tile]));
   };
 
-  /* ---------- CHOP: drag the knife back and forth over the food ---------- */
+  /* ---------- CHOP: tap, tap, tap with the knife ---------- */
   STEPS.chop = (s, tok) => {
     const ves = mkVessel('board'), bar = mkBar(), TIMES = 4;
     G.pieces = [];
-    let k = 0, c = 0, cur = null, bits = null, busy = false, acc = 0, cuts = 0;
+    let k = 0, c = 0, cur = null, bits = null, busy = false;
     const tile = mkTile(V.knife.h);
     tile.classList.add('next');
+    tile.setAttribute('aria-label', V.knife.n);
     function load() {
       ves.vin.innerHTML = '';
       const it = s.items[k];
@@ -449,15 +439,18 @@
     }
     function chop() {
       if (busy || tok !== G.run) return;
-      c++; cuts++;
+      c++;
       SFX.play('chop');
       wobble(ves, 'chopped');
+      wobble(tile, 'tapped');
       const f = c / TIMES;
       cur.style.clipPath = `inset(0 ${f * 100}% 0 0)`;
       bits.style.clipPath = `inset(0 0 0 ${(1 - f) * 100}%)`;
       const line = el(`<i class="cut" style="left:${(1 - f) * 100}%"></i>`);
-      ves.vin.append(line);
+      const knife = el(`<div class="tool-fx knife" style="left:${clamp((1 - f) * 100, 12, 100)}%">${V.knife.h}</div>`);
+      ves.vin.append(line, knife);
       line.addEventListener('animationend', () => line.remove());
+      knife.addEventListener('animationend', () => knife.remove());
       bar.set((k * TIMES + c) / (s.items.length * TIMES));
       if (c >= TIMES) {
         busy = true;
@@ -469,19 +462,13 @@
         }, 750 * FAST);
       }
     }
-    draggable(tile, {
-      ghost: () => V.knife.h,
-      start: () => { acc = 0; cuts = 0; },
-      move: (x, y, d) => { if (!hit(ves.vin, x, y, 6)) return; acc += d; if (acc > 64) { acc = 0; chop(); } },
-      drop: (x, y) => { if (cuts === 0 && hit(ves, x, y, 10)) chop(); return false; },
-      tap: () => nudge(300),
-    });
-    ves.addEventListener('pointerdown', () => { if (!dragging) chop(); });
+    tappable(tile, chop);
+    tappable(ves, chop);
     load();
-    hint(() => (k < s.items.length ? [tile, ves] : null));
+    hint(() => (k < s.items.length ? [tile, tile] : null));
   };
 
-  /* ---------- COOK: drag the heat onto the stove, flip with the spatula ---------- */
+  /* ---------- COOK: tap the heat to turn on the stove, tap the spatula to flip ---------- */
   STEPS.cook = (s, tok) => {
     const ves = mkVessel(s.on), bar = mkBar();
     paint(ves);
@@ -490,9 +477,11 @@
     let prog = 0, state = 'idle', flipped = false, last = 0, raf = 0, fx = 0, spat = null;
     const fire = mkTile(V.fire.h);
     fire.classList.add('next');
+    fire.setAttribute('aria-label', 'Turn on the heat');
     const look = () => (!s.flip ? prog : !flipped ? prog * 0.6 : 0.78 + (prog - 0.5) * 0.44);
     const paintCook = () => { const c = look(); G.pieces.forEach((p, i) => setCook(p, start[i] + (1 - start[i]) * c)); };
     function begin() {
+      if (tok !== G.run) return;
       state = 'on';
       ves.classList.add('hot');
       SFX.play('ignite');
@@ -517,22 +506,16 @@
       setSay(LINES.flip);
       spat = mkTile(V.spatula.h);
       spat.classList.add('next', 'pop');
-      draggable(spat, {
-        ghost: () => V.spatula.h,
-        move: (x, y) => ves.classList.toggle('over', hit(ves, x, y, 24)),
-        end: () => ves.classList.remove('over'),
-        drop: (x, y) => {
-          if (state !== 'flip' || !hit(ves, x, y, 24)) return false;
-          spat.classList.add('gone');
-          state = 'flipping'; flipped = true;
-          SFX.play('flip');
-          G.pieces.forEach((p, i) => { p.el.style.animationDelay = i * 70 + 'ms'; wobble(p.el, 'flipping'); });
-          setTimeout(() => { if (tok === G.run) paintCook(); }, 260);
-          setTimeout(() => { if (tok === G.run) { state = 'on'; last = performance.now(); SFX.loop(boil ? 'boil' : 'sizzle'); } }, 720);
-          return true;
-        },
-        tap: () => nudge(300),
-      });
+      spat.setAttribute('aria-label', 'Flip');
+      tappable(spat, act);
+    }
+    function doFlip() {
+      if (tok !== G.run) return;
+      flipped = true;
+      SFX.play('flip');
+      G.pieces.forEach((p, i) => { p.el.style.animationDelay = i * 70 + 'ms'; wobble(p.el, 'flipping'); });
+      setTimeout(() => { if (tok === G.run) paintCook(); }, 260);
+      setTimeout(() => { if (tok === G.run) { state = 'on'; last = performance.now(); SFX.loop(boil ? 'boil' : 'sizzle'); } }, 720);
     }
     function finish() {
       state = 'done';
@@ -544,46 +527,56 @@
       wobble(ves, 'bump');
       stepDone(tok);
     }
-    draggable(fire, {
-      ghost: () => V.fire.h,
-      move: (x, y) => ves.classList.toggle('over', hit(ves, x, y, 24)),
-      end: () => ves.classList.remove('over'),
-      drop: (x, y) => {
-        if (state !== 'idle' || !hit(ves, x, y, 24)) return false;
+    // one tap (on the tile or on the stove) does whatever comes next
+    function act() {
+      if (tok !== G.run) return;
+      if (state === 'idle') {
+        state = 'lighting';
+        SFX.play('pick');
         fire.classList.add('gone');
-        begin();
-        return true;
-      },
-      tap: () => nudge(300),
-    });
-    hint(() => (state === 'idle' ? [fire, ves] : state === 'flip' && spat ? [spat, ves] : null));
+        fly(fire, mid(ves), V.fire.h, begin);
+      } else if (state === 'flip' && spat) {
+        state = 'flipping';
+        SFX.play('pick');
+        spat.classList.add('gone');
+        fly(spat, mid(ves), V.spatula.h, doFlip);
+      }
+    }
+    tappable(fire, act);
+    tappable(ves, act);
+    hint(() => (state === 'idle' ? [fire, fire] : state === 'flip' && spat ? [spat, spat] : null));
     G.cleanup.push(() => { cancelAnimationFrame(raf); clearInterval(fx); });
   };
 
-  /* ---------- BAKE: drag the tray into the oven ---------- */
+  /* ---------- BAKE: tap the tray and it slides into the oven ---------- */
   STEPS.bake = (s, tok) => {
     stage.classList.add('baking');
     tray.classList.add('hide');
     const ves = mkVessel(s.on), bar = mkBar();
     ves.classList.add('carry');
+    ves.setAttribute('role', 'button');
+    ves.setAttribute('tabindex', '0');
+    ves.setAttribute('aria-label', 'Put it in the oven');
     paint(ves);
     const oven = el(`<div class="oven open">${OVEN}</div>`);
     stage.append(oven);
-    const dur = 4600 * FAST, start = G.pieces.map(p => p.cook);
-    let state = 'idle', raf = 0, base = null;
+    const dur = 4600 * FAST;
+    let state = 'idle', raf = 0;
 
     function goIn() {
+      if (state !== 'idle' || tok !== G.run) return;
       state = 'in';
-      const o = oven.getBoundingClientRect();
+      SFX.play('pick');
+      const base = ves.getBoundingClientRect(), o = oven.getBoundingClientRect();
       const dx = o.left + o.width / 2 - (base.left + base.width / 2);
       const dy = o.top + o.height * 0.5 - (base.top + base.height / 2);
-      ves.style.transition = 'transform .35s ease-in, opacity .25s .3s';
+      ves.style.transition = 'transform .5s ease-in-out, opacity .25s .42s';
       ves.style.transform = `translate(${dx}px,${dy}px) scale(${(o.width * 0.5) / base.width})`;
       ves.style.opacity = 0;
       SFX.play('whoosh');
       setTimeout(() => {
         if (tok !== G.run) return;
-        oven.classList.remove('open', 'over');
+        oven.classList.remove('open');
         SFX.play('door');
         setTimeout(() => {
           if (tok !== G.run) return;
@@ -600,7 +593,6 @@
             SFX.play('door');
             oven.classList.remove('on');
             oven.classList.add('open');
-            G.pieces.forEach((p, i) => setCook(p, 1));
             applyResult(s, ves);
             ves.style.transition = 'transform .55s cubic-bezier(.3,1.4,.5,1), opacity .2s';
             ves.style.opacity = 1;
@@ -610,43 +602,11 @@
           };
           raf = requestAnimationFrame(tick);
         }, 480);
-      }, 360);
+      }, 520);
     }
-    ves.addEventListener('pointerdown', (e) => {
-      if (state !== 'idle' || dragging || e.button > 0) return;
-      e.preventDefault();
-      SFX.unlock();
-      dragging = true;
-      const id = e.pointerId, sx = e.clientX, sy = e.clientY;
-      ves.style.transition = 'none';
-      base = ves.getBoundingClientRect();
-      ves.classList.add('held');
-      SFX.play('pick');
-      const overOven = () => { const r = ves.getBoundingClientRect(), o = oven.getBoundingClientRect(); return r.top + r.height / 2 > o.top + o.height * 0.12; };
-      const mv = (ev) => {
-        if (ev.pointerId !== id) return;
-        const dx = ev.clientX - sx, dy = ev.clientY - sy;
-        ves.style.transform = `translate(${dx}px,${dy}px) scale(${1 - clamp(dy / 500, 0, 0.3)})`;
-        oven.classList.toggle('over', overOven());
-      };
-      const up = (ev) => {
-        if (ev.pointerId !== id) return;
-        window.removeEventListener('pointermove', mv);
-        window.removeEventListener('pointerup', up);
-        window.removeEventListener('pointercancel', up);
-        dragging = false;
-        ves.classList.remove('held');
-        if (ev.type === 'pointerup' && overOven()) { goIn(); return; }
-        oven.classList.remove('over');
-        ves.style.transition = 'transform .3s';
-        ves.style.transform = '';
-        SFX.play('nope');
-      };
-      window.addEventListener('pointermove', mv);
-      window.addEventListener('pointerup', up);
-      window.addEventListener('pointercancel', up);
-    });
-    hint(() => (state === 'idle' ? [ves, oven] : null));
+    tappable(ves, goIn);
+    tappable(oven, goIn);
+    hint(() => (state === 'idle' ? [ves, ves] : null));
     G.cleanup.push(() => cancelAnimationFrame(raf));
   };
 
@@ -662,10 +622,8 @@
     sparkle(stage, 50, 45, 10);
     const BITES = [[76, 24], [22, 40], [64, 78]];
     let n = 0;
-    ves.addEventListener('pointerdown', (e) => {
+    tappable(ves, () => {
       if (n > BITES.length || tok !== G.run) return;
-      e.preventDefault();
-      SFX.unlock();
       n++;
       SFX.play(G.r.eat || 'munch');
       wobble(ves, 'bump');

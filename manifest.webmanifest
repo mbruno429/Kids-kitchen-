@@ -1,7 +1,7 @@
 {
   "name": "Kids Kitchen",
   "short_name": "Kids Kitchen",
-  "description": "A drag-and-drop cooking game for little chefs.",
+  "description": "A tap-to-cook game for little chefs.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
