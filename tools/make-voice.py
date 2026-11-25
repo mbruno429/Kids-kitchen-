@@ -17,7 +17,7 @@ js/recipes.js or the ingredient names in js/art.js):
 
 Only new lines are recorded; add --force to redo them all, --prune to delete unused clips.
 """
-import argparse, hashlib, json, os, subprocess, sys, tempfile
+import argparse, hashlib, json, os, re, subprocess, sys, tempfile
 
 import numpy as np
 import soundfile as sf
@@ -69,11 +69,29 @@ def tidy(x, sr):
 
 LEAD = 'Okay...'
 
+# How to say food words the pronunciation library gets wrong or does not know.
+# (Sounds: A = "ay", O = "oh", I = "eye", ɑ = "ah", i = "ee", u = "oo", ˈ marks the loud part.)
+SAY = {
+    'jalapeño': 'hˌɑləpˈAnjO',   # hah-luh-PAY-nyoh
+    'étouffée': 'ˌAtufˈA',        # ay-too-FAY
+    'lumpia': 'lˈumpiɑ',          # LOOM-pee-ah
+    'sopas': 'sˈOpɑs',            # SOH-pahs
+    'sinigang': 'sˌiniɡˈɑŋ',      # see-nee-GAHNG
+    'pancit': 'pɑnsˈɪt',          # pahn-SIT
+    'flan': 'flˈɑn',              # flahn
+}
+SAY_RE = re.compile(r'(?<!\w)(' + '|'.join(sorted(SAY, key=len, reverse=True)) + r')(?!\w)', re.IGNORECASE)
+
+
+def marked(text):
+    return SAY_RE.sub(lambda m: f'[{m.group(1)}](/{SAY[m.group(1).lower()]}/)', text)
+
+
 
 def speak(text):
     """Very short lines start with a little "uh" if the voice begins cold, so every line is
     recorded as "Okay... <line>" and the "Okay..." is cut off at the pause that follows it."""
-    x, sr = tts.create(g2p(LEAD + ' ' + text)[0], voice=style, speed=args.speed, is_phonemes=True, trim=False)
+    x, sr = tts.create(g2p(LEAD + ' ' + marked(text))[0], voice=style, speed=args.speed, is_phonemes=True, trim=False)
     x = np.asarray(x, dtype=np.float32)
     fr = int(sr * 0.01)
     quiet = np.array([np.sqrt(np.mean(x[i:i + fr] ** 2)) for i in range(0, len(x) - fr, fr)]) < 0.006
@@ -90,9 +108,13 @@ def speak(text):
             return rest, sr
         i = j
     print('  (no clean pause after the lead-in, recorded without it)', text)
-    x, sr = tts.create(g2p(text)[0], voice=style, speed=args.speed, is_phonemes=True)
+    x, sr = tts.create(g2p(marked(text))[0], voice=style, speed=args.speed, is_phonemes=True)
     return np.asarray(x, dtype=np.float32), sr
 
+
+unknown = [t for t in lines if '❓' in g2p(marked(t))[0]]
+if unknown:
+    sys.exit('The pronunciation library does not know a word in these lines; add it to SAY:\n  ' + '\n  '.join(unknown))
 
 index, made, secs = {}, 0, 0.0
 for text in lines:

@@ -77,6 +77,7 @@ svg { display: block; }
 .cat span { font-size: 22px; }
 .cat.cat-breakfast { background: #ff9f1c; } .cat.cat-lunch { background: var(--mint); }
 .cat.cat-dinner { background: var(--tomato); } .cat.cat-treats { background: var(--grape); }
+.cat.cat-texmex { background: #e8590c; } .cat.cat-cajun { background: #2e9e5b; } .cat.cat-filipino { background: #2f6fe0; }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .card {
   position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
@@ -85,6 +86,7 @@ svg { display: block; }
 }
 .card.cat-breakfast { --c: #ffc56b; --c2: #f09a1c; } .card.cat-lunch { --c: #86e3d1; --c2: #2fb198; }
 .card.cat-dinner { --c: #ff9a92; --c2: #e2483d; } .card.cat-treats { --c: #c3a6ff; --c2: #8257e6; }
+.card.cat-texmex { --c: #ffb37a; --c2: #d9500a; } .card.cat-cajun { --c: #8fd9aa; --c2: #23834a; } .card.cat-filipino { --c: #9dbcf7; --c2: #2459c0; }
 .card:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--c2); }
 .card-pic { width: 92px; height: 92px; }
 .card-pic svg { width: 100%; height: 100%; }
@@ -134,6 +136,8 @@ svg { display: block; }
 .vessel.on-stove::before, .vessel.v-iron::before { content: ''; position: absolute; inset: -11%; border-radius: 13%; background: #dfe5ec; border: 4px solid #b9c3cf; box-shadow: 0 8px 0 #0001; }
 .vessel.v-iron::before { background: none; border: 0; box-shadow: none; }
 .v-art, .v-food, .v-fx { position: absolute; inset: 0; }
+.v-fx > svg { width: 100%; height: 100%; overflow: visible; }
+.vessel.v-glass { width: min(92vw, 48vh); width: min(94cqw, 86cqh); margin-top: 2%; }
 .v-art svg { width: 100%; height: 100%; overflow: visible; }
 .v-in { position: absolute; }
 .v-fx { pointer-events: none; }
@@ -177,8 +181,8 @@ svg { display: block; }
 @keyframes bub { 0% { opacity: 0; scale: .3; } 40% { opacity: 1; } 100% { opacity: 0; scale: calc(var(--s) * 1.5); } }
 .spark { position: absolute; font-style: normal; font-size: 26px; pointer-events: none; z-index: 30; margin: -13px; opacity: 0; animation: spark .75s ease-out forwards; }
 @keyframes spark { 0% { opacity: 1; scale: .4; } 70% { opacity: 1; } 100% { opacity: 0; translate: var(--dx) var(--dy); scale: 1.2; rotate: 90deg; } }
-.yum { position: absolute; z-index: 30; font-style: normal; font-size: 30px; white-space: nowrap; font-weight: 900; color: var(--tomato); text-shadow: 0 3px 0 #fff, 3px 0 0 #fff, -3px 0 0 #fff, 0 -3px 0 #fff; pointer-events: none; animation: yum 1.2s ease-out forwards; }
-@keyframes yum { 0% { opacity: 0; scale: .5; } 15% { opacity: 1; scale: 1.1; } 75% { opacity: 1; } 100% { opacity: 0; translate: 0 -50px; } }
+.yum { position: absolute; left: 50%; translate: -50% 0; z-index: 30; font-style: normal; font-size: 30px; white-space: nowrap; font-weight: 900; color: var(--tomato); text-shadow: 0 3px 0 #fff, 3px 0 0 #fff, -3px 0 0 #fff, 0 -3px 0 #fff; pointer-events: none; animation: yum 1.2s ease-out forwards; }
+@keyframes yum { 0% { opacity: 0; scale: .5; } 15% { opacity: 1; scale: 1.1; } 75% { opacity: 1; } 100% { opacity: 0; translate: -50% -50px; } }
 
 /* the spoon / rolling pin / knife that moves when you tap */
 .tool-fx { position: absolute; left: 50%; top: 50%; width: 40%; margin: -34% 0 0 -8%; pointer-events: none; opacity: 0; z-index: 8; filter: drop-shadow(0 6px 4px #0004); }

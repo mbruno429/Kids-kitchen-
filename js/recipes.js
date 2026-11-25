@@ -3,12 +3,12 @@
      add   tap ingredients and they hop onto a bowl / pot / pan / board / sheet / plate
      rub   tap to stir with a spoon or roll with a rolling pin
      chop  tap to chop with the knife
-     cook  tap the heat to turn on the stove (and tap the spatula to flip)
+     cook  tap the heat to turn on the stove (and tap the spatula to flip); fry: true = frying in a pot of oil
      bake  tap the tray and it slides into the oven
      eat   tap to eat it all up
    Item fields: v picture, n how many, as what it looks like once dropped,
    at where it lands (scatter | center | free | fill | slot | stack), raw = needs cooking,
-   w width in %, pos exact spot {x, y, z}.
+   w width in %, pos exact spot {x, y, z}, spots a list of exact spots [[x, y], ...] used one after another.
    Recipe fields: sp = how the chef says the name, eat = the eating sound (crunch | slurp | munch).
    seq: true = strict order, a number = first N in order, 'ends' = first first and last last. */
 window.RECIPES = [
@@ -227,6 +227,178 @@ window.RECIPES = [
         { v: 'lattice', at: 'center', w: 100, raw: true }] },
       { t: 'bake', on: 'pie', say: 'Bake the pie!' },
       { t: 'eat', on: 'plate' },
+    ],
+  },
+
+  /* ---------------- Tex-Mex ---------------- */
+  {
+    id: 'quesadilla', sp: 'a quesadilla', eat: 'crunch', name: 'Quesadilla', icon: '🫓', art: 'quesadilla', cat: 'Tex-Mex',
+    steps: [
+      { t: 'add', on: 'pan', seq: true, say: 'Tortilla, cheese, tortilla!', items: [
+        { v: 'tortilla', at: 'center', w: 92, raw: true },
+        { v: 'cheese', as: 'pizzaCheese', at: 'center', w: 76, raw: true },
+        { v: 'tortilla', pos: { x: 52, y: 48 }, w: 92, raw: true }] },
+      { t: 'cook', on: 'pan', flip: true, say: 'Cook it until it is crispy!', out: [{ v: 'quesadilla', w: 96 }] },
+      { t: 'add', on: 'plate', seq: 1, say: 'Add salsa and guacamole!', items: [{ v: 'quesadilla', at: 'center', w: 86 }, { v: 'salsa', at: 'free', w: 26, max: 30 }, { v: 'guac', at: 'free', w: 26, max: 30 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'nachos', sp: 'nachos', eat: 'crunch', name: 'Nachos', icon: '🧀', art: 'nachos', cat: 'Tex-Mex',
+    steps: [
+      { t: 'add', on: 'sheet', seq: 1, say: 'Chips, beans and lots of cheese!', w: 46, items: [{ v: 'chipBag', n: 3 }, { v: 'beans', w: 40 }, { v: 'cheese', as: 'pizzaCheese', at: 'center', w: 56, raw: true }, { v: 'jalapeno', n: 2, at: 'free', w: 26 }] },
+      { t: 'bake', on: 'sheet', say: 'Melt the cheese in the oven!' },
+      { t: 'add', on: 'plate', keep: true, say: 'Add the yummy toppings!', items: [{ v: 'salsa', at: 'free', w: 26 }, { v: 'guac', at: 'free', w: 26 }, { v: 'sourCream', at: 'free', w: 26 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'enchiladas', sp: 'cheese enchiladas', name: 'Cheese Enchiladas', icon: '🌯', art: 'enchiladas', cat: 'Tex-Mex',
+    steps: [
+      { t: 'chop', say: 'Chop the onion!', items: [{ v: 'onion', out: 'onionBits' }] },
+      { t: 'add', on: 'sheet', seq: true, say: 'Roll them up! Then sauce and cheese!', items: [
+        { v: 'tortilla', as: 'enchilada', n: 3, spots: [[50, 26], [50, 50], [50, 74]], w: 84 },
+        { v: 'chiliSauce', at: 'center', w: 64 },
+        { v: 'cheese', as: 'pizzaCheese', at: 'center', w: 50, raw: true },
+        { v: 'onionBits', at: 'center', w: 40 }] },
+      { t: 'bake', on: 'sheet', say: 'Bake the enchiladas!' },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'fajitas', sp: 'fajitas', name: 'Fajitas', icon: '🌯', art: 'fajitaMix', cat: 'Tex-Mex',
+    steps: [
+      { t: 'chop', say: 'Slice the pepper and the onion!', items: [{ v: 'pepper', out: 'pepperStrips' }, { v: 'onion', out: 'onionBits' }] },
+      { t: 'add', on: 'pan', say: 'Everything in the hot pan!', w: 44, items: [{ v: 'steak', n: 2 }, 'pepperStrips', 'onionBits', 'chiliSpice'] },
+      { t: 'cook', on: 'pan', say: 'Sizzle, sizzle! Cook the fajitas!', out: [{ v: 'fajitaMix', w: 96 }] },
+      { t: 'add', on: 'plate', seq: 2, say: 'Fill your tortilla!', items: [{ v: 'tortilla', at: 'center', w: 98 }, { v: 'fajitaMix', at: 'center', w: 64 }, { v: 'guac', at: 'free', w: 24, max: 24 }, { v: 'sourCream', at: 'free', w: 24, max: 24 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'chili', sp: 'chili', name: 'Chili', icon: '🌶️', art: 'chili', cat: 'Tex-Mex',
+    steps: [
+      { t: 'chop', say: 'Chop the onion!', items: [{ v: 'onion', out: 'onionBits' }] },
+      { t: 'add', on: 'pot', say: 'Everything in the pot!', w: 42, items: [{ v: 'sauce', as: 'sauceFill', at: 'fill' }, { v: 'beef', n: 2 }, 'onionBits', 'beans', 'chiliSpice'] },
+      { t: 'cook', on: 'pot', say: 'Cook the chili!' },
+      { t: 'rub', on: 'pot', tool: 'spoon', say: 'Stir the chili!', out: [{ v: 'chili', w: 96 }] },
+      { t: 'add', on: 'bowl2', keep: true, say: 'Cheese on top!', items: [{ v: 'cheese', as: 'cheeseShreds', at: 'center', w: 50 }] },
+      { t: 'eat', on: 'bowl2' },
+    ],
+  },
+
+  /* ---------------- Cajun & Creole (Breaux Bridge, Louisiana: the crawfish capital) ---------------- */
+  {
+    id: 'etouffee', sp: 'crawfish étouffée', name: 'Crawfish Étouffée', icon: '🦞', art: 'etouffee', cat: 'Cajun & Creole',
+    steps: [
+      { t: 'chop', say: 'Chop the onion, pepper and celery!', items: [{ v: 'onion', out: 'onionBits' }, { v: 'pepper', out: 'pepperBits' }, { v: 'celery', out: 'celeryBits' }] },
+      { t: 'add', on: 'pan', say: 'Everything in the pan!', w: 36, items: [{ v: 'butter', as: 'butterMelt', at: 'center', w: 86 }, 'onionBits', 'pepperBits', 'celeryBits', { v: 'crawfish', n: 3, raw: true }, 'cajun'] },
+      { t: 'cook', on: 'pan', say: 'Cook the étouffée!', out: [{ v: 'etouffee', w: 96 }] },
+      { t: 'add', on: 'bowl2', seq: true, say: 'Rice first! Then the étouffée!', items: [{ v: 'rice', at: 'center', w: 88 }, { v: 'etouffee', at: 'center', w: 62 }] },
+      { t: 'eat', on: 'bowl2' },
+    ],
+  },
+  {
+    id: 'crawfishboil', sp: 'a crawfish boil', name: 'Crawfish Boil', icon: '🦞', cat: 'Cajun & Creole',
+    steps: [
+      { t: 'add', on: 'pot', say: 'Everything in the big pot!', w: 36, items: ['water', { v: 'crawfish', n: 3, raw: true }, { v: 'corn', n: 2, raw: true, w: 40 }, { v: 'potato', n: 2, w: 30 }, 'cajun', { v: 'lemon', w: 26 }] },
+      { t: 'cook', on: 'pot', say: 'Boil, boil, boil!' },
+      { t: 'add', on: 'sheet', say: 'Pour it all out! Time to eat!', items: [{ v: 'crawfish', n: 3, at: 'free', w: 36 }, { v: 'corn', n: 2, at: 'free', w: 40 }, { v: 'potato', n: 2, at: 'free', w: 30 }, { v: 'lemon', at: 'free', w: 24 }] },
+      { t: 'eat', on: 'sheet' },
+    ],
+  },
+  {
+    id: 'gumbo', sp: 'gumbo', eat: 'slurp', name: 'Gumbo', icon: '🍲', art: 'gumbo', cat: 'Cajun & Creole',
+    steps: [
+      { t: 'add', on: 'pot', say: 'Oil and flour in the pot!', items: ['oil', 'flour'] },
+      { t: 'rub', on: 'pot', tool: 'spoon', say: 'Stir, stir, stir the roux!', out: [{ v: 'roux', w: 92, raw: true }] },
+      { t: 'cook', on: 'pot', fry: true, say: 'Cook the roux until it is brown!' },
+      { t: 'add', on: 'pot', keep: true, say: 'Now add everything else!', w: 30, items: ['water', { v: 'chickenRaw', n: 2, raw: true, w: 28 }, { v: 'andouille', n: 2 }, { v: 'trinity', w: 40 }] },
+      { t: 'cook', on: 'pot', say: 'Cook the gumbo!', out: [{ v: 'gumboFill', w: 100, z: 1 }, { v: 'chickenRaw', w: 26, x: 30, y: 36 }, { v: 'chickenRaw', w: 26, x: 68, y: 66 }, { v: 'sausageCoins', w: 34, x: 66, y: 32 }, { v: 'sausageCoins', w: 34, x: 32, y: 68 }, { v: 'trinity', w: 44, x: 50, y: 50 }] },
+      { t: 'add', on: 'bowl2', keep: true, say: 'A scoop of rice on top!', items: [{ v: 'rice', at: 'center', w: 42 }] },
+      { t: 'eat', on: 'bowl2' },
+    ],
+  },
+  {
+    id: 'jambalaya', sp: 'jambalaya', name: 'Jambalaya', icon: '🥘', art: 'jambalaya', cat: 'Cajun & Creole',
+    steps: [
+      { t: 'chop', say: 'Chop the veggies!', items: [{ v: 'onion', out: 'onionBits' }, { v: 'pepper', out: 'pepperBits' }] },
+      { t: 'add', on: 'pot', say: 'Everything in the pot!', w: 30, items: [{ v: 'sauce', as: 'sauceFill', at: 'fill' }, { v: 'andouille', n: 2 }, { v: 'chickenRaw', n: 2, raw: true, w: 28 }, { v: 'onionBits', w: 36 }, { v: 'pepperBits', w: 36 }, { v: 'rice', as: 'riceGrains', at: 'center', w: 84 }] },
+      { t: 'cook', on: 'pot', say: 'Cook the jambalaya!' },
+      { t: 'rub', on: 'pot', tool: 'spoon', say: 'Stir it up!', out: [{ v: 'jambalaya', w: 96 }] },
+      { t: 'eat', on: 'bowl2' },
+    ],
+  },
+  {
+    id: 'beignets', sp: 'beignets', name: 'Beignets', icon: '🍩', art: 'beignetPlate', cat: 'Cajun & Creole',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['flour', 'sugar', 'egg', 'milk'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'dough', w: 96 }] },
+      { t: 'add', on: 'pot', seq: 1, say: 'Oil first! Then the dough!', w: 32, items: [{ v: 'oil', as: 'oilFill', at: 'fill' }, { v: 'doughBall', n: 4, as: 'beignet', raw: true }] },
+      { t: 'cook', on: 'pot', fry: true, say: 'Fry the beignets!', out: [{ v: 'beignet', w: 36, x: 32, y: 32, rot: -8 }, { v: 'beignet', w: 36, x: 68, y: 34, rot: 10 }, { v: 'beignet', w: 36, x: 34, y: 68, rot: 6 }, { v: 'beignet', w: 36, x: 68, y: 68, rot: -12 }] },
+      { t: 'add', on: 'plate', keep: true, say: 'Lots of powdered sugar on top!', items: [{ v: 'powderSugar', n: 2 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+
+  /* ---------------- Filipino ---------------- */
+  {
+    id: 'lumpia', sp: 'lumpia', eat: 'crunch', name: 'Lumpia', icon: '🥟', art: 'lumpiaPlate', cat: 'Filipino',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put the filling in the bowl!', w: 36, items: [{ v: 'pork', n: 2, as: 'groundBeef', raw: true, w: 40 }, 'carrot', 'onion', 'egg'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Mix it all up!', out: [{ v: 'porkMix', w: 94 }] },
+      { t: 'add', on: 'board', seq: true, say: 'Wrapper first! Then the filling!', items: [{ v: 'wrapper', at: 'center', w: 96 }, { v: 'porkMix', at: 'center', w: 66 }] },
+      { t: 'rub', on: 'board', tool: 'hands', say: 'Roll, roll, roll the lumpia!', out: [{ v: 'lumpia', w: 76, x: 50, y: 28, raw: true }, { v: 'lumpia', w: 76, x: 50, y: 50, raw: true }, { v: 'lumpia', w: 76, x: 50, y: 72, raw: true }] },
+      { t: 'add', on: 'pot', seq: 1, say: 'Oil first! Then the lumpia!', w: 62, items: [{ v: 'oil', as: 'oilFill', at: 'fill' }, { v: 'lumpia', n: 3, raw: true, spots: [[50, 28], [50, 50], [50, 72]] }] },
+      { t: 'cook', on: 'pot', fry: true, say: 'Fry the lumpia!', out: [{ v: 'lumpia', w: 62, x: 42, y: 26, rot: -6 }, { v: 'lumpia', w: 62, x: 42, y: 46, rot: 4 }, { v: 'lumpia', w: 62, x: 42, y: 66, rot: -3 }, { v: 'sweetChili', w: 30, x: 76, y: 76 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'sopas', sp: 'sopas', eat: 'slurp', name: 'Sopas', icon: '🍲', art: 'sopas', cat: 'Filipino',
+    steps: [
+      { t: 'chop', say: 'Chop the veggies!', items: [{ v: 'carrot', out: 'carrotCoins' }, { v: 'cabbage', out: 'cabbageBits' }] },
+      { t: 'add', on: 'pot', say: 'Everything in the pot!', w: 36, items: ['water', { v: 'chickenRaw', n: 2, raw: true, w: 28 }, { v: 'macBox', w: 44 }, 'carrotCoins', 'cabbageBits'] },
+      { t: 'cook', on: 'pot', say: 'Cook the soup!', turn: { waterFill: 'broth' } },
+      { t: 'add', on: 'pot', keep: true, say: 'Now pour in the milk!', items: [{ v: 'milk', at: 'center', w: 70 }] },
+      { t: 'rub', on: 'pot', tool: 'spoon', say: 'Stir it up!', out: [{ v: 'sopas', w: 100 }] },
+      { t: 'eat', on: 'bowl2' },
+    ],
+  },
+  {
+    id: 'sinigang', sp: 'sinigang', eat: 'slurp', name: 'Sinigang', icon: '🍲', art: 'sinigang', cat: 'Filipino',
+    steps: [
+      { t: 'chop', say: 'Chop the veggies!', items: [{ v: 'tomato', out: 'tomatoBits' }, { v: 'radish', out: 'radishCoins' }] },
+      { t: 'add', on: 'pot', say: 'Everything in the pot!', w: 34, items: ['water', { v: 'pork', n: 2, raw: true, w: 30 }, 'tomatoBits', 'radishCoins', 'greens', { v: 'tamarind', w: 30 }] },
+      { t: 'cook', on: 'pot', say: 'Cook the sinigang! So sour and yummy!', turn: { waterFill: 'sinigangBroth' } },
+      { t: 'eat', on: 'bowl2' },
+    ],
+  },
+  {
+    id: 'adobo', sp: 'chicken adobo', name: 'Chicken Adobo', icon: '🍗', art: 'adoboPlate', cat: 'Filipino',
+    steps: [
+      { t: 'add', on: 'pot', say: 'Chicken, soy sauce and vinegar!', w: 34, items: [{ v: 'chickenRaw', n: 3, as: 'adoboChicken', raw: true }, { v: 'soy', as: 'soyFill', at: 'fill' }, 'vinegar', { v: 'garlic', n: 2, w: 22 }, { v: 'bayLeaf', w: 24 }] },
+      { t: 'cook', on: 'pot', say: 'Cook the adobo!' },
+      { t: 'add', on: 'plate', seq: 1, say: 'Rice and chicken on the plate!', items: [{ v: 'rice', pos: { x: 34, y: 50 }, w: 58 }, { v: 'adoboChicken', n: 3, spots: [[68, 30], [74, 54], [62, 76]], w: 30 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'pancit', sp: 'pancit', eat: 'slurp', name: 'Pancit', icon: '🍜', art: 'pancit', cat: 'Filipino',
+    steps: [
+      { t: 'chop', say: 'Chop the veggies!', items: [{ v: 'carrot', out: 'carrotCoins' }, { v: 'cabbage', out: 'cabbageBits' }] },
+      { t: 'add', on: 'pan', say: 'Everything in the pan!', w: 38, items: [{ v: 'noodleBox', w: 50 }, { v: 'shrimp', n: 2, raw: true, w: 28 }, 'carrotCoins', 'cabbageBits', 'soy'] },
+      { t: 'cook', on: 'pan', say: 'Cook the pancit!', out: [{ v: 'pancit', w: 96 }] },
+      { t: 'add', on: 'plate', seq: 1, say: 'Add a squeeze of lemon!', items: [{ v: 'pancit', at: 'center', w: 90 }, { v: 'lemon', n: 2, at: 'free', w: 22, max: 34 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'halohalo', sp: 'halo-halo', eat: 'slurp', name: 'Halo-Halo', icon: '🍧', cat: 'Filipino',
+    steps: [
+      { t: 'add', on: 'glass', seq: true, say: 'Fill the glass all the way up!', w: 44, items: ['sweetBeans', 'gulaman', 'ice', { v: 'milk', as: 'hhMilk', w: 46 }, { v: 'ube', w: 40 }, { v: 'flan', w: 24 }] },
+      { t: 'rub', on: 'glass', tool: 'spoon', fx: 'mix', say: 'Mix, mix, mix! Halo-halo!', out: [{ v: 'haloMixed', w: 45, x: 50, y: 68.5 }] },
+      { t: 'eat', on: 'glass' },
     ],
   },
 ];

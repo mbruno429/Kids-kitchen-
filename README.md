@@ -8,7 +8,7 @@ bowl, stir, chop, cook on the stove, bake in the oven — then eat it all up.
 No reading needed: the chef says every instruction out loud, a pointing hand shows what to do
 if a child gets stuck, and nothing can burn or go wrong.
 
-## The 20 dishes
+## The 36 dishes
 
 | Breakfast | Lunch | Dinner | Treats |
 | --- | --- | --- | --- |
@@ -20,6 +20,18 @@ if a child gets stuck, and nothing can burn or go wrong.
 | | Garden Salad | Chicken Nuggets | |
 | | | Corn on the Cob | |
 | | | Baked Potato | |
+
+| Tex-Mex | Cajun & Creole | Filipino |
+| --- | --- | --- |
+| Quesadilla | Crawfish Étouffée | Lumpia |
+| Nachos | Crawfish Boil | Sopas |
+| Cheese Enchiladas | Gumbo | Sinigang |
+| Fajitas | Jambalaya | Chicken Adobo |
+| Chili | Beignets | Pancit |
+| | | Halo-Halo |
+
+The Cajun & Creole dishes come from the Breaux Bridge area of Louisiana (the "crawfish capital of the
+world"); the Filipino dishes are family favourites of the Filipino community in Sacramento.
 
 ## How to play
 

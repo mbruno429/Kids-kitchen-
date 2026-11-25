@@ -34,15 +34,16 @@
     });
   })();
 
-  const CATS = [['Breakfast', '☀️'], ['Lunch', '🥪'], ['Dinner', '🍽️'], ['Treats', '🧁']];
+  const CATS = [['Breakfast', '☀️', 'breakfast'], ['Lunch', '🥪', 'lunch'], ['Dinner', '🍽️', 'dinner'], ['Tex-Mex', '🌮', 'texmex'],
+    ['Cajun & Creole', '🦞', 'cajun'], ['Filipino', '🥟', 'filipino'], ['Treats', '🧁', 'treats']];
   const dishPic = (r) => (r.art ? V[r.art].h : E(r.icon));
   function buildMenu() {
     const box = $('#dishes'); box.innerHTML = '';
-    CATS.forEach(([cat, icon]) => {
-      box.append(el(`<h3 class="cat cat-${cat.toLowerCase()}"><span>${icon}</span>${cat}</h3>`));
+    CATS.forEach(([cat, icon, key]) => {
+      box.append(el(`<h3 class="cat cat-${key}"><span>${icon}</span>${cat}</h3>`));
       const grid = el('<div class="grid"></div>');
       RECIPES.filter(r => r.cat === cat).forEach(r => {
-        const b = el(`<button class="card cat-${cat.toLowerCase()}${save.stars[r.id] ? ' done' : ''}" data-id="${r.id}" aria-label="${r.name}">
+        const b = el(`<button class="card cat-${key}${save.stars[r.id] ? ' done' : ''}" data-id="${r.id}" aria-label="${r.name}">
           <span class="card-pic">${dishPic(r)}</span><span class="card-name">${r.name}</span><span class="card-star">⭐</span></button>`);
         b.addEventListener('click', () => { SFX.unlock(); SFX.play('pick'); startRecipe(r); });
         grid.append(b);
@@ -135,7 +136,7 @@
   function mkVessel(type) {
     const d = VESSEL[type];
     const v = el(`<div class="vessel v-${type}${d.stove ? ' on-stove' : ''}"><div class="v-art">${d.art}</div>
-      <div class="v-food"><div class="v-in" style="left:${d.box[0]}%;top:${d.box[1]}%;width:${d.box[2]}%;height:${d.box[2]}%"></div></div><div class="v-fx"></div></div>`);
+      <div class="v-food"><div class="v-in" style="left:${d.box[0]}%;top:${d.box[1]}%;width:${d.box[2]}%;height:${d.box[2]}%"></div></div><div class="v-fx">${d.front || ''}</div></div>`);
     stage.append(v);
     v.vin = $('.v-in', v); v.food = $('.v-food', v); v.fx = $('.v-fx', v); v.def = d;
     return v;
@@ -316,7 +317,8 @@
     function landing(it) {
       const look = V[it.as];
       const p = { v: it.as, w: it.w, cook: it.raw ? 0 : 1, rot: 0, z: it.z != null ? it.z : it.pos && it.pos.z != null ? it.pos.z : G.z++ };
-      if (it.at === 'pos') { p.x = it.pos.x; p.y = it.pos.y; }
+      if (it.spots) { const sp = it.spots[(it.n || 1) - it.left] || [50, 50]; p.x = sp[0]; p.y = sp[1]; }
+      else if (it.at === 'pos') { p.x = it.pos.x; p.y = it.pos.y; }
       else if (it.at === 'center') { p.x = 50; p.y = 50; }
       else if (it.at === 'fill') { p.x = 50; p.y = 50; p.w = 100; p.z = 1; }
       else if (it.at === 'free') {
@@ -379,7 +381,7 @@
     const olds = G.pieces.map(p => p.el);
     const outs = (s.out || []).map(mkPiece);
     const news = outs.map(p => { const e = pieceEl(p); e.style.opacity = 0; ves.vin.append(e); return e; });
-    const bar = mkBar(), grow = s.fx === 'grow';
+    const bar = mkBar(), grow = s.fx === 'grow', spin = !grow && s.fx !== 'mix';
     let n = 0, fin = false;
     const tile = mkTile(V[s.tool].h);
     tile.classList.add('next');
@@ -387,7 +389,7 @@
     const tool = el(`<div class="tool-fx ${grow ? 'pin' : 'spoon'}">${V[s.tool].h}</div>`);
     ves.append(tool);
     olds.concat(news).forEach(e => { e.style.transition = 'opacity .4s, scale .4s'; });
-    if (!grow) ves.vin.style.transition = 'transform .45s ease-out';
+    if (spin) ves.vin.style.transition = 'transform .45s ease-out';
     function finish() {
       if (tok !== G.run) return;
       G.pieces = outs;
@@ -411,7 +413,7 @@
       bar.set(pr);
       olds.forEach(e => { e.style.opacity = grow ? clamp(1 - pr * 2.5, 0, 1) : 1 - pr; });
       news.forEach(e => { e.style.opacity = grow ? clamp(pr * 2.5, 0, 1) : pr; if (grow) e.style.scale = 0.42 + 0.58 * pr; });
-      if (!grow) ves.vin.style.transform = `rotate(${n * 144}deg)`;
+      if (spin) ves.vin.style.transform = `rotate(${n * 144}deg)`;
       if (n >= TAPS) { fin = true; setTimeout(finish, 520 * FAST); }
     }
     tappable(tile, tap);
@@ -472,7 +474,7 @@
   STEPS.cook = (s, tok) => {
     const ves = mkVessel(s.on), bar = mkBar();
     paint(ves);
-    const boil = s.on === 'pot', dur = 4400 * FAST;
+    const boil = s.on === 'pot', dur = 4400 * FAST, hiss = boil && !s.fry ? 'boil' : 'sizzle';
     const start = G.pieces.map(p => p.cook);
     let prog = 0, state = 'idle', flipped = false, last = 0, raf = 0, fx = 0, spat = null;
     const fire = mkTile(V.fire.h);
@@ -485,7 +487,7 @@
       state = 'on';
       ves.classList.add('hot');
       SFX.play('ignite');
-      SFX.loop(boil ? 'boil' : 'sizzle');
+      SFX.loop(hiss);
       last = performance.now();
       raf = requestAnimationFrame(tick);
       fx = setInterval(() => { if (state === 'on') puff(ves, boil ? 'bub' : 'steam'); }, boil ? 150 : 300);
@@ -515,7 +517,7 @@
       SFX.play('flip');
       G.pieces.forEach((p, i) => { p.el.style.animationDelay = i * 70 + 'ms'; wobble(p.el, 'flipping'); });
       setTimeout(() => { if (tok === G.run) paintCook(); }, 260);
-      setTimeout(() => { if (tok === G.run) { state = 'on'; last = performance.now(); SFX.loop(boil ? 'boil' : 'sizzle'); } }, 720);
+      setTimeout(() => { if (tok === G.run) { state = 'on'; last = performance.now(); SFX.loop(hiss); } }, 720);
     }
     function finish() {
       state = 'done';
@@ -629,7 +631,7 @@
       wobble(ves, 'bump');
       const word = LINES.bites[n - 1] || LINES.bites[0];
       SFX.say(word);
-      const yum = el(`<i class="yum" style="left:${rand(8, 40)}%;top:${rand(12, 40)}%">${word}</i>`);
+      const yum = el(`<i class="yum" style="top:${rand(10, 34)}%">${word}</i>`);
       stage.append(yum);
       yum.addEventListener('animationend', () => yum.remove());
       if (n <= BITES.length) {
