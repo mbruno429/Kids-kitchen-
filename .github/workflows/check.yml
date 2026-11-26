@@ -14,28 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Check scripts, recipes, pictures and voice recordings
+      - name: Check scripts, recipes, pictures, voice recordings and the offline file list
         run: |
-          for f in js/art.js js/recipes.js js/lines.js js/audio.js js/game.js assets/voice/index.js; do node --check "$f"; done
-          node -e "
-            const fs = require('fs');
-            global.window = {};
-            require('./js/art.js'); require('./js/recipes.js'); require('./js/lines.js'); require('./assets/voice/index.js');
-            const { V, VESSEL } = window.ART;
-            let bad = 0;
-            const need = (id, where) => { if (!V[id]) { console.error('Missing picture', id, 'in', where); bad++; } };
-            for (const r of window.RECIPES) for (const s of r.steps) {
-              if (s.on && !VESSEL[s.on]) { console.error('Missing vessel', s.on, 'in', r.id); bad++; }
-              for (let it of s.items || []) { if (typeof it === 'string') it = { v: it }; need(it.v, r.id); if (it.as) need(it.as, r.id); if (it.out) need(it.out, r.id); }
-              for (const o of s.out || []) need(o.v, r.id);
-              for (const k in s.turn || {}) need(s.turn[k], r.id);
-            }
-            const lines = window.LINES.all(window.RECIPES, V);
-            for (const l of lines) {
-              const f = window.VOICE[l];
-              if (!f) console.warn('No recording yet (the phone voice will read it): ' + l);
-              else if (!fs.existsSync('assets/voice/' + f)) { console.error('Recording file missing for: ' + l); bad++; }
-            }
-            console.log(window.RECIPES.length + ' recipes and ' + lines.length + ' voice lines checked');
-            process.exit(bad ? 1 : 0);
-          "
+          for f in js/*.js sw.js assets/voice/index.js tools/*.js; do node --check "$f"; done
+          node tools/check.js

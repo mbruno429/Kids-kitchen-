@@ -6,7 +6,7 @@ They are made with Kokoro, an open (Apache-2.0) neural text-to-speech model, usi
 upbeat voice, slowed down a little and brightened so it suits small children.
 
 Run this again whenever you change what the chef says (js/lines.js, the `say` lines in
-js/recipes.js or the ingredient names in js/art.js):
+js/recipes.js, the ingredient names in js/art.js or the friends' names in js/store.js):
 
     # Python 3.12 or older (the pronunciation library does not build on 3.13 yet)
     pip install kokoro-onnx "misaki[en]" numpy soundfile     # plus ffmpeg and node on your PATH
@@ -146,4 +146,10 @@ if args.prune:
 with open(os.path.join(OUT, 'index.js'), 'w', encoding='utf-8') as fh:
     fh.write('/* Made by tools/make-voice.py — which recording goes with which line. */\n')
     fh.write('window.VOICE = ' + json.dumps(index, ensure_ascii=False, indent=1, sort_keys=True) + ';\n')
+    # a stamp that changes whenever any recording changes: phones then save the recordings again (see sw.js)
+    stamp = hashlib.sha1()
+    for name in sorted(set(index.values())):
+        with open(os.path.join(OUT, name), 'rb') as clip:
+            stamp.update(name.encode() + hashlib.sha1(clip.read()).digest())
+    fh.write('window.VOICE_V = ' + json.dumps(stamp.hexdigest()[:10]) + ';\n')
 print(f'{made} recorded ({secs:.0f}s of speech), {len(index)} lines in total')

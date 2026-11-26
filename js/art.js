@@ -548,6 +548,24 @@
       <g>${[[24, 58, '#3dccb0'], [66, 70, '#ff5a7a'], [38, 106, '#ffd24d'], [74, 108, '#7a2f3a'], [22, 102, '#7a2f3a'], [62, 22, '#ffd24d']].map(p => `<rect x="${p[0] - 7}" y="${p[1] - 7}" width="14" height="14" rx="4" fill="${p[2]}"/>`).join('')}</g>`, '0 0 100 126'), ar: 1.26 },
   });
 
+  /* ---------- things to choose from, washing hands, the "heat off" button ---------- */
+  Object.assign(V, {
+    mushroom: { n: 'mushrooms', h: E('🍄'), d: { as: 'mushroomSlice' } },
+    mushroomSlice: { h: S(`<path d="M8 50 Q8 12 50 12 Q92 12 92 50 Q74 60 62 54 L65 84 Q50 92 35 84 L38 54 Q26 60 8 50Z" fill="#eadbc3" stroke="#b39676" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M24 40 Q30 24 50 22" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none" opacity=".6"/>`) },
+    pineapple: { n: 'pineapple', h: E('🍍'), d: { as: 'pineappleBit' } },
+    pineappleBit: { h: S(`<path d="M14 78 Q8 30 50 12 Q92 30 86 78 Q50 92 14 78Z" fill="#ffd94d" stroke="#e0a520" stroke-width="5" stroke-linejoin="round"/>
+      <g stroke="#f0b930" stroke-width="4" stroke-linecap="round"><path d="M50 26 V70"/><path d="M32 40 L40 72"/><path d="M68 40 L60 72"/></g>`) },
+    bananaCoin: { h: S(coin('#fff0b0', '#f7e08a', 42)(50, 50, 0)) },
+    frostChoc: { s: 'squirt', n: 'chocolate frosting', h: pipingBag('#8a5a3c'), d: { as: 'frostingChoc' } },
+    frostingChoc: { h: frosting('#8a5a3c'), ar: 0.8 },
+    soap: { s: 'squirt', n: 'soap', h: E('🧼') },
+    drop: { s: 'pour', n: 'water', h: E('💧') },
+    wetHands: { h: E('👐', 78) },
+    heatOff: { h: S(`<text x="50" y="50" dy=".36em" font-size="62" text-anchor="middle" opacity=".85">🔥</text>
+      <circle cx="50" cy="50" r="41" fill="none" stroke="#e5352b" stroke-width="9"/><path d="M21 21 L79 79" stroke="#e5352b" stroke-width="9" stroke-linecap="round"/>`) },
+  });
+
   /* ---------- pots, pans, plates ----------
      box = [left%, top%, size%] of the square where food goes */
   const A = (inner) => `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" overflow="visible">${inner}</svg>`;
@@ -630,6 +648,18 @@
     front: A(`<path d="M82 112 H218 L210 252 Q209 264 198 264 H102 Q91 264 90 252Z" fill="none" stroke="#9fd0ee" stroke-width="4" stroke-linejoin="round"/>
       <path d="M98 128 L102 240" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".55"/>`),
     box: [10, 7, 80], round: false, side: true,
+  };
+
+  // the kitchen sink, seen from above (washing hands before cooking)
+  VESSEL.sink = {
+    art: A(`<rect x="14" y="74" width="272" height="214" rx="40" fill="#000" opacity=".12"/>
+      <rect x="14" y="64" width="272" height="214" rx="40" fill="#dfe7ee" stroke="#a9b6c3" stroke-width="4"/>
+      <rect x="38" y="90" width="224" height="166" rx="30" fill="#f6fbfe" stroke="#c3ced9" stroke-width="3"/>
+      <circle cx="150" cy="232" r="10" fill="#9aa7b5"/>
+      <circle cx="92" cy="50" r="17" fill="#5cb8ff" stroke="#3b8fd0" stroke-width="4"/><circle cx="208" cy="50" r="17" fill="#ff7a6e" stroke="#d6483d" stroke-width="4"/>
+      <rect x="136" y="20" width="28" height="92" rx="14" fill="#c3ccd6" stroke="#8792a0" stroke-width="4"/>
+      <path d="M144 32 V96" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".6"/>`),
+    box: [21, 36, 58], round: false,
   };
 
   const OVEN = `<svg viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg" overflow="visible">

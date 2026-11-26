@@ -27,14 +27,17 @@
       <button id="playBtn" class="big-btn" aria-label="Play">
         <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M36 24 L78 50 L36 76Z" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/></svg>
       </button>
+      <button id="bookBtn" class="book-btn" aria-label="Sticker book"><span>📒</span><b id="bookCount"></b></button>
     </div>
+    <button id="grownBtn" class="grown-btn">For grown-ups</button>
   </section>
 
   <!-- Dish picker -->
   <section id="menu" class="screen">
     <header class="menu-head">
-      <div class="menu-chef" id="menuChef"></div>
+      <div class="menu-chef" id="menuChef" role="button" tabindex="0" aria-label="Back to the title screen"></div>
       <h2>What shall we cook?</h2>
+      <button class="round-btn book-open" aria-label="Sticker book">📒</button>
       <button class="round-btn snd" aria-label="Sound on or off"></button>
     </header>
     <div id="dishes" class="dishes"></div>
@@ -47,6 +50,7 @@
         <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M18 52 L50 22 L82 52 M28 46 V80 H72 V46" fill="none" stroke="currentColor" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <div id="dots" class="dots"></div>
+      <div id="guest" class="guest" role="img"></div>
       <button class="round-btn snd" aria-label="Sound on or off"></button>
     </header>
     <button class="bubble" id="bubble" aria-live="polite">
@@ -58,6 +62,33 @@
     <div id="hand" class="hand" aria-hidden="true">👆</div>
   </section>
 
+  <!-- Sticker book -->
+  <section id="book" class="screen">
+    <header class="menu-head book-head">
+      <button class="round-btn back" aria-label="Back">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M80 50 H24 M46 26 L22 50 L46 74" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h2>My Sticker Book</h2>
+      <div class="book-total" id="bookTotal"></div>
+    </header>
+    <div id="bookBody" class="dishes book-body"></div>
+  </section>
+
+  <!-- Grown-ups corner -->
+  <section id="grown" class="screen">
+    <header class="menu-head grown-head">
+      <button class="round-btn back" aria-label="Back">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M80 50 H24 M46 26 L22 50 L46 74" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h2>For grown-ups</h2>
+    </header>
+    <div id="grownGate" class="gate">
+      <p>This part is for parents.</p>
+      <button id="holdBtn" class="hold-btn"><i></i><span>Press and hold<br>for 3 seconds</span></button>
+    </div>
+    <div id="grownBody" class="dishes grown-body" hidden></div>
+  </section>
+
   <!-- You did it! -->
   <div id="win" class="win" hidden>
     <canvas id="confetti"></canvas>
@@ -66,6 +97,7 @@
       <div class="win-dish" id="winDish"></div>
       <h2>Yummy!</h2>
       <p id="winName"></p>
+      <div class="win-news" id="winNews"></div>
       <div class="win-btns">
         <button id="winMenu" class="pill-btn alt" aria-label="Cookbook">
           <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M18 52 L50 22 L82 52 M28 46 V80 H72 V46" fill="none" stroke="currentColor" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -85,7 +117,9 @@
 <script src="js/recipes.js"></script>
 <script src="js/lines.js"></script>
 <script src="assets/voice/index.js"></script>
+<script src="js/store.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/game.js"></script>
+<script src="js/screens.js"></script>
 </body>
 </html>

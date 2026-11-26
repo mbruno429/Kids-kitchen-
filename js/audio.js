@@ -1,12 +1,14 @@
 /* Kids Kitchen — sound.
-   - Sound effects are made on the spot with WebAudio (no files to download).
+   - Sound effects and the background music are made on the spot with WebAudio (no files to download).
    - The chef's voice is a set of small recordings (assets/voice, see tools/make-voice.py).
      If a recording is missing or cannot load, the phone's own voice reads the line instead. */
 window.SFX = (function () {
   'use strict';
   const VOICE = window.VOICE || {};
-  let ctx = null, sfxOut = null, voiceOut = null;
+  let ctx = null, sfxOut = null, voiceOut = null, musicOut = null;
   let muted = false;
+  const on = { voice: true, sfx: true, music: true }; // the grown-ups' switches
+  let musicWanted = false, voiceDuck = false, duckUntil = 0;
   try { muted = localStorage.getItem('kk-mute') === '1'; } catch (e) { /* private mode */ }
   // iPhone: keep playing when the ring/silent switch is on silent (the game has its own mute button)
   try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* older iOS */ }
@@ -19,9 +21,26 @@ window.SFX = (function () {
     const comp = ctx.createDynamicsCompressor(); // stops loud moments from crackling
     comp.threshold.value = -14; comp.ratio.value = 6; comp.attack.value = 0.004; comp.release.value = 0.2;
     comp.connect(ctx.destination);
-    sfxOut = ctx.createGain(); sfxOut.gain.value = muted ? 0 : 0.6; sfxOut.connect(comp);
-    voiceOut = ctx.createGain(); voiceOut.gain.value = muted ? 0 : 1.15; voiceOut.connect(comp);
+    sfxOut = ctx.createGain(); sfxOut.connect(comp);
+    voiceOut = ctx.createGain(); voiceOut.connect(comp);
+    musicOut = ctx.createGain(); musicOut.gain.value = 0; musicOut.connect(comp);
+    levels();
     return ctx;
+  }
+  // the music plays quietly, and even more quietly while the chef is talking
+  const musicLevel = () => (muted || !on.music || !musicWanted ? 0 : voiceDuck || ctx.currentTime < duckUntil ? 0.28 : 0.7);
+  function setMusic() { if (ctx) { try { musicOut.gain.setTargetAtTime(musicLevel(), ctx.currentTime, 0.2); } catch (e) { /* closed */ } } }
+  function levels() {
+    if (!ctx) return;
+    sfxOut.gain.value = muted || !on.sfx ? 0 : 0.6;
+    voiceOut.gain.value = muted || !on.voice ? 0 : 1.15;
+    setMusic();
+  }
+  function duck(seconds) {
+    if (!ctx) return;
+    duckUntil = Math.max(duckUntil, ctx.currentTime + seconds);
+    setMusic();
+    setTimeout(setMusic, seconds * 1000 + 60);
   }
   function ac() {
     const c = make();
@@ -30,17 +49,17 @@ window.SFX = (function () {
   }
 
   /* ---------- building blocks ---------- */
-  // a note: {f, f1 (slide to), d seconds, type, v volume, t delay, a attack}
+  // a note: {f, f1 (slide to), d seconds, type, v volume, t delay (or at = exact time), a attack, out}
   function tone(o) {
-    const c = ac(); if (!c) return;
-    const t = c.currentTime + (o.t || 0), d = o.d || 0.15, osc = c.createOscillator(), g = c.createGain();
+    const c = o.out ? ctx : ac(); if (!c) return;
+    const t = o.at != null ? o.at : c.currentTime + (o.t || 0), d = o.d || 0.15, osc = c.createOscillator(), g = c.createGain();
     osc.type = o.type || 'sine';
     osc.frequency.setValueAtTime(o.f, t);
     if (o.f1 && o.f1 !== o.f) osc.frequency.exponentialRampToValueAtTime(o.f1, t + d);
     g.gain.setValueAtTime(0.0001, t);
     g.gain.exponentialRampToValueAtTime(o.v || 0.4, t + (o.a || 0.012));
     g.gain.exponentialRampToValueAtTime(0.0001, t + d);
-    osc.connect(g).connect(sfxOut); osc.start(t); osc.stop(t + d + 0.03);
+    osc.connect(g).connect(o.out || sfxOut); osc.start(t); osc.stop(t + d + 0.03);
   }
   let whiteBuf = null, crackleBuf = null;
   function white(c) {
@@ -119,6 +138,16 @@ window.SFX = (function () {
     ding() { bell(1318, 0.45, 0, 1.4); bell(1318, 0.3, 0.16, 1.2); },
     tick() { noise({ f: 2600, q: 6, d: 0.02, v: 0.5 }); },
     tock() { noise({ f: 1700, q: 6, d: 0.022, v: 0.45 }); },
+    // washing hands
+    scrub() { [0, 0.11, 0.22].forEach((t, i) => noise({ f: 2300, f1: 3500, q: 3, d: 0.08, v: i === 1 ? 0.22 : 0.3, t })); tone({ f: 880, f1: 1250, d: 0.08, v: 0.07, t: 0.05 }); },
+    water() {
+      noise({ f: 1500, f1: 1000, q: 0.8, d: 1.0, v: 0.28, a: 0.08 });
+      for (let i = 0; i < 9; i++) { const f = R(420, 900); tone({ f, f1: f * 1.5, d: 0.06, v: 0.2, t: 0.05 + i * 0.1 }); }
+    },
+    pop() { tone({ f: 420, f1: 980, d: 0.06, v: 0.3 }); },
+    // too hot!
+    uhoh() { tone({ f: 440, f1: 330, d: 0.2, type: 'triangle', v: 0.4 }); tone({ f: 330, f1: 235, d: 0.26, type: 'triangle', v: 0.4, t: 0.24 }); },
+    smoke() { noise({ type: 'lowpass', f: 700, f1: 240, d: 0.5, v: 0.35, a: 0.08 }); },
     // eating
     munch() { noise({ type: 'lowpass', f: 1150, d: 0.1, v: 0.75 }); tone({ f: 210, f1: 130, d: 0.09, v: 0.4 }); noise({ type: 'lowpass', f: 950, d: 0.1, v: 0.6, t: 0.17 }); tone({ f: 190, f1: 120, d: 0.08, v: 0.3, t: 0.17 }); },
     crunch() {
@@ -131,6 +160,9 @@ window.SFX = (function () {
     yay() { [523, 659, 784, 1047].forEach((f, i) => bell(f, 0.22, i * 0.085, 0.5)); },
     tada() { tune([392, 523, 659, 784], 0.1, 'triangle', 0.33, 0.24); bell(1568, 0.2, 0.42, 0.9); },
     star() { bell(1760, 0.25, 0, 0.6); bell(2349, 0.18, 0.07, 0.6); },
+    heart() { tone({ f: 660, f1: 990, d: 0.12, v: 0.25 }); bell(1320, 0.14, 0.09, 0.45); },
+    sticker() { noise({ type: 'lowpass', f: 1400, d: 0.05, v: 0.5 }); bell(1568, 0.22, 0.05, 0.5); bell(2093, 0.18, 0.14, 0.6); },
+    fanfare() { tune([523, 659, 784, 1047, 1319], 0.09, 'triangle', 0.3, 0.22); bell(2093, 0.2, 0.5, 1.0); },
     win() {
       tune([523, 523, 659, 784, 0, 659, 784, 1047], 0.13, 'triangle', 0.36, 0.26);
       tune([262, 0, 330, 0, 392, 0, 523], 0.15, 'sine', 0.24, 0.32);
@@ -169,6 +201,44 @@ window.SFX = (function () {
     }
   }
   function stopLoop() { loopStops.forEach(f => f()); loopStops = []; }
+
+  /* ---------- background music: a gentle, slow tune that loops ---------- */
+  const hz = (m) => 440 * Math.pow(2, (m - 69) / 12); // note number -> pitch
+  const CHORD = { C: [48, 60, 64, 67], Am: [45, 57, 60, 64], F: [53, 57, 60, 65], G: [55, 59, 62, 67] }; // bass note + three notes
+  const BARS = ['C', 'Am', 'F', 'G', 'C', 'Am', 'F', 'G'];
+  // eight bars of eight steps each; 0 = rest
+  const TUNE_A = [76, 0, 79, 0, 76, 0, 72, 0, 69, 0, 72, 0, 76, 0, 72, 0, 69, 0, 72, 0, 77, 0, 72, 0, 74, 0, 71, 0, 67, 0, 0, 0,
+    76, 0, 79, 0, 84, 0, 79, 0, 81, 0, 79, 0, 76, 0, 72, 0, 77, 0, 76, 0, 74, 0, 72, 0, 74, 0, 0, 0, 67, 71, 74, 0];
+  const TUNE_B = [72, 0, 0, 76, 79, 0, 76, 0, 72, 0, 0, 76, 81, 0, 76, 0, 72, 0, 0, 77, 81, 0, 77, 0, 74, 0, 0, 79, 83, 0, 79, 0,
+    84, 0, 79, 0, 76, 0, 79, 0, 81, 0, 76, 0, 72, 0, 76, 0, 77, 0, 72, 0, 69, 0, 72, 0, 74, 0, 71, 0, 67, 0, 0, 0];
+  const STEP = 0.3, STEPS = 24 * 8; // 100 beats a minute; tune A, tune B, then a quiet part
+  let mStep = 0, mNext = 0, mTimer = 0;
+  const note = (m, t, d, v, type) => tone({ f: hz(m), at: t, d, v, type: type || 'sine', out: musicOut, a: 0.01 });
+  function musicStep(step, t) {
+    const bar = Math.floor(step / 8), k = step % 8, part = Math.floor(bar / 8), ch = CHORD[BARS[bar % 8]];
+    if (k === 0) note(ch[0], t, 0.55, 0.2, 'triangle');
+    if (k === 4) note(ch[0] + 7, t, 0.4, 0.13, 'triangle');
+    if (k === 2 || k === 6) ch.slice(1).forEach((m, i) => note(m, t + i * 0.02, 0.3, 0.07, 'triangle'));
+    const tuneNow = part === 0 ? TUNE_A : part === 1 ? TUNE_B : null;
+    const m = tuneNow && tuneNow[(bar % 8) * 8 + k];
+    if (m) { note(m, t, 0.45, 0.17); note(m + 12, t, 0.12, 0.035); }
+    else if (!tuneNow && k === 0 && bar % 2 === 0) note(ch[2] + 12, t, 1.0, 0.08);
+  }
+  function musicTick() {
+    if (!ctx || ctx.state !== 'running' || muted || !on.music || !musicWanted) return;
+    if (mNext < ctx.currentTime) mNext = ctx.currentTime + 0.08; // (re)start cleanly after a pause
+    while (mNext < ctx.currentTime + 0.6) { musicStep(mStep, mNext); mStep = (mStep + 1) % STEPS; mNext += STEP; }
+  }
+  function music(want) {
+    musicWanted = !!want;
+    if (musicWanted && !mTimer) mTimer = setInterval(musicTick, 150);
+    setMusic();
+  }
+  // going to another app or locking the phone: everything pauses, and carries on when the child comes back
+  document.addEventListener('visibilitychange', () => {
+    if (!ctx) return;
+    try { if (document.hidden) { ctx.suspend(); stopVoice(); } else ctx.resume(); } catch (e) { /* not allowed right now */ }
+  });
 
   /* ---------- the chef's voice ---------- */
   const clips = new Map(); // line -> Promise<AudioBuffer | null>
@@ -236,31 +306,41 @@ window.SFX = (function () {
   function say(lines) {
     const list = [].concat(lines).filter(Boolean), id = ++sayId;
     stopVoice();
-    if (muted || !list.length) return Promise.resolve();
+    if (muted || !on.voice || !list.length) { speaking = false; voiceDuck = false; setMusic(); return Promise.resolve(); }
     list.forEach(t => { load(t); });
-    speaking = true;
+    speaking = true; voiceDuck = true; setMusic();
     const one = (text) => load(text).then(buf => {
       if (id !== sayId || muted) return null;
       return buf ? playClip(buf) : speakSystem(text);
     });
     return list.reduce((p, text) => p.then(() => (id === sayId ? one(text) : null)), Promise.resolve())
       .catch(() => null)
-      .then(() => { if (id === sayId) speaking = false; });
+      .then(() => { if (id === sayId) { speaking = false; voiceDuck = false; setMusic(); } });
   }
   const talking = () => speaking;
 
   return {
-    play(name) { if (!muted && sounds[name]) { try { sounds[name](); } catch (e) { /* audio blocked */ } } },
-    loop(kind) { if (!muted) { try { loop(kind); } catch (e) { /* audio blocked */ } } },
-    stopLoop, say, talking, preload,
+    play(name) {
+      if (muted || !on.sfx || !sounds[name]) return;
+      try { sounds[name](); if (name === 'win') duck(3.4); else if (name === 'tada' || name === 'fanfare') duck(1.3); } catch (e) { /* audio blocked */ }
+    },
+    loop(kind) { if (!muted && on.sfx) { try { loop(kind); } catch (e) { /* audio blocked */ } } },
+    stopLoop, say, talking, preload, music,
+    // the grown-ups' switches: {voice, sfx, music}
+    setChannels(o) {
+      Object.assign(on, o);
+      levels();
+      if (!on.sfx) stopLoop();
+      if (!on.voice) { sayId++; speaking = false; voiceDuck = false; stopVoice(); setMusic(); }
+    },
     has: (name) => !!sounds[name],
     unlock() { ac(); },
     get muted() { return muted; },
     setMuted(m) {
       muted = m;
       try { localStorage.setItem('kk-mute', m ? '1' : '0'); } catch (e) { /* private mode */ }
-      if (sfxOut) { sfxOut.gain.value = m ? 0 : 0.6; voiceOut.gain.value = m ? 0 : 1.15; }
-      if (m) { stopLoop(); sayId++; speaking = false; stopVoice(); }
+      levels();
+      if (m) { stopLoop(); sayId++; speaking = false; voiceDuck = false; stopVoice(); }
     },
   };
 })();

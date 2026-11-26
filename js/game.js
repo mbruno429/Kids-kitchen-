@@ -5,6 +5,8 @@
   const RECIPES = window.RECIPES;
   const SFX = window.SFX;
   const LINES = window.LINES;
+  const STORE = window.STORE;
+  const CATS = STORE.CATS;
 
   const $ = (s, root) => (root || document).querySelector(s);
   const $$ = (s, root) => [...(root || document).querySelectorAll(s)];
@@ -15,13 +17,9 @@
 
   const app = $('#app'), kitchen = $('#kitchen'), stage = $('#stage'), tray = $('#tray'), hand = $('#hand');
 
-  /* ---------- saved progress ---------- */
-  let save = { stars: {} };
-  try { save = Object.assign(save, JSON.parse(localStorage.getItem('kk-save') || '{}')); } catch (e) { /* private mode */ }
-  const persist = () => { try { localStorage.setItem('kk-save', JSON.stringify(save)); } catch (e) { /* private mode */ } };
-
   /* ---------- game state ---------- */
-  const G = { r: null, i: 0, pieces: [], top: 97, z: 10, run: 0, cleanup: [] };
+  const G = { r: null, i: 0, pieces: [], top: 97, z: 10, run: 0, cleanup: [], friend: null, crispy: new Set(), tipped: {}, opening: null };
+  SFX.setChannels({ voice: STORE.opts.voice, sfx: STORE.opts.sfx, music: STORE.opts.music });
 
   function show(id) { $$('.screen').forEach(s => s.classList.toggle('on', s.id === id)); }
 
@@ -34,34 +32,54 @@
     });
   })();
 
-  const CATS = [['Breakfast', '☀️', 'breakfast'], ['Lunch', '🥪', 'lunch'], ['Dinner', '🍽️', 'dinner'], ['Tex-Mex', '🌮', 'texmex'],
-    ['Cajun & Creole', '🦞', 'cajun'], ['Filipino', '🥟', 'filipino'], ['Treats', '🧁', 'treats']];
   const dishPic = (r) => (r.art ? V[r.art].h : E(r.icon));
   function buildMenu() {
     const box = $('#dishes'); box.innerHTML = '';
+    const o = STORE.order();
+    const ob = el(`<button class="order" aria-label="${o.friend.name} wants ${o.dish.name}">
+      <span class="order-face">${o.friend.face}</span>
+      <span class="order-think"><i></i><i></i><span class="order-pic">${dishPic(o.dish)}</span></span>
+      <span class="order-txt"><b>${o.friend.name}</b> wants<br>${o.dish.name}!</span></button>`);
+    ob.addEventListener('click', () => { SFX.unlock(); SFX.play('pick'); startRecipe(o.dish, o.friend); });
+    box.append(ob);
     CATS.forEach(([cat, icon, key]) => {
+      const list = STORE.visible().filter(r => r.cat === cat);
+      if (!list.length) return;
       box.append(el(`<h3 class="cat cat-${key}"><span>${icon}</span>${cat}</h3>`));
       const grid = el('<div class="grid"></div>');
-      RECIPES.filter(r => r.cat === cat).forEach(r => {
-        const b = el(`<button class="card cat-${key}${save.stars[r.id] ? ' done' : ''}" data-id="${r.id}" aria-label="${r.name}">
-          <span class="card-pic">${dishPic(r)}</span><span class="card-name">${r.name}</span><span class="card-star">⭐</span></button>`);
+      list.forEach(r => {
+        const b = el(`<button class="card cat-${key}${STORE.save.stars[r.id] ? ' done' : ''}${r === o.dish ? ' wanted' : ''}" data-id="${r.id}" aria-label="${r.name}">
+          <span class="card-pic">${dishPic(r)}</span><span class="card-name">${r.name}</span><span class="card-star">⭐</span>${r === o.dish ? `<span class="card-want">${o.friend.face}</span>` : ''}</button>`);
         b.addEventListener('click', () => { SFX.unlock(); SFX.play('pick'); startRecipe(r); });
         grid.append(b);
       });
       box.append(grid);
     });
+    box.scrollTop = 0;
+    return o;
   }
-  function toMenu() {
+  function toMenu(lines) {
     endStep(); G.run++;
     $('#win').hidden = true; stopConfetti();
-    buildMenu(); show('menu');
+    const o = buildMenu();
+    show('menu');
+    SFX.say((lines || []).concat(LINES.hungry(o.friend)));
   }
-  $('#playBtn').addEventListener('click', () => { SFX.unlock(); SFX.play('yay'); SFX.say(LINES.hello); toMenu(); });
+  function toHome() {
+    endStep(); G.run++;
+    $('#win').hidden = true; stopConfetti();
+    $('#bookCount').textContent = STORE.dishCount() || '';
+    show('home');
+  }
+  $('#playBtn').addEventListener('click', () => { SFX.unlock(); SFX.play('yay'); SFX.music(true); toMenu([LINES.hello]); });
   $('#homeBtn').addEventListener('click', () => { SFX.play('pick'); toMenu(); });
   $('#winMenu').addEventListener('click', () => { SFX.play('pick'); toMenu(); });
   $('#winAgain').addEventListener('click', () => { SFX.play('pick'); startRecipe(G.r); });
-  $('#winNext').addEventListener('click', () => { SFX.play('pick'); startRecipe(RECIPES[(RECIPES.indexOf(G.r) + 1) % RECIPES.length]); });
+  // "next" cooks what the waiting friend is hungry for
+  $('#winNext').addEventListener('click', () => { SFX.play('pick'); const o = STORE.order(); startRecipe(o.dish, o.friend); });
   $('#bubble').addEventListener('click', () => SFX.say(G.said || $('#say').textContent));
+  $('#bookCount').textContent = STORE.dishCount() || '';
+  $('#menuChef').addEventListener('click', () => { SFX.play('pick'); toHome(); }); // the chef's picture goes back to the title screen
 
   function paintSnd() { $$('.snd').forEach(b => { b.textContent = SFX.muted ? '🔇' : '🔊'; }); }
   $$('.snd').forEach(b => b.addEventListener('click', () => { SFX.setMuted(!SFX.muted); paintSnd(); if (!SFX.muted) { SFX.unlock(); SFX.play('yay'); } }));
@@ -73,13 +91,18 @@
   const pause = (ms) => new Promise(r => setTimeout(r, ms));
   SFX.preload(LINES.common());
 
-  function startRecipe(r) {
+  function startRecipe(r, friend) {
     G.r = r; G.pieces = [];
-    SFX.preload(LINES.forRecipe(r, V), LINES.common());
+    G.friend = friend || STORE.guestFor(r);
+    G.crispy = new Set(); G.tipped = {};
+    SFX.preload(LINES.forRecipe(r, V, G.friend), LINES.common());
     $('#win').hidden = true; stopConfetti();
     show('kitchen');
+    $('#guest').textContent = G.friend.face;
+    $('#guest').setAttribute('aria-label', 'Cooking for ' + G.friend.name);
     $('#dots').innerHTML = r.steps.map(() => '<i></i>').join('');
-    goStep(0);
+    G.opening = [LINES.hungry(G.friend), LINES.intro(r)]; // said before the first instruction
+    if (STORE.opts.wash) goWash(); else goStep(0);
   }
   function setSay(text, spoken) {
     $('#say').textContent = text;
@@ -95,6 +118,7 @@
     $$('.ghost', kitchen).forEach(g => g.remove());
     SFX.stopLoop();
   }
+  const TIP = { cook: 'stove', bake: 'oven', chop: 'knife' };
   function goStep(i) {
     endStep();
     G.i = i;
@@ -103,21 +127,87 @@
     stage.className = 'stage'; stage.innerHTML = '';
     tray.className = 'tray'; tray.innerHTML = '';
     const text = s.say || DEFAULT_SAY[s.t] || '';
-    setSay(text, i === 0 ? [LINES.intro(G.r), text] : text);
+    const lead = G.opening || []; G.opening = null;
+    // kitchen safety: the first time a recipe uses the stove, the oven or the knife
+    const kind = TIP[s.t], tip = kind && STORE.opts.tips && !G.tipped[kind] ? LINES.tips[kind] : null;
+    if (tip) G.tipped[kind] = true;
+    setSay(text, lead.concat(text, tip || []));
     $$('#dots i').forEach((d, k) => { d.className = k < i ? 'done' : k === i ? 'now' : ''; });
     STEPS[s.t](s, tok);
+    if (tip) stage.append(el('<div class="tip"><span>✋</span>Ask a grown-up!</div>'));
   }
-  function stepDone(tok) {
+  // `oops` = the line to say when the food got a little too hot (instead of cheering)
+  function stepDone(tok, oops) {
     if (tok !== G.run) return;
     clearHint();
-    SFX.play('yay');
-    sparkle(stage, 50, 45, 9);
+    SFX.play(oops ? 'pop' : 'yay');
+    if (!oops) sparkle(stage, 50, 45, 9);
     const s = G.r.steps[G.i];
-    const said = setSay(pickOne(LINES.praise[s.t === 'rub' ? s.tool : s.t] || LINES.praise.add));
+    const said = setSay(oops || pickOne(LINES.praise[s.t === 'rub' ? s.tool : s.t] || LINES.praise.add));
     $$('#dots i')[G.i].className = 'done';
     // move on once the chef has finished cheering (but never keep a child waiting long)
-    Promise.all([pause(1250 * FAST), FAST < 1 ? null : Promise.race([said, pause(3200)])])
+    Promise.all([pause(1250 * FAST), FAST < 1 ? null : Promise.race([said, pause(3400)])])
       .then(() => { if (tok === G.run && G.i + 1 < G.r.steps.length) goStep(G.i + 1); });
+  }
+
+  /* ---------- first of all: wash your hands ---------- */
+  function goWash() {
+    endStep();
+    G.i = -1;
+    const tok = ++G.run;
+    stage.className = 'stage washing'; stage.innerHTML = '';
+    tray.className = 'tray'; tray.innerHTML = '';
+    const lead = G.opening || []; G.opening = null;
+    setSay(LINES.wash, lead.concat(LINES.wash));
+    $$('#dots i').forEach(d => { d.className = ''; });
+    const ves = mkVessel('sink');
+    const hands = el(`<div class="pc hands" style="left:50%;top:54%;width:92%">${V.wetHands.h}</div>`);
+    ves.vin.append(hands);
+    const soap = mkTile(V.soap.h), water = mkTile(V.drop.h);
+    soap.setAttribute('aria-label', 'Soap'); water.setAttribute('aria-label', 'Water');
+    soap.classList.add('next'); water.classList.add('off');
+    let state = 'soap';
+    function lather() {
+      if (tok !== G.run) return;
+      state = 'water';
+      SFX.play('squirt');
+      SFX.say(LINES.scrub);
+      hands.classList.add('scrub');
+      for (let i = 0; i < 9; i++) ves.vin.append(el(`<i class="suds" style="left:${rand(18, 82)}%;top:${rand(30, 80)}%;--s:${rand(0.7, 1.5)};animation-delay:${i * 60}ms"></i>`));
+      [80, 430, 780].forEach(ms => setTimeout(() => { if (tok === G.run && state === 'water') SFX.play('scrub'); }, ms * (FAST < 1 ? 0.3 : 1)));
+      water.classList.remove('off'); water.classList.add('next');
+    }
+    function rinse() {
+      state = 'rinse';
+      SFX.play('water');
+      water.classList.add('gone');
+      hands.classList.remove('scrub');
+      const stream = el('<i class="stream"></i>');
+      ves.fx.append(stream);
+      $$('.suds', ves).forEach(b => b.classList.add('away'));
+      setTimeout(() => {
+        if (tok !== G.run) return;
+        stream.remove();
+        SFX.play('yay');
+        sparkle(stage, 50, 50, 9);
+        const said = setSay(LINES.clean);
+        Promise.all([pause(1000 * FAST), FAST < 1 ? null : Promise.race([said, pause(2600)])]).then(() => { if (tok === G.run) goStep(0); });
+      }, 1100 * FAST);
+    }
+    function act(which) {
+      if (tok !== G.run) return;
+      if (state === 'soap' && which !== 'water') {
+        state = 'flying';
+        SFX.play('pick');
+        soap.classList.add('gone');
+        fly(soap, mid(hands), V.soap.h, lather);
+      } else if (state === 'water' && which !== 'soap') rinse();
+      else if (state === 'soap') { wobble(water, 'no'); SFX.play('nope'); }
+    }
+    tappable(soap, () => act('soap'));
+    tappable(water, () => act('water'));
+    tappable(ves, () => act());
+    hint(() => (state === 'soap' ? [soap, soap] : state === 'water' ? [water, water] : null));
   }
 
   /* ---------- pieces + vessels ---------- */
@@ -130,6 +220,7 @@
     e.style.cssText = `left:${p.x}%;top:${p.y}%;width:${p.w}%;z-index:${p.z};--rot:${p.rot || 0}deg;--cook:${p.cook}`;
     e.innerHTML = v.r ? `<div class="rw">${v.r}</div><div class="ck">${v.h}</div>` : v.h;
     if (!v.r && p.cook < 1) e.classList.add('flt');
+    if (p.crispy || G.crispy.has(p.v)) e.classList.add('crispy');
     p.el = e;
     return e;
   }
@@ -158,6 +249,8 @@
       });
     }
   }
+  // left on the heat too long: everything that was cooking stays a little dark for the rest of the recipe
+  function crisp() { G.pieces.forEach(p => { G.crispy.add(p.v); p.crispy = true; if (p.el) p.el.classList.add('crispy'); }); }
   function mkBar() {
     const b = el('<div class="bar"><i></i><b>⭐</b></div>');
     stage.append(b);
@@ -182,7 +275,7 @@
   }
   function puff(ves, kind) {
     const p = el(`<i class="${kind}" style="left:${rand(22, 78)}%;top:${kind === 'bub' ? rand(24, 76) : rand(20, 55)}%;--s:${rand(0.6, 1.3)}"></i>`);
-    ves.fx.append(p);
+    (ves.fx || ves).append(p);
     p.addEventListener('animationend', () => p.remove());
   }
   function wobble(node, cls) { node.classList.remove(cls); void node.offsetWidth; node.classList.add(cls); }
@@ -227,8 +320,8 @@
     node.addEventListener('click', (e) => { if (performance.now() - last > 700) fn(e); });
   }
   // a picture hops from one thing to a spot on the screen, then `done` runs
-  function fly(from, to, html, done) {
-    const kr = kitchen.getBoundingClientRect(), a = mid(from), size = clamp(from.offsetWidth * 1.15, 72, 104);
+  function fly(from, to, html, done, px) {
+    const kr = kitchen.getBoundingClientRect(), a = mid(from), size = px || clamp(from.offsetWidth * 1.15, 72, 104);
     const g = el(`<div class="ghost" style="width:${size}px;height:${size}px">${html}</div>`);
     kitchen.append(g);
     const at = (x, y, sc) => `translate(${x - kr.left - size / 2}px,${y - kr.top - size / 2}px) scale(${sc})`;
@@ -294,6 +387,18 @@
     });
     if (items.length > 4) tray.classList.add('rows2');
     if (d.side) stage.classList.add('sideview');
+    // "pick two toppings": the child chooses `need` of the items marked opt, the others go away
+    const need = s.pick || 0;
+    const chosen = () => items.filter(q => q.opt && !q.skipped && q.left < (q.n || 1)).length;
+    const chip = need ? el(`<div class="pickchip" aria-hidden="true"><span>👆</span>${'<i></i>'.repeat(need)}</div>`) : null;
+    if (chip) stage.append(chip);
+    function choose() {
+      const c = chosen();
+      $$('i', chip).forEach((dot, k) => dot.classList.toggle('on', k < c));
+      if (c < need) return;
+      items.forEach(q => { if (q.opt && q.left === (q.n || 1)) { q.skipped = true; q.left = 0; q.tile.classList.add('gone'); } });
+      chip.classList.add('done');
+    }
     const scatterTotal = items.reduce((n, it) => n + (it.at === 'scatter' ? it.left : 0), 0) + G.pieces.length;
     const before = (k) => items.slice(0, k).every(x => x.left === 0);
     const enabled = (i) => {
@@ -316,7 +421,7 @@
     // decide where the ingredient will land
     function landing(it) {
       const look = V[it.as];
-      const p = { v: it.as, w: it.w, cook: it.raw ? 0 : 1, rot: 0, z: it.z != null ? it.z : it.pos && it.pos.z != null ? it.pos.z : G.z++ };
+      const p = { v: it.as, w: it.w, cook: it.raw ? 0 : 1, rot: 0, z: it.z != null ? it.z : it.pos && it.pos.z != null ? it.pos.z : G.z++, crispy: G.crispy.has(it.v) };
       if (it.spots) { const sp = it.spots[(it.n || 1) - it.left] || [50, 50]; p.x = sp[0]; p.y = sp[1]; }
       else if (it.at === 'pos') { p.x = it.pos.x; p.y = it.pos.y; }
       else if (it.at === 'center') { p.x = 50; p.y = 50; }
@@ -352,6 +457,7 @@
       const cnt = $('.cnt', it.tile);
       if (cnt) { cnt.textContent = it.left; if (it.left <= 1) cnt.remove(); }
       if (it.left === 0) it.tile.classList.add('gone'); else wobble(it.tile, 'tapped');
+      if (need && it.opt) choose();
       refresh();
       flying++;
       const r = ves.vin.getBoundingClientRect();
@@ -368,6 +474,8 @@
       const look = V[it.v], pic = (it.raw || it.tileRaw) && look.r ? look.r : look.h;
       it.tile = mkTile(pic, it.left);
       it.tile.setAttribute('aria-label', look.n || it.v);
+      if (it.opt) it.tile.classList.add('opt');
+      if (G.crispy.has(it.v)) it.tile.classList.add('crispy');
       tappable(it.tile, () => send(it, i, pic));
     });
     refresh();
@@ -470,13 +578,15 @@
     hint(() => (k < s.items.length ? [tile, tile] : null));
   };
 
-  /* ---------- COOK: tap the heat to turn on the stove, tap the spatula to flip ---------- */
+  /* ---------- COOK: tap the heat to turn on the stove, tap the spatula to flip, turn the heat off when it is ready ---------- */
+  // how long food can wait once it is ready before it gets too hot, and how long until it is "a little crispy"
+  const GRACE = Math.max(2600, 6500 * FAST), BURN = Math.max(1500, 4500 * FAST);
   STEPS.cook = (s, tok) => {
     const ves = mkVessel(s.on), bar = mkBar();
     paint(ves);
-    const boil = s.on === 'pot', dur = 4400 * FAST, hiss = boil && !s.fry ? 'boil' : 'sizzle';
+    const boil = s.on === 'pot', dur = 4400 * FAST, hiss = boil && !s.fry ? 'boil' : 'sizzle', spill = hiss === 'boil';
     const start = G.pieces.map(p => p.cook);
-    let prog = 0, state = 'idle', flipped = false, last = 0, raf = 0, fx = 0, spat = null;
+    let prog = 0, state = 'idle', flipped = false, last = 0, raf = 0, fx = 0, spat = null, off = null, wait = 0, warned = false;
     const fire = mkTile(V.fire.h);
     fire.classList.add('next');
     fire.setAttribute('aria-label', 'Turn on the heat');
@@ -490,7 +600,10 @@
       SFX.loop(hiss);
       last = performance.now();
       raf = requestAnimationFrame(tick);
-      fx = setInterval(() => { if (state === 'on') puff(ves, boil ? 'bub' : 'steam'); }, boil ? 150 : 300);
+      fx = setInterval(() => {
+        if (state === 'on') puff(ves, boil ? 'bub' : 'steam');
+        else if (state === 'ready') puff(ves, !warned ? (boil ? 'bub' : 'steam') : spill ? 'bub big' : 'smoke');
+      }, boil ? 150 : 300);
     }
     function tick(now) {
       if (tok !== G.run) return;
@@ -499,7 +612,17 @@
         prog = Math.min(1, prog + dt / dur);
         paintCook(); bar.set(prog);
         if (s.flip && !flipped && prog >= 0.5) { state = 'flip'; askFlip(); }
-        else if (prog >= 1) { finish(); return; }
+        else if (prog >= 1) {
+          if (!STORE.opts.crispy) { SFX.play('ding'); finish(false); return; }
+          askOff();
+        }
+      } else if (state === 'ready') {
+        wait += dt;
+        if (wait > GRACE) {
+          if (!warned) { warned = true; SFX.play('uhoh'); setSay(LINES.hot); ves.classList.add('toohot'); }
+          ves.vin.style.setProperty('--burn', spill ? 0 : Math.min(1, (wait - GRACE) / BURN));
+          if (wait > GRACE + BURN) { finish(true); return; }
+        }
       }
       raf = requestAnimationFrame(tick);
     }
@@ -507,7 +630,7 @@
       SFX.stopLoop();
       setSay(LINES.flip);
       spat = mkTile(V.spatula.h);
-      spat.classList.add('next', 'pop');
+      spat.classList.add('next', 'pop', 't-flip');
       spat.setAttribute('aria-label', 'Flip');
       tappable(spat, act);
     }
@@ -519,15 +642,29 @@
       setTimeout(() => { if (tok === G.run) paintCook(); }, 260);
       setTimeout(() => { if (tok === G.run) { state = 'on'; last = performance.now(); SFX.loop(hiss); } }, 720);
     }
-    function finish() {
+    // cooked! now the heat has to go off
+    function askOff() {
+      state = 'ready'; wait = 0;
+      SFX.play('ding');
+      setSay(LINES.ready.cook);
+      off = mkTile(V.heatOff.h);
+      off.classList.add('next', 'pop', 't-off');
+      off.setAttribute('aria-label', 'Turn off the heat');
+      tappable(off, act);
+    }
+    function finish(over) {
+      if (tok !== G.run || state === 'done') return;
       state = 'done';
       clearInterval(fx);
       SFX.stopLoop();
-      ves.classList.remove('hot');
+      ves.classList.remove('hot', 'toohot');
+      ves.vin.style.removeProperty('--burn');
+      if (off) off.classList.add('gone');
       applyResult(s, ves);
-      SFX.play('ding');
+      if (over && !spill) crisp();
+      if (over) SFX.play('smoke');
       wobble(ves, 'bump');
-      stepDone(tok);
+      stepDone(tok, over ? LINES.oops[spill ? 'spill' : 'crispy'] : null);
     }
     // one tap (on the tile or on the stove) does whatever comes next
     function act() {
@@ -542,15 +679,20 @@
         SFX.play('pick');
         spat.classList.add('gone');
         fly(spat, mid(ves), V.spatula.h, doFlip);
+      } else if (state === 'ready' && off) {
+        state = 'off';
+        SFX.play('pick');
+        off.classList.add('gone');
+        fly(off, mid(ves), V.heatOff.h, () => finish(false));
       }
     }
     tappable(fire, act);
     tappable(ves, act);
-    hint(() => (state === 'idle' ? [fire, fire] : state === 'flip' && spat ? [spat, spat] : null));
+    hint(() => (state === 'idle' ? [fire, fire] : state === 'flip' && spat ? [spat, spat] : state === 'ready' && off ? [off, off] : null));
     G.cleanup.push(() => { cancelAnimationFrame(raf); clearInterval(fx); });
   };
 
-  /* ---------- BAKE: tap the tray and it slides into the oven ---------- */
+  /* ---------- BAKE: tap the tray and it slides into the oven; tap the oven to take it out when it is ready ---------- */
   STEPS.bake = (s, tok) => {
     stage.classList.add('baking');
     tray.classList.add('hide');
@@ -560,13 +702,12 @@
     ves.setAttribute('tabindex', '0');
     ves.setAttribute('aria-label', 'Put it in the oven');
     paint(ves);
-    const oven = el(`<div class="oven open">${OVEN}</div>`);
+    const oven = el(`<div class="oven open" role="button" aria-label="Oven">${OVEN}</div>`);
     stage.append(oven);
     const dur = 4600 * FAST;
-    let state = 'idle', raf = 0;
+    let state = 'idle', raf = 0, last = 0, t = 0, wait = 0, warned = false;
 
     function goIn() {
-      if (state !== 'idle' || tok !== G.run) return;
       state = 'in';
       SFX.play('pick');
       const base = ves.getBoundingClientRect(), o = oven.getBoundingClientRect();
@@ -584,69 +725,116 @@
           if (tok !== G.run) return;
           oven.classList.add('on');
           SFX.loop('oven');
-          const t0 = performance.now();
-          const tick = (now) => {
-            if (tok !== G.run) return;
-            const pr = Math.min(1, (now - t0) / dur);
-            bar.set(pr);
-            if (pr < 1) { raf = requestAnimationFrame(tick); return; }
-            SFX.stopLoop();
-            SFX.play('ding');
-            SFX.play('door');
-            oven.classList.remove('on');
-            oven.classList.add('open');
-            applyResult(s, ves);
-            ves.style.transition = 'transform .55s cubic-bezier(.3,1.4,.5,1), opacity .2s';
-            ves.style.opacity = 1;
-            ves.style.transform = '';
-            for (let i = 0; i < 5; i++) setTimeout(() => { if (tok === G.run) puff(ves, 'steam'); }, 300 + i * 160);
-            setTimeout(() => stepDone(tok), 620);
-          };
+          state = 'baking';
+          last = performance.now();
           raf = requestAnimationFrame(tick);
         }, 480);
       }, 520);
     }
-    tappable(ves, goIn);
-    tappable(oven, goIn);
-    hint(() => (state === 'idle' ? [ves, ves] : null));
+    function tick(now) {
+      if (tok !== G.run) return;
+      const dt = Math.min(100, now - last); last = now;
+      if (state === 'baking') {
+        t += dt;
+        bar.set(t / dur);
+        if (t >= dur) {
+          SFX.play('ding');
+          if (!STORE.opts.crispy) { takeOut(false); return; }
+          state = 'ready'; wait = 0;
+          oven.classList.add('ready');
+          setSay(LINES.ready.bake);
+        }
+      } else if (state === 'ready') {
+        wait += dt;
+        if (wait > GRACE) {
+          if (!warned) { warned = true; SFX.play('uhoh'); setSay(LINES.hot); oven.classList.add('toohot'); }
+          if (Math.random() < dt / 260) puff(oven, 'smoke');
+          if (wait > GRACE + BURN) { takeOut(true); return; }
+        }
+      }
+      raf = requestAnimationFrame(tick);
+    }
+    function takeOut(over) {
+      if (tok !== G.run || state === 'out') return;
+      state = 'out';
+      SFX.stopLoop();
+      SFX.play('door');
+      if (over) SFX.play('smoke');
+      oven.classList.remove('on', 'ready', 'toohot');
+      oven.classList.add('open');
+      applyResult(s, ves);
+      if (over) crisp();
+      ves.style.transition = 'transform .55s cubic-bezier(.3,1.4,.5,1), opacity .2s';
+      ves.style.opacity = 1;
+      ves.style.transform = '';
+      for (let i = 0; i < 5; i++) setTimeout(() => { if (tok === G.run) puff(ves, over ? 'smoke' : 'steam'); }, 300 + i * 160);
+      setTimeout(() => stepDone(tok, over ? LINES.oops.crispy : null), 620);
+    }
+    function act() {
+      if (tok !== G.run) return;
+      if (state === 'idle') goIn(); else if (state === 'ready') takeOut(false);
+    }
+    tappable(ves, act);
+    tappable(oven, act);
+    hint(() => (state === 'idle' ? [ves, ves] : state === 'ready' ? [oven, oven] : null));
     G.cleanup.push(() => cancelAnimationFrame(raf));
   };
 
-  /* ---------- EAT: tap, tap, tap ---------- */
+  /* ---------- EAT: tap, tap, tap to feed the friend who came to eat ---------- */
   STEPS.eat = (s, tok) => {
     stage.classList.add('eating');
     tray.classList.add('hide');
+    const f = G.friend;
+    const eater = el(`<div class="eater" aria-label="${f.name}"><span>${f.face}</span></div>`);
+    stage.append(eater);
     const ves = mkVessel(s.on || 'plate');
     if (ves.def.side) stage.classList.add('sideview');
     paint(ves);
     ves.classList.add('tada');
     SFX.play('tada');
-    sparkle(stage, 50, 45, 10);
+    sparkle(stage, 50, 55, 10);
     const BITES = [[76, 24], [22, 40], [64, 78]];
     let n = 0;
     tappable(ves, () => {
       if (n > BITES.length || tok !== G.run) return;
-      n++;
-      SFX.play(G.r.eat || 'munch');
+      const k = ++n, last = k > BITES.length;
+      SFX.play('pick');
       wobble(ves, 'bump');
-      const word = LINES.bites[n - 1] || LINES.bites[0];
-      SFX.say(word);
-      const yum = el(`<i class="yum" style="top:${rand(10, 34)}%">${word}</i>`);
-      stage.append(yum);
-      yum.addEventListener('animationend', () => yum.remove());
-      if (n <= BITES.length) {
-        const R = ves.getBoundingClientRect().width * 0.27;
-        const m = BITES.slice(0, n).map(b => `radial-gradient(circle ${R}px at ${b[0]}% ${b[1]}%, transparent 0, transparent 98%, #000 100%)`).join(',');
+      const b = BITES[Math.min(k, BITES.length) - 1], r = ves.getBoundingClientRect();
+      if (!last) {
+        const R = r.width * 0.27;
+        const m = BITES.slice(0, k).map(q => `radial-gradient(circle ${R}px at ${q[0]}% ${q[1]}%, transparent 0, transparent 98%, #000 100%)`).join(',');
         ves.food.style.webkitMaskImage = m; ves.food.style.maskImage = m;
-        sparkle(ves, BITES[n - 1][0], BITES[n - 1][1], 3);
+        sparkle(ves, b[0], b[1], 3);
       } else {
         ves.food.classList.add('eaten');
         clearHint();
+      }
+      // the bite hops over to the friend, who gobbles it up
+      const bite = el('<i style="position:absolute;width:1px;height:1px"></i>');
+      bite.style.left = b[0] + '%'; bite.style.top = b[1] + '%';
+      ves.append(bite);
+      fly(bite, mid(eater), dishPic(G.r), () => {
+        bite.remove();
+        if (tok !== G.run) return;
+        SFX.play(G.r.eat || 'munch');
+        wobble(eater, 'chomp');
+        const word = LINES.bites[k - 1] || LINES.bites[0];
+        SFX.say(word);
+        $$('.yum', stage).forEach(y => y.remove());
+        const yum = el(`<i class="yum">${word}</i>`);
+        stage.append(yum);
+        yum.addEventListener('animationend', () => yum.remove());
+        const heart = el(`<i class="heart" style="left:${rand(34, 66)}%">❤️</i>`);
+        stage.append(heart);
+        heart.addEventListener('animationend', () => heart.remove());
+        if (!last) return;
+        eater.classList.add('happy');
         setTimeout(() => SFX.play('gulp'), 260);
         // let the chef finish "All gone!" before the party starts
-        const quiet = new Promise(r => { const t = setInterval(() => { if (!SFX.talking()) { clearInterval(t); r(); } }, 80); });
+        const quiet = new Promise(res => { const t = setInterval(() => { if (!SFX.talking()) { clearInterval(t); res(); } }, 80); });
         Promise.all([pause(650 * FAST), FAST < 1 ? null : Promise.race([quiet, pause(2600)])]).then(() => win(tok));
-      }
+      }, 60);
     });
     hint(() => (n <= BITES.length ? [ves, ves] : null));
   };
@@ -654,17 +842,25 @@
   /* ---------- You did it! ---------- */
   function win(tok) {
     if (tok !== G.run) return;
-    const r = G.r;
-    save.stars[r.id] = (save.stars[r.id] || 0) + 1;
-    persist();
-    $('#winDish').innerHTML = dishPic(r);
-    $('#winName').textContent = `You made ${r.name}!`;
+    const r = G.r, f = G.friend, news = STORE.served(r, f);
+    $('#winDish').innerHTML = dishPic(r) + `<span class="win-friend">${f.face}</span>`;
+    $('#winName').textContent = `${f.name} loved your ${r.name}!`;
+    const chips = [`<span class="chip">${f.face} ${'❤️'.repeat(news.hearts)}</span>`];
+    if (news.first) chips.push('<span class="chip">⭐ New sticker!</span>');
+    news.badges.forEach(b => chips.push(`<span class="chip">${b.icon} New badge!</span>`));
+    if (news.friend) chips.push(`<span class="chip new">${news.friend.face} New friend: ${news.friend.name}!</span>`);
+    $('#winNews').innerHTML = chips.join('');
     [250, 450, 650].forEach(ms => setTimeout(() => SFX.play('star'), ms));
     const w = $('#win');
     w.hidden = false;
     wobble($('.win-card', w), 'in');
     SFX.play('win');
-    SFX.say(LINES.win(r));
+    const lines = [LINES.win(r), LINES.thanks(f)];
+    if (news.first) lines.push(LINES.sticker);
+    if (news.badges.length) lines.push(LINES.badge);
+    if (news.friend) lines.push(LINES.friend, LINES.meet(news.friend));
+    SFX.say(lines);
+    G.news = news;
     startConfetti();
   }
   let confRaf = 0;
@@ -699,7 +895,8 @@
   /* ---------- keep iOS from zooming / scrolling the page while playing ---------- */
   ['gesturestart', 'gesturechange', 'dblclick'].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive: false }));
   document.addEventListener('contextmenu', e => e.preventDefault());
-  document.addEventListener('touchmove', e => { if (!e.target.closest || !e.target.closest('#dishes')) e.preventDefault(); }, { passive: false });
+  document.addEventListener('touchmove', e => { if (!e.target.closest || !e.target.closest('.dishes')) e.preventDefault(); }, { passive: false });
 
-  window.__KK = { G, RECIPES, startRecipe, toMenu }; // handy for tests
+  // shared with js/screens.js (and handy for tests)
+  window.__KK = { G, RECIPES, startRecipe, toMenu, toHome, show, buildMenu, dishPic, el, $, $$, wobble, sparkle, paintSnd, tappable };
 })();

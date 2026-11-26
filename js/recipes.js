@@ -8,7 +8,8 @@
      eat   tap to eat it all up
    Item fields: v picture, n how many, as what it looks like once dropped,
    at where it lands (scatter | center | free | fill | slot | stack), raw = needs cooking,
-   w width in %, pos exact spot {x, y, z}, spots a list of exact spots [[x, y], ...] used one after another.
+   w width in %, pos exact spot {x, y, z}, spots a list of exact spots [[x, y], ...] used one after another,
+   opt: true = one of the things to choose from (the step says how many with pick: N).
    Recipe fields: sp = how the chef says the name, eat = the eating sound (crunch | slurp | munch).
    seq: true = strict order, a number = first N in order, 'ends' = first first and last last. */
 window.RECIPES = [
@@ -31,7 +32,8 @@ window.RECIPES = [
       { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'batter', w: 96 }] },
       { t: 'add', on: 'iron', say: 'Pour the batter on the waffle maker!', items: [{ v: 'batterBowl', as: 'waffle', at: 'center', w: 92, raw: true }] },
       { t: 'cook', on: 'iron', say: 'Cook the waffle!' },
-      { t: 'add', on: 'plate', seq: 1, say: 'Add yummy toppings!', items: [{ v: 'waffle', at: 'center', w: 78 }, { v: 'syrup', as: 'syrupPool', at: 'center', w: 56 }, { v: 'strawberry', n: 3, at: 'free', w: 24 }, { v: 'blueberry', n: 3, at: 'free', w: 20 }] },
+      { t: 'add', on: 'plate', seq: 2, pick: 2, say: 'Syrup first! Then pick two toppings!', items: [{ v: 'waffle', at: 'center', w: 78 }, { v: 'syrup', as: 'syrupPool', at: 'center', w: 56 },
+        { v: 'strawberry', n: 3, at: 'free', w: 24, opt: true }, { v: 'blueberry', n: 3, at: 'free', w: 20, opt: true }, { v: 'banana', n: 3, as: 'bananaCoin', at: 'free', w: 20, opt: true }] },
       { t: 'eat', on: 'plate' },
     ],
   },
@@ -110,7 +112,7 @@ window.RECIPES = [
     steps: [
       { t: 'add', on: 'pan', say: 'Put the burgers in the pan!', w: 42, items: [{ v: 'patty', n: 2, as: 'patty', raw: true }] },
       { t: 'cook', on: 'pan', flip: true, say: 'Cook the burgers!' },
-      { t: 'add', on: 'side', seq: 'ends', say: 'Build your burger!', w: 84, items: ['bunBottom', 'patty', { v: 'cheese', as: 'cheeseSide' }, { v: 'lettuce', as: 'lettuceSide' }, { v: 'tomato', as: 'tomatoSide' }, 'bunTop'] },
+      { t: 'add', on: 'side', seq: 'ends', pick: 2, say: 'Build your burger! Pick two toppings!', w: 84, items: ['bunBottom', 'patty', { v: 'cheese', as: 'cheeseSide', opt: true }, { v: 'lettuce', as: 'lettuceSide', opt: true }, { v: 'tomato', as: 'tomatoSide', opt: true }, 'bunTop'] },
       { t: 'eat', on: 'side' },
     ],
   },
@@ -129,7 +131,9 @@ window.RECIPES = [
     steps: [
       { t: 'add', on: 'board', say: 'Put the dough on the board!', items: [{ v: 'doughBall', at: 'center', w: 44 }] },
       { t: 'rub', on: 'board', tool: 'pin', fx: 'grow', say: 'Roll, roll, roll the dough!', out: [{ v: 'crust', w: 100, raw: true }] },
-      { t: 'add', on: 'board', keep: true, seq: 2, say: 'Sauce, cheese and toppings!', items: [{ v: 'sauce', at: 'center', w: 80 }, { v: 'cheese', as: 'pizzaCheese', at: 'center', w: 76, raw: true }, { v: 'pepperoni', n: 5, at: 'free', w: 18, max: 34 }, { v: 'pepper', n: 3, at: 'free', w: 17, max: 34 }] },
+      { t: 'add', on: 'board', keep: true, seq: 2, pick: 2, say: 'Sauce and cheese! Then pick two toppings!', items: [{ v: 'sauce', at: 'center', w: 80 }, { v: 'cheese', as: 'pizzaCheese', at: 'center', w: 76, raw: true },
+        { v: 'pepperoni', n: 5, at: 'free', w: 18, max: 34, opt: true }, { v: 'pepper', n: 3, at: 'free', w: 17, max: 34, opt: true },
+        { v: 'mushroom', n: 4, at: 'free', w: 17, max: 34, opt: true }, { v: 'pineapple', n: 4, at: 'free', w: 14, max: 34, opt: true }] },
       { t: 'bake', on: 'sheet', say: 'Bake the pizza!' },
       { t: 'eat', on: 'plate' },
     ],
@@ -185,7 +189,8 @@ window.RECIPES = [
     steps: [
       { t: 'add', on: 'sheet', say: 'Potatoes on the tray!', w: 46, items: [{ v: 'potato', n: 2 }, 'oil', 'salt'] },
       { t: 'bake', on: 'sheet', say: 'Bake them in the oven!', turn: { potato: 'potatoOpen' } },
-      { t: 'add', on: 'plate', seq: 1, say: 'Add your toppings!', items: [{ v: 'potatoOpen', at: 'center', w: 96 }, { v: 'butter', at: 'free', w: 20, max: 22 }, { v: 'cheese', as: 'cheeseShreds', at: 'free', w: 40, max: 20 }, { v: 'bacon', as: 'baconBits', at: 'free', w: 38, max: 20 }, { v: 'sourCream', at: 'free', w: 30, max: 22 }] },
+      { t: 'add', on: 'plate', seq: 1, pick: 3, say: 'Pick three yummy toppings!', items: [{ v: 'potatoOpen', at: 'center', w: 96 }, { v: 'butter', at: 'free', w: 20, max: 22, opt: true }, { v: 'cheese', as: 'cheeseShreds', at: 'free', w: 40, max: 20, opt: true },
+        { v: 'bacon', as: 'baconBits', at: 'free', w: 38, max: 20, opt: true }, { v: 'sourCream', at: 'free', w: 30, max: 22, opt: true }] },
       { t: 'eat', on: 'plate' },
     ],
   },
@@ -208,10 +213,11 @@ window.RECIPES = [
       { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'batter', w: 96 }] },
       { t: 'add', on: 'tin', say: 'Fill the cupcake cups!', items: [{ v: 'batterBowl', n: 6, as: 'cupcakeTop', at: 'slot', w: 21, raw: true }] },
       { t: 'bake', on: 'tin', say: 'Bake the cupcakes!' },
-      { t: 'add', on: 'side', seq: 1, say: 'Decorate your cupcake!', items: [
+      { t: 'add', on: 'side', seq: 1, pick: 1, say: 'Pick your frosting! Then decorate!', items: [
         { v: 'cupcake', pos: { x: 50, y: 68, z: 1 }, w: 62 },
-        { v: 'frostPink', pos: { x: 50, y: 37, z: 2 }, w: 66 },
-        { v: 'frostBlue', pos: { x: 50, y: 37, z: 2 }, w: 66 },
+        { v: 'frostPink', pos: { x: 50, y: 37, z: 2 }, w: 66, opt: true },
+        { v: 'frostBlue', pos: { x: 50, y: 37, z: 2 }, w: 66, opt: true },
+        { v: 'frostChoc', pos: { x: 50, y: 37, z: 2 }, w: 66, opt: true },
         { v: 'sprinkles', n: 3, at: 'free', w: 26, z: 4, box: [35, 27, 65, 48] },
         { v: 'cherry', pos: { x: 50, y: 8, z: 5 }, w: 24 }] },
       { t: 'eat', on: 'side' },
@@ -248,7 +254,7 @@ window.RECIPES = [
     steps: [
       { t: 'add', on: 'sheet', seq: 1, say: 'Chips, beans and lots of cheese!', w: 46, items: [{ v: 'chipBag', n: 3 }, { v: 'beans', w: 40 }, { v: 'cheese', as: 'pizzaCheese', at: 'center', w: 56, raw: true }, { v: 'jalapeno', n: 2, at: 'free', w: 26 }] },
       { t: 'bake', on: 'sheet', say: 'Melt the cheese in the oven!' },
-      { t: 'add', on: 'plate', keep: true, say: 'Add the yummy toppings!', items: [{ v: 'salsa', at: 'free', w: 26 }, { v: 'guac', at: 'free', w: 26 }, { v: 'sourCream', at: 'free', w: 26 }] },
+      { t: 'add', on: 'plate', keep: true, pick: 2, say: 'Pick two yummy toppings!', items: [{ v: 'salsa', at: 'free', w: 26, opt: true }, { v: 'guac', at: 'free', w: 26, opt: true }, { v: 'sourCream', at: 'free', w: 26, opt: true }] },
       { t: 'eat', on: 'plate' },
     ],
   },
