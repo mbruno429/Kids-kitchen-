@@ -566,6 +566,178 @@
       <circle cx="50" cy="50" r="41" fill="none" stroke="#e5352b" stroke-width="9"/><path d="M21 21 L79 79" stroke="#e5352b" stroke-width="9" stroke-linecap="round"/>`) },
   });
 
+  /* ---------- Japanese, Thai and Chinese food, and frozen treats ---------- */
+  const NORI = '#23402b';
+  const scallionArt = S(`<g fill="none" stroke-linecap="round"><path d="M40 70 Q36 44 26 10" stroke="#3f9d2a" stroke-width="10"/><path d="M52 70 Q54 40 60 6" stroke="#58b84a" stroke-width="10"/><path d="M62 70 Q68 46 82 18" stroke="#3f9d2a" stroke-width="9"/></g>
+      <path d="M33 96 Q28 70 38 62 H64 Q74 70 69 96 Q51 100 33 96Z" fill="#fdfdf3" stroke="#d6d2c2" stroke-width="3" stroke-linejoin="round"/>`);
+  const ringlet = (c, c2, rad) => (x, y) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${rad}" fill="${c2}" stroke="${c}" stroke-width="${(rad * 0.7).toFixed(1)}"/>`;
+  const shrimpArc = (x, y, rot) => `<path ${at(x, y, rot)} d="M-7 4 A8 8 0 1 1 7 4" stroke="#d9563f" stroke-width="8" fill="none" stroke-linecap="round"/><path ${at(x, y, rot)} d="M-7 4 A8 8 0 1 1 7 4" stroke="#ff9a85" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+  const noriArt = S(`<rect x="8" y="8" width="84" height="84" rx="7" fill="${NORI}" stroke="#16291b" stroke-width="3"/>${spread(14, 123, 34, dot(['#2f5a3b', '#1b3322'], 2.4))}
+      <path d="M18 22 Q30 16 44 18" stroke="#4f7d5c" stroke-width="4" stroke-linecap="round" fill="none" opacity=".7"/>`);
+  const riceLayer = S(`<rect x="8" y="12" width="84" height="76" rx="14" fill="#fffdf6" stroke="#e3dccb" stroke-width="2.5"/>${spread(30, 125, 36, grain('#efe8d6'))}`);
+  const salmonArt = S(`<path d="M10 40 Q30 14 62 20 Q90 26 92 52 Q88 78 56 82 Q24 84 10 60Z" fill="#ff8a5c" stroke="#e0603a" stroke-width="3" stroke-linejoin="round"/>
+      <g stroke="#ffd2bd" stroke-width="4" stroke-linecap="round" fill="none"><path d="M30 32 Q40 50 32 72"/><path d="M48 24 Q60 50 50 78"/><path d="M68 26 Q80 50 70 74"/></g>`);
+  const makiArt = S(`<circle cx="50" cy="50" r="45" fill="${NORI}" stroke="#16291b" stroke-width="3"/><circle cx="50" cy="50" r="36" fill="#fffdf6"/>${spread(14, 127, 26, grain('#e9e2cf'))}
+      <rect x="36" y="36" width="15" height="15" rx="4" fill="#ff8a5c"/><rect x="50" y="42" width="14" height="14" rx="4" fill="#58b84a"/><rect x="39" y="51" width="13" height="13" rx="4" fill="#cfe58a"/>`);
+  const onigiriArt = S(`<path d="M50 9 Q59 9 65 20 L91 64 Q99 84 80 89 H20 Q1 84 9 64 L35 20 Q41 9 50 9Z" fill="#fffdf6" stroke="#bfb393" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M20 84 H80 Q92 80 88 66" fill="none" stroke="#e6dcc0" stroke-width="6" stroke-linecap="round"/>
+      ${[[50, 28], [40, 44], [60, 46], [30, 62], [50, 60], [70, 64], [22, 78], [78, 78]].map((p, i) => grain('#ebe4d2')(p[0], p[1], i * 47)).join('')}`);
+  const eggHalf = S(`<ellipse cx="50" cy="50" rx="33" ry="42" fill="#fffdf6" stroke="#e3dccb" stroke-width="3"/><circle cx="50" cy="54" r="18" fill="#ffb81f" stroke="#f09a0b" stroke-width="2.5"/>
+      <path d="M40 48 Q44 40 54 40" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none" opacity=".7"/>`);
+  const tempuraArt = (c) => S(`<path d="M150 26 L194 6 L184 36 L196 62 L150 50Z" fill="#f0604a" stroke="#b9341f" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M14 40 Q10 14 34 16 Q44 4 60 14 Q74 4 90 14 Q106 4 120 16 Q140 8 156 24 Q168 40 154 54 Q140 68 120 60 Q106 72 90 62 Q74 74 58 62 Q42 72 30 62 Q12 64 14 40Z" fill="${c}" stroke="${sh(c, -0.22)}" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M30 32 Q60 20 110 28" stroke="#fff" stroke-width="5" stroke-linecap="round" fill="none" opacity=".4"/>`, '0 0 200 78');
+  const tamagoArt = S(`<rect x="10" y="22" width="80" height="56" rx="14" fill="#ffd84a" stroke="#e0a520" stroke-width="3"/>
+      <path d="M26 50 Q26 36 44 36 H62 Q74 38 74 50 Q74 62 62 62 H50 Q42 60 42 52" fill="none" stroke="#f0b930" stroke-width="4" stroke-linecap="round"/>`);
+  const limeArt = S(`<circle cx="50" cy="52" r="40" fill="#6cc04a" stroke="#3f9d2a" stroke-width="3"/><path d="M28 40 Q34 24 52 22" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none" opacity=".45"/><circle cx="50" cy="12" r="4" fill="#3f9d2a"/>`);
+  const limeWedge = S(`<path d="M8 30 Q50 6 92 30 Q86 82 50 86 Q14 82 8 30Z" fill="#d9f2a6" stroke="#4fae34" stroke-width="6" stroke-linejoin="round"/>
+      <g stroke="#a9d86a" stroke-width="4" stroke-linecap="round"><path d="M50 26 V76"/><path d="M30 30 L42 72"/><path d="M70 30 L58 72"/></g>`);
+  const lemongrassArt = S(`<g fill="none" stroke-linecap="round"><path d="M22 90 Q30 50 26 10" stroke="#9fbf5a" stroke-width="12"/><path d="M22 90 Q30 50 26 10" stroke="#e3efb4" stroke-width="6"/>
+      <path d="M50 92 Q52 50 54 8" stroke="#9fbf5a" stroke-width="12"/><path d="M50 92 Q52 50 54 8" stroke="#e3efb4" stroke-width="6"/>
+      <path d="M78 90 Q72 50 82 12" stroke="#9fbf5a" stroke-width="12"/><path d="M78 90 Q72 50 82 12" stroke="#e3efb4" stroke-width="6"/></g>`);
+  const mushBit = (x, y, rot) => `<path transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${rot}) scale(.26)" d="M-42 0 Q-42 -38 0 -38 Q42 -38 42 0 Q24 10 12 4 L15 34 Q0 42 -15 34 L-12 4 Q-24 10 -42 0Z" fill="#eadbc3" stroke="#b39676" stroke-width="7" stroke-linejoin="round"/>`;
+  const stickOnly = `<path d="M4 23 H196" stroke="#b9925a" stroke-width="7" stroke-linecap="round"/><path d="M4 22 H196" stroke="#e9c88f" stroke-width="4" stroke-linecap="round"/>`;
+  const satayArt = (c, marks) => S(`${stickOnly}${[30, 72, 114].map((x, i) => `<rect x="${x}" y="${5 + (i % 2) * 2}" width="38" height="${34 - (i % 2) * 3}" rx="12" fill="${c}" stroke="${sh(c, -0.25)}" stroke-width="3"/>
+      ${marks ? `<g stroke="${sh(c, -0.5)}" stroke-width="3.5" stroke-linecap="round" opacity=".7"><path d="M${x + 9} 12 L${x + 15} 32"/><path d="M${x + 21} 12 L${x + 27} 32"/></g>` : ''}`).join('')}`, '0 0 200 46');
+  const mangoSlices = S(`${[[18, 0], [44, 6], [70, 0]].map(p => `<path transform="translate(${p[0]} ${p[1]})" d="M4 14 Q16 -2 22 16 L22 74 Q14 92 4 76Z" fill="#ffb829" stroke="#e58a0b" stroke-width="3" stroke-linejoin="round"/><path transform="translate(${p[0]} ${p[1]})" d="M10 22 V70" stroke="#ffe08a" stroke-width="4" stroke-linecap="round"/>`).join('')}`);
+  const dumplingArt = (c) => S(`<path d="M6 58 Q8 16 50 14 Q92 16 94 58 Q94 70 78 70 H22 Q6 70 6 58Z" fill="${c}" stroke="${sh(c, -0.2)}" stroke-width="3" stroke-linejoin="round"/>
+      <g fill="none" stroke="${sh(c, -0.24)}" stroke-width="3" stroke-linecap="round"><path d="M22 34 Q26 22 34 22"/><path d="M36 26 Q42 16 50 18"/><path d="M52 18 Q60 16 66 26"/><path d="M68 22 Q76 22 80 34"/></g>
+      <path d="M20 52 Q30 44 44 44" stroke="#fff" stroke-width="5" stroke-linecap="round" fill="none" opacity=".6"/>`, '0 0 100 76');
+  const coneArt = S(`<path d="M16 16 H84 L55 124 Q50 132 45 124Z" fill="#e9b45c" stroke="#b97a2f" stroke-width="3" stroke-linejoin="round"/>
+      <g stroke="#c98a3c" stroke-width="3" stroke-linecap="round" opacity=".8"><path d="M28 22 L62 96"/><path d="M46 20 L70 70"/><path d="M64 20 L78 44"/><path d="M72 22 L38 96"/><path d="M54 20 L30 70"/><path d="M36 20 L22 44"/></g>
+      <rect x="10" y="6" width="80" height="16" rx="8" fill="#f0c273" stroke="#b97a2f" stroke-width="3"/>`, '0 0 100 132');
+  const berryLayer = L(`${[8, 46, 84, 122, 160].map(x => `<path d="M${x} 6 H${x + 32} Q${x + 34} 30 ${x + 16} 40 Q${x - 2} 30 ${x} 6Z" fill="#f0493a" stroke="#c22e22" stroke-width="3" stroke-linejoin="round"/><circle cx="${x + 10}" cy="16" r="2" fill="#ffe08a"/><circle cx="${x + 22}" cy="18" r="2" fill="#ffe08a"/><circle cx="${x + 16}" cy="28" r="2" fill="#ffe08a"/>`).join('')}`, 46);
+  const shakeMixed = S(`<rect x="4" y="4" width="92" height="118" rx="10" fill="#ffb3cf" stroke="#f07fa8" stroke-width="3"/>
+      <path d="M16 34 Q40 16 60 38 T84 50 M14 84 Q36 66 56 88 T86 98" stroke="#ffe3ee" stroke-width="7" fill="none" stroke-linecap="round" opacity=".85"/>
+      <g fill="#f0493a">${[[26, 60], [68, 72], [40, 104], [72, 26]].map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="3.5"/>`).join('')}</g>`, '0 0 100 126');
+  const whipArt = S(`<path d="M8 50 Q2 34 20 32 Q18 16 38 20 Q46 4 58 18 Q78 12 78 30 Q98 32 92 50 Q92 60 80 60 H20 Q8 60 8 50Z" fill="#fffdf6" stroke="#e3dccb" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M26 42 Q34 32 46 34 M54 30 Q62 24 70 30" stroke="#ebe4d2" stroke-width="4" stroke-linecap="round" fill="none"/>`, '0 0 100 64');
+  const donutArt = (c) => S(`<circle cx="50" cy="50" r="29" fill="none" stroke="${sh(c, -0.24)}" stroke-width="34"/><circle cx="50" cy="50" r="29" fill="none" stroke="${c}" stroke-width="28"/>
+      <path d="M24 38 Q32 22 50 20" stroke="#fff" stroke-width="5" stroke-linecap="round" fill="none" opacity=".45"/>`);
+  const DONUT_AT = [[32, 34], [68, 36], [50, 70]];
+  const glazeAll = (c) => S(DONUT_AT.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="10.4" fill="none" stroke="${sh(c, -0.18)}" stroke-width="9.4"/><circle cx="${p[0]}" cy="${p[1]}" r="10.4" fill="none" stroke="${c}" stroke-width="7.6"/>
+      <path d="M${p[0] - 9} ${p[1] - 5} Q${p[0] - 5} ${p[1] - 11} ${p[0] + 2} ${p[1] - 11}" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".6"/>`).join(''));
+  const slabArt = (c, crack) => S(`<rect x="6" y="10" width="88" height="80" rx="10" fill="${c}" stroke="${sh(c, -0.3)}" stroke-width="3"/>
+      ${crack ? `<g stroke="${sh(c, -0.35)}" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M18 30 L34 36 L44 28"/><path d="M58 24 L66 38 L82 34"/><path d="M22 66 L38 60 L48 72"/><path d="M60 62 L72 72 L84 64"/><path d="M40 46 L54 50 L62 44"/></g>` : `<path d="M18 28 Q40 16 70 22" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none" opacity=".35"/>`}`);
+  const brownieSq = S(`<rect x="8" y="8" width="84" height="84" rx="12" fill="#5a341c" stroke="#3b2010" stroke-width="3"/><rect x="8" y="8" width="84" height="20" rx="10" fill="#6e4426" opacity=".9"/>
+      <g stroke="#3b2010" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M24 44 L40 50 L50 42"/><path d="M56 62 L68 72 L80 64"/><path d="M26 74 L38 68"/></g>
+      <g fill="#2e180c"><circle cx="66" cy="42" r="4"/><circle cx="34" cy="60" r="4"/><circle cx="52" cy="78" r="3.5"/></g>`);
+  const popFill = (c, frozen) => S(`<rect x="8" y="6" width="84" height="328" rx="30" fill="${c}" opacity="${frozen ? 1 : 0.72}" stroke="${sh(c, -0.2)}" stroke-width="5"/>
+      ${frozen ? `<g fill="#fff" opacity=".8">${[[30, 50], [64, 96], [36, 150], [66, 210], [34, 270], [60, 300]].map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="6"/>`).join('')}</g>` : '<path d="M26 40 V200" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".5"/>'}`, '0 0 100 340');
+  const popStick = S(`<rect x="14" y="6" width="72" height="388" rx="34" fill="#e9c88f" stroke="#b9925a" stroke-width="9"/>`, '0 0 100 400');
+  const icePop = (c) => S(`<rect x="38" y="118" width="24" height="78" rx="11" fill="#e9c88f" stroke="#b9925a" stroke-width="3"/>
+      <path d="M14 46 Q14 6 50 6 Q86 6 86 46 V124 Q86 138 72 138 H28 Q14 138 14 124Z" fill="${c}" stroke="${sh(c, -0.22)}" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M30 30 V104" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".5"/><path d="M56 22 H86 V46 Q72 40 56 22Z" fill="#fff" opacity=".25"/>`, '0 0 100 200');
+  const leafArt = S(`<path d="M6 54 Q20 12 60 10 Q92 12 95 44 Q92 84 50 92 Q14 92 6 54Z" fill="#4fae4a" stroke="#2f8a35" stroke-width="3" stroke-linejoin="round"/>
+      <g fill="none" stroke="#7fd07a" stroke-width="3" stroke-linecap="round"><path d="M12 56 Q50 44 92 40"/><path d="M34 50 L30 26"/><path d="M52 46 L52 18"/><path d="M70 43 L76 22"/><path d="M36 51 L38 80"/><path d="M56 47 L62 82"/><path d="M74 43 L84 66"/></g>`);
+  const POP = '#ff6f9f';
+  const fillPic = (c, extra) => S(`${inner(fill(c, 1))}${extra}`);
+
+  Object.assign(V, {
+    // shared
+    scallion: { n: 'green onion', h: scallionArt },
+    scallionBits: { n: 'green onion', h: S(spread(11, 131, 28, ringlet('#58b84a', '#d9f2c2', 5))) },
+    broccoli: { n: 'broccoli', h: E('🥦') },
+    peanuts: { s: 'shake', n: 'peanuts', h: E('🥜'), d: { as: 'peanutBits', at: 'center', w: 66 } },
+    peanutBits: { h: S(spread(14, 143, 32, dot(['#d9a85a', '#b98238', '#e8c382'], 3.6))) },
+    saucePuddle: { h: puddle('#a3541a', 0.85) },
+    soyDip: { h: dipArt('#3b2416') },
+
+    // Japanese
+    nori: { n: 'seaweed', h: noriArt },
+    noriStrip: { h: S(`<rect x="6" y="14" width="88" height="72" rx="8" fill="${NORI}" stroke="#16291b" stroke-width="4"/>`) },
+    riceLayer: { h: riceLayer },
+    salmon: { s: 'thud', n: 'salmon', h: salmonArt, d: { as: 'salmonStrips' } },
+    salmonStrips: { h: S([32, 50, 68].map(y => `<rect x="14" y="${y - 6}" width="72" height="12" rx="6" fill="#ff8a5c" stroke="#e0603a" stroke-width="2"/>`).join('')) },
+    cucumberSticks: { n: 'cucumber', h: S(spread(7, 133, 26, stick('#6cc04a', 34, 8))) },
+    avocado: { n: 'avocado', h: E('🥑') },
+    avocadoSlices: { n: 'avocado', h: S(spread(6, 135, 26, (x, y, rot) => `<path ${at(x, y, rot)} d="M-13 5 Q0 -14 13 5 Q0 0 -13 5Z" fill="#cfe58a" stroke="#6f9a3a" stroke-width="2.5" stroke-linejoin="round"/>`)) },
+    maki: { s: 'thud', n: 'sushi', h: makiArt },
+    onigiri: { s: 'thud', n: 'rice ball', h: onigiriArt },
+    eggHalf: { h: eggHalf },
+    fishCake: { n: 'fish cake', h: E('🍥') },
+    ramenBroth: { h: fill('#c98a3c', 0.95, spread(6, 137, 32, dot(['#e0aa5a', '#b0752c'], 4))) },
+    ramenNoodles: { h: nest('#f6dc8a') },
+    tempuraShrimp: { s: 'thud', n: 'shrimp', h: tempuraArt('#e2a53e'), r: tempuraArt('#f5ead0'), ar: 0.39 },
+    tempuraVeg: { s: 'thud', n: 'broccoli', h: nug('#e2a53e', '#58b84a'), r: nug('#f3ead0', '#58b84a') },
+    tempuraDip: { h: dipArt('#8a5a2b') },
+    teriyaki: { s: 'pour', n: 'teriyaki sauce', h: bottle('#5a3418', '#ffc93c', '🍗'), d: { as: 'saucePuddle' } },
+    teriyakiChicken: { s: 'thud', n: 'chicken', h: chunk('#a35a1e'), r: chunk('#f7b9b0') },
+    tamago: { s: 'thud', n: 'egg', h: tamagoArt },
+
+    // Thai
+    padThaiSauce: { s: 'pour', n: 'pad thai sauce', h: jar('#b5651d', '#e23d2e', '🍜'), d: { as: 'saucePuddle' } },
+    lime: { n: 'lime', h: limeArt, d: { as: 'limeWedge' } },
+    limeWedge: { h: limeWedge },
+    padThai: { n: 'pad thai', h: S(inner(nest('#e9b46a')) + spread(4, 145, 26, shrimpArc) + spread(7, 147, 32, ringlet('#58b84a', '#d9f2c2', 3)) + spread(5, 149, 28, dot(['#ffd24d'], 4.5))) },
+    coconut: { s: 'pour', n: 'coconut milk', h: E('🥥'), d: { as: 'coconutFill', at: 'fill' } },
+    coconutFill: { h: fill('#fbf6e6', 0.96) },
+    coconutDrizzle: { h: drizzle('#fff8e0', 0.98) },
+    curryPaste: { s: 'splat', n: 'curry paste', h: jar('#5fae4d', '#ffc93c', '🌶️'), d: { as: 'curryDollop' } },
+    curryDollop: { h: dollop('#6fae3d') },
+    eggplant: { n: 'eggplant', h: E('🍆') },
+    eggplantCoins: { n: 'eggplant', h: S(spread(7, 151, 27, coin('#7b4aa8', '#f1ead0', 10))) },
+    basil: { n: 'basil', h: E('🌿') },
+    greenCurryFill: { h: fill('#b9cf7a', 0.97, spread(6, 153, 32, dot(['#d6e6a4', '#93ad52'], 4))) },
+    greenCurry: { h: fillPic('#b9cf7a', put(chunk('#f3dcae'), 18, 20, 0.3) + put(chunk('#f3dcae'), 52, 48, 0.28) + spread(4, 151, 30, coin('#7b4aa8', '#f1ead0', 8)) + spread(5, 155, 32, sticks(['#f0493a', '#58c463'], 22, 6)) + spread(3, 157, 26, leaf(['#3f9d2a'], 0.8))) },
+    mushroomSlices: { n: 'mushrooms', h: S(spread(6, 159, 27, mushBit)) },
+    lemongrass: { n: 'lemongrass', h: lemongrassArt },
+    tomYumBroth: { h: fill('#e8703a', 0.93, spread(7, 161, 32, dot(['#f59a5e', '#c9481c'], 4))) },
+    tomYum: { h: fillPic('#e8703a', spread(4, 163, 28, shrimpArc) + spread(4, 159, 30, mushBit) + spread(4, 7, 30, dice(['#f0493a'], 9)) + spread(3, 165, 24, leaf(['#58b84a'], 0.8))) },
+    skewer: { n: 'sticks', h: S(stickOnly, '0 0 200 46'), ar: 0.23 },
+    satay: { s: 'thud', n: 'chicken', h: satayArt('#c98a2e', true), r: satayArt('#f7b9b0'), ar: 0.23 },
+    peanutSauce: { s: 'splat', n: 'peanut sauce', h: dipArt('#c68a4a') },
+    satayPlate: { h: S(put(satayArt('#c98a2e', true), 4, 18, 0.46, 6) + put(satayArt('#c98a2e', true), 2, 42, 0.46, -4) + put(satayArt('#c98a2e', true), 6, 64, 0.46, 4) + put(dipArt('#c68a4a'), 64, 60, 0.34)) },
+    mango: { s: 'thud', n: 'mango', h: E('🥭') },
+    bananaLeaf: { n: 'leaf', h: leafArt },
+    mangoSlices: { n: 'mango', h: mangoSlices },
+    stickyRice: { s: 'thud', n: 'sticky rice', h: riceMound },
+    mangoRice: { h: S(put(leafArt, 0, 2, 0.98) + put(riceMound, 6, 24, 0.5) + put(mangoSlices, 48, 24, 0.46) + put(drizzle('#fff8e0', 0.98), 13, 31, 0.36)) },
+
+    // Chinese
+    roundWrapper: { n: 'wrapper', h: S(`<circle cx="50" cy="50" r="45" fill="#fbf3dc" stroke="#e3d2a4" stroke-width="2.5"/><path d="M26 36 Q34 22 52 22" stroke="#fff" stroke-width="5" stroke-linecap="round" fill="none" opacity=".8"/>`) },
+    dumpling: { s: 'thud', n: 'dumpling', h: dumplingArt('#f3dba8'), r: dumplingArt('#fbf6e6'), ar: 0.76 },
+    peas: { n: 'peas', h: S(spread(7, 167, 22, (x, y) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="9" fill="#6ccb4b" stroke="#3f9d2a" stroke-width="2"/><circle cx="${(x - 3).toFixed(1)}" cy="${(y - 3).toFixed(1)}" r="2.5" fill="#fff" opacity=".6"/>`)) },
+    friedRice: { n: 'fried rice', h: blob('#f0d089', spread(26, 169, 34, grain('#fff6da')) + spread(6, 171, 30, dice(['#ff9a3c'], 7)) + spread(7, 173, 32, dot(['#58b84a'], 3.6)) + spread(5, 175, 28, dice(['#ffd84a'], 9))) },
+    chowNoodles: { n: 'noodles', h: nest('#e9c877') },
+    chowMein: { n: 'chow mein', h: S(inner(nest('#d9a850')) + spread(7, 177, 30, sticks(['#58c463', '#f0493a', '#ffc93c'], 24, 6)) + spread(5, 179, 28, leaf(['#9bd97c', '#b7e59a'], 0.8)) + put(chunk('#f3dcae'), 24, 18, 0.24) + put(chunk('#f3dcae'), 52, 52, 0.24)) },
+    crispyChicken: { s: 'thud', n: 'chicken', h: nug('#dc9a3c', '#b87424'), r: nug('#f7c9c0', '#e9a79c') },
+    pineappleChunks: { n: 'pineapple', h: S(spread(7, 181, 27, dice(['#ffd94d', '#ffe680'], 14))) },
+    ssSauce: { s: 'pour', n: 'sweet and sour sauce', h: jar('#f0622d', '#ffc93c', '🍍'), d: { as: 'ssFill', at: 'fill' } },
+    ssFill: { h: fill('#ef6a2e', 0.95) },
+    sweetSour: { h: blob('#ef6a2e', spread(5, 183, 26, (x, y) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="10" fill="#e0a040" stroke="#b87424" stroke-width="2"/>`) + spread(5, 185, 32, dice(['#58c463'], 9)) + spread(4, 187, 30, dice(['#ffd94d'], 10))) },
+    chickenBroth: { s: 'pour', n: 'chicken broth', h: box('#f6b93b', '🍗'), d: { as: 'broth', at: 'fill' } },
+    cornBits: { n: 'corn', h: S(spread(13, 189, 28, dot(['#ffd24d', '#f5b82e'], 4.4))) },
+    eggDrop: { h: fill('#f4c95a', 0.97, `<g fill="none" stroke="#fff3b8" stroke-width="5" stroke-linecap="round"><path d="M22 34 Q34 22 46 34 T70 34"/><path d="M30 58 Q42 46 54 58 T78 58"/><path d="M24 76 Q36 66 48 76"/><path d="M58 22 Q68 16 78 24"/></g>` + spread(8, 189, 34, dot(['#ffd24d'], 3.4)) + spread(8, 131, 34, ringlet('#58b84a', '#d9f2c2', 2.6))) },
+
+    // frozen and sweet treats
+    cone: { s: 'thud', n: 'cone', h: coneArt, ar: 1.32 },
+    scoopVanilla: { s: 'splat', n: 'vanilla ice cream', h: scoopArt('#fff1cf'), ar: 0.74, sink: 0.3 },
+    scoopChoc: { s: 'splat', n: 'chocolate ice cream', h: scoopArt('#8a5a3c'), ar: 0.74, sink: 0.3 },
+    scoopBerry: { s: 'splat', n: 'strawberry ice cream', h: scoopArt('#ff9ec0'), ar: 0.74, sink: 0.3 },
+    berryLayer: { h: berryLayer, ar: 0.23, sink: 0.06 },
+    shakeMixed: { h: shakeMixed, ar: 1.26 },
+    milkshake: { h: S(`<path d="M58 6 L48 40" stroke="#e23d2e" stroke-width="6" stroke-linecap="round"/><path d="M28 34 H72 L66 90 Q65 96 59 96 H41 Q35 96 34 90Z" fill="#ffb3cf" stroke="#f07fa8" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M36 48 L39 84" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".6"/>${put(whipArt, 26, 12, 0.48)}<circle cx="42" cy="12" r="7" fill="#e5352b" stroke="#b3221a" stroke-width="2"/>`) },
+    whip: { s: 'squirt', n: 'whipped cream', h: whipArt, ar: 0.64 },
+    juice: { s: 'pour', n: 'juice', h: E('🧃') },
+    juiceMix: { h: blob(POP, swirl('#ffc2d8')) },
+    juiceBowl: { s: 'pour', n: 'juice', h: bowlOf(POP) },
+    popFill: { h: popFill(POP, true), r: popFill('#ff9ec0', false), ar: 3.4 },
+    popStick: { n: 'sticks', h: popStick, ar: 4 },
+    icePop: { s: 'thud', n: 'ice pop', h: icePop(POP), ar: 2 },
+    icePops: { h: S(put(icePop(POP), 4, 14, 0.4, -10) + put(icePop('#ffb829'), 32, 8, 0.4) + put(icePop('#7cc7ff'), 60, 14, 0.4, 10)) },
+    donut: { s: 'thud', n: 'donut', h: donutArt('#d99a45'), r: donutArt('#f6e6c0') },
+    glazePink: { h: glazeAll('#ff8fb3') },
+    glazeBlue: { h: glazeAll('#7cc7ff') },
+    glazeChoc: { h: glazeAll('#8a5a3c') },
+    brownieBatter: { h: blob('#5a341c', swirl('#3b2010')) },
+    chocBowl: { s: 'pour', n: 'batter', h: bowlOf('#6b3f22') },
+    brownieSlab: { h: slabArt('#4f2d17', true), r: slabArt('#7a4a2a') },
+    brownie: { s: 'thud', n: 'brownie', h: brownieSq },
+    brownies: { h: S(put(brownieSq, 6, 30, 0.46, -6) + put(brownieSq, 46, 34, 0.46, 8) + put(brownieSq, 26, 4, 0.46, 3)) },
+  });
+
   /* ---------- pots, pans, plates ----------
      box = [left%, top%, size%] of the square where food goes */
   const A = (inner) => `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" overflow="visible">${inner}</svg>`;
@@ -662,6 +834,53 @@
     box: [21, 36, 58], round: false,
   };
 
+  // a bamboo steamer on the stove, seen from above (dumplings)
+  VESSEL.steamer = {
+    art: A(`${burner(150, 148, 128)}<circle cx="150" cy="148" r="130" fill="#c98f47" stroke="#8f6126" stroke-width="4"/><circle cx="150" cy="148" r="112" fill="#f3dfae" stroke="#b9853a" stroke-width="3"/>
+      <g stroke="#dcc083" stroke-width="5" stroke-linecap="round">${[-80, -48, -16, 16, 48, 80].map(d => { const h = Math.sqrt(112 * 112 - d * d) - 6; return `<path d="M${(150 - h).toFixed(0)} ${148 + d} H${(150 + h).toFixed(0)}"/>`; }).join('')}</g>
+      <path d="M46 96 Q72 42 132 26" stroke="#fff" stroke-width="8" stroke-linecap="round" fill="none" opacity=".4"/>`),
+    box: [15.4, 14.7, 69.2], round: true, stove: true,
+  };
+  // a lunch box with three parts, seen from above (bento)
+  VESSEL.bento = {
+    art: A(`<rect x="10" y="34" width="280" height="250" rx="30" fill="#000" opacity=".12"/><rect x="10" y="24" width="280" height="250" rx="30" fill="#c0392b" stroke="#8f2318" stroke-width="4"/>
+      <g fill="#2b2320" stroke="#8f2318" stroke-width="3"><rect x="26" y="40" width="130" height="218" rx="18"/><rect x="166" y="40" width="108" height="104" rx="18"/><rect x="166" y="154" width="108" height="104" rx="18"/></g>
+      <path d="M30 60 Q52 40 90 34" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none" opacity=".25"/>`),
+    box: [0, 0, 100], round: false,
+  };
+  // a little stand that holds an ice cream cone, seen from the side; `front` is drawn over the cone
+  VESSEL.stand = {
+    art: A(`<ellipse cx="150" cy="284" rx="92" ry="10" fill="#000" opacity=".12"/><path d="M92 276 H208 Q214 276 214 270 Q214 262 204 262 H96 Q86 262 86 270 Q86 276 92 276Z" fill="#7cc7ff" stroke="#3b8fd0" stroke-width="4"/>
+      <rect x="120" y="222" width="60" height="44" rx="8" fill="#5cb8ff" stroke="#3b8fd0" stroke-width="4"/>`),
+    front: A(`<path d="M112 214 H188 L180 246 Q179 252 172 252 H128 Q121 252 120 246Z" fill="#7cc7ff" stroke="#3b8fd0" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M124 224 L128 242" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".6"/>`),
+    box: [10, 7, 80], round: false, side: true,
+  };
+  // a tray of four ice pop moulds, seen from above
+  VESSEL.molds = {
+    art: A(`<rect x="14" y="48" width="272" height="226" rx="28" fill="#000" opacity=".12"/><rect x="14" y="38" width="272" height="226" rx="28" fill="#8fd0f7" stroke="#3b8fd0" stroke-width="4"/>
+      ${[60, 120, 180, 240].map(x => `<rect x="${x - 25}" y="70" width="50" height="160" rx="20" fill="#3b8fd0"/><rect x="${x - 21}" y="74" width="42" height="152" rx="17" fill="#e6f5ff" stroke="#bfe1fb" stroke-width="2"/>`).join('')}
+      <path d="M30 62 Q60 46 110 44" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none" opacity=".6"/>`),
+    box: [0, 0, 100], round: false,
+    slots: [[20, 50], [40, 50], [60, 50], [80, 50]],
+  };
+
+  // the freezer: built like the oven (same door, glow and lamp) so the bake step can use either
+  const FREEZER = `<svg viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+    <rect x="22" y="196" width="26" height="16" rx="5" fill="#8fb4cc"/><rect x="252" y="196" width="26" height="16" rx="5" fill="#8fb4cc"/>
+    <rect x="8" y="6" width="284" height="198" rx="22" fill="#e6f5ff" stroke="#9fd0ee" stroke-width="4"/>
+    <rect x="22" y="16" width="256" height="30" rx="12" fill="#bfe1fb"/>
+    <text x="50" y="32" dy=".36em" font-size="20" text-anchor="middle">❄️</text><rect x="118" y="22" width="64" height="18" rx="6" fill="#3b6f96"/><circle class="lamp" cx="204" cy="31" r="5" fill="#5b6b7a"/>
+    <rect x="30" y="56" width="240" height="140" rx="14" fill="#1d3b5c"/>
+    <rect class="glow" x="30" y="56" width="240" height="140" rx="14" fill="#9fdcff"/>
+    <g stroke="#6c8fb0" stroke-width="3" stroke-linecap="round"><path d="M40 128 H260"/><path d="M40 164 H260"/></g>
+    <g class="door">
+      <rect x="24" y="52" width="252" height="146" rx="16" fill="#f4fbff" stroke="#9fd0ee" stroke-width="4"/>
+      <rect x="110" y="96" width="80" height="64" rx="12" fill="#1d3b5c" opacity=".8"/><rect class="glow win" x="110" y="96" width="80" height="64" rx="12" fill="#bfe9ff"/>
+      <text x="150" y="128" dy=".36em" font-size="40" text-anchor="middle">❄️</text>
+      <rect x="64" y="60" width="172" height="12" rx="6" fill="#fff" stroke="#bfd6e6" stroke-width="2"/>
+    </g></svg>`;
+
   const OVEN = `<svg viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg" overflow="visible">
     <rect x="22" y="196" width="26" height="16" rx="5" fill="#2d8f7b"/><rect x="252" y="196" width="26" height="16" rx="5" fill="#2d8f7b"/>
     <rect x="8" y="6" width="284" height="198" rx="22" fill="#3dccb0" stroke="#2d9f89" stroke-width="4"/>
@@ -681,5 +900,5 @@
 
   const ICON = S(`<rect width="100" height="100" rx="22" fill="#ffc93c"/><circle cx="50" cy="52" r="42" fill="#fff6e4"/><g transform="translate(9 10) scale(.82)">${chef.replace(/<\/?svg[^>]*>/g, '')}</g>`);
 
-  window.ART = { V, VESSEL, OVEN, chef, E, S, ICON };
+  window.ART = { V, VESSEL, OVEN, FREEZER, chef, E, S, ICON };
 })();

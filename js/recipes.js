@@ -235,6 +235,64 @@ window.RECIPES = [
       { t: 'eat', on: 'plate' },
     ],
   },
+  {
+    id: 'icecream', sp: 'an ice cream cone', name: 'Ice Cream Cone', icon: '🍦', cat: 'Treats',
+    steps: [
+      { t: 'add', on: 'stand', seq: 1, pick: 2, say: 'Cone first! Then pick two scoops!', items: [
+        { v: 'cone', w: 34 },
+        { v: 'scoopVanilla', w: 40, opt: true }, { v: 'scoopChoc', w: 40, opt: true }, { v: 'scoopBerry', w: 40, opt: true },
+        { v: 'sprinkles', n: 2, at: 'free', w: 20, z: 40, box: [41, 18, 59, 46] },
+        { v: 'cherry', pos: { x: 50, y: 6, z: 41 }, w: 16 }] },
+      { t: 'eat', on: 'stand' },
+    ],
+  },
+  {
+    id: 'icepops', sp: 'ice pops', eat: 'crunch', name: 'Ice Pops', icon: '🧊', art: 'icePops', cat: 'Treats',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Strawberries, juice and sugar!', items: [{ v: 'strawberry', n: 3 }, 'juice', 'sugar'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'juiceMix', w: 96 }] },
+      { t: 'add', on: 'molds', seq: 1, say: 'Pour the juice! Then add the sticks!', items: [
+        { v: 'juiceBowl', n: 4, as: 'popFill', at: 'slot', w: 13, raw: true },
+        { v: 'popStick', n: 4, spots: [[20, 77], [40, 77], [60, 77], [80, 77]], w: 4.4 }] },
+      { t: 'bake', on: 'molds', cold: true, say: 'Put them in the freezer!', out: [{ v: 'icePop', w: 17, x: 20, y: 50 }, { v: 'icePop', w: 17, x: 40, y: 50 }, { v: 'icePop', w: 17, x: 60, y: 50 }, { v: 'icePop', w: 17, x: 80, y: 50 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'milkshake', sp: 'a strawberry milkshake', eat: 'slurp', name: 'Strawberry Milkshake', icon: '🥤', art: 'milkshake', cat: 'Treats',
+    steps: [
+      { t: 'add', on: 'glass', seq: true, say: 'Fill the glass all the way up!', items: [{ v: 'strawberry', as: 'berryLayer', w: 44 }, { v: 'scoopVanilla', n: 2, w: 40 }, { v: 'milk', as: 'hhMilk', w: 46 }] },
+      { t: 'rub', on: 'glass', tool: 'spoon', fx: 'mix', say: 'Mix, mix, mix the milkshake!', out: [{ v: 'shakeMixed', w: 45, x: 50, y: 68.5 }] },
+      { t: 'add', on: 'glass', keep: true, seq: true, say: 'Whipped cream and a cherry on top!', items: [{ v: 'whip', pos: { x: 50, y: 33, z: 30 }, w: 42 }, { v: 'cherry', pos: { x: 50, y: 17, z: 31 }, w: 15 }] },
+      { t: 'eat', on: 'glass' },
+    ],
+  },
+  {
+    id: 'donuts', sp: 'donuts', name: 'Donuts', icon: '🍩', cat: 'Treats',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['flour', 'sugar', 'egg', 'milk'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'dough', w: 96 }] },
+      { t: 'add', on: 'pot', seq: 1, say: 'Oil first! Then the dough!', w: 36, items: [{ v: 'oil', as: 'oilFill', at: 'fill' }, { v: 'doughBall', n: 3, as: 'donut', raw: true }] },
+      { t: 'cook', on: 'pot', fry: true, say: 'Fry the donuts!', out: [{ v: 'donut', w: 36, x: 32, y: 34 }, { v: 'donut', w: 36, x: 68, y: 36 }, { v: 'donut', w: 36, x: 50, y: 70 }] },
+      { t: 'add', on: 'plate', keep: true, pick: 1, say: 'Pick your frosting! Then add sprinkles!', items: [
+        { v: 'frostPink', as: 'glazePink', at: 'center', w: 100, z: 20, opt: true },
+        { v: 'frostChoc', as: 'glazeChoc', at: 'center', w: 100, z: 20, opt: true },
+        { v: 'frostBlue', as: 'glazeBlue', at: 'center', w: 100, z: 20, opt: true },
+        { v: 'sprinkles', n: 3, spots: [[32, 34], [68, 36], [50, 70]], w: 25, z: 30 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'brownies', sp: 'brownies', name: 'Brownies', icon: '🍫', art: 'brownies', cat: 'Treats',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['flour', 'sugar', 'butter', 'egg', 'chocolate'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'brownieBatter', w: 96 }] },
+      { t: 'add', on: 'sheet', say: 'Pour the batter on the tray!', items: [{ v: 'chocBowl', as: 'brownieSlab', at: 'center', w: 94, raw: true }] },
+      { t: 'bake', on: 'sheet', say: 'Bake the brownies!', out: [{ v: 'brownie', w: 36, x: 30, y: 30 }, { v: 'brownie', w: 36, x: 70, y: 30 }, { v: 'brownie', w: 36, x: 30, y: 70 }, { v: 'brownie', w: 36, x: 70, y: 70 }] },
+      { t: 'add', on: 'plate', keep: true, say: 'Lots of powdered sugar on top!', items: [{ v: 'powderSugar', n: 2 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
 
   /* ---------------- Tex-Mex ---------------- */
   {
@@ -405,6 +463,172 @@ window.RECIPES = [
       { t: 'add', on: 'glass', seq: true, say: 'Fill the glass all the way up!', w: 44, items: ['sweetBeans', 'gulaman', 'ice', { v: 'milk', as: 'hhMilk', w: 46 }, { v: 'ube', w: 40 }, { v: 'flan', w: 24 }] },
       { t: 'rub', on: 'glass', tool: 'spoon', fx: 'mix', say: 'Mix, mix, mix! Halo-halo!', out: [{ v: 'haloMixed', w: 45, x: 50, y: 68.5 }] },
       { t: 'eat', on: 'glass' },
+    ],
+  },
+
+  /* ---------------- Japanese ---------------- */
+  {
+    id: 'sushi', sp: 'sushi rolls', name: 'Sushi Rolls', icon: '🍣', cat: 'Japanese',
+    steps: [
+      { t: 'chop', say: 'Slice the cucumber and the avocado!', items: [{ v: 'cucumber', out: 'cucumberSticks' }, { v: 'avocado', out: 'avocadoSlices' }] },
+      { t: 'add', on: 'board', seq: 2, say: 'Seaweed, rice, then the filling!', items: [
+        { v: 'nori', at: 'center', w: 98 }, { v: 'rice', as: 'riceLayer', at: 'center', w: 86 },
+        { v: 'salmon', at: 'center', w: 62 }, { v: 'cucumberSticks', at: 'center', w: 60 }, { v: 'avocadoSlices', at: 'center', w: 56 }] },
+      { t: 'rub', on: 'board', tool: 'hands', say: 'Roll, roll, roll the sushi!', out: [{ v: 'maki', w: 25, x: 80, y: 50 }, { v: 'maki', w: 25, x: 65, y: 76 }, { v: 'maki', w: 25, x: 35, y: 76 }, { v: 'maki', w: 25, x: 20, y: 50 }, { v: 'maki', w: 25, x: 35, y: 24 }, { v: 'maki', w: 25, x: 65, y: 24 }] },
+      { t: 'add', on: 'plate', keep: true, say: 'Soy sauce for dipping!', items: [{ v: 'soy', as: 'soyDip', pos: { x: 50, y: 50 }, w: 28 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'onigiri', sp: 'onigiri rice balls', name: 'Onigiri', icon: '🍙', cat: 'Japanese',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Rice and salt in the bowl!', items: [{ v: 'rice', n: 2, as: 'riceMound', w: 48 }, 'salt'] },
+      { t: 'rub', on: 'bowl', tool: 'hands', say: 'Squish, squish! Make rice balls!', out: [{ v: 'onigiri', w: 38, x: 30, y: 34 }, { v: 'onigiri', w: 38, x: 70, y: 34 }, { v: 'onigiri', w: 38, x: 50, y: 70 }] },
+      { t: 'add', on: 'plate', keep: true, say: 'Wrap them in seaweed!', items: [{ v: 'nori', as: 'noriStrip', n: 3, spots: [[30, 43], [70, 43], [50, 79]], w: 19 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'ramen', sp: 'ramen', eat: 'slurp', name: 'Ramen', icon: '🍜', cat: 'Japanese',
+    steps: [
+      { t: 'chop', say: 'Chop the green onion!', items: [{ v: 'scallion', out: 'scallionBits' }] },
+      { t: 'add', on: 'pot', say: 'Water, noodles and soy sauce!', w: 44, items: ['water', { v: 'noodleBox', n: 2 }, 'soy'] },
+      { t: 'cook', on: 'pot', say: 'Boil the noodles!', out: [{ v: 'ramenBroth', w: 100, z: 1 }, { v: 'ramenNoodles', w: 84 }] },
+      { t: 'add', on: 'bowl2', keep: true, say: 'Add the yummy toppings!', items: [
+        { v: 'egg', n: 2, as: 'eggHalf', at: 'free', w: 24, max: 30 }, { v: 'fishCake', n: 2, at: 'free', w: 22, max: 30 }, { v: 'scallionBits', at: 'center', w: 46 }] },
+      { t: 'eat', on: 'bowl2' },
+    ],
+  },
+  {
+    id: 'tempura', sp: 'tempura', eat: 'crunch', name: 'Tempura', icon: '🍤', cat: 'Japanese',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Make the batter!', items: ['flour', 'egg', 'water'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'batter', w: 96 }] },
+      { t: 'add', on: 'pot', seq: 1, say: 'Oil first! Then shrimp and broccoli!', items: [{ v: 'oil', as: 'oilFill', at: 'fill' }, { v: 'shrimp', n: 3, as: 'tempuraShrimp', raw: true, w: 46 }, { v: 'broccoli', n: 2, as: 'tempuraVeg', raw: true, w: 28 }] },
+      { t: 'cook', on: 'pot', fry: true, say: 'Fry the tempura!', out: [{ v: 'tempuraShrimp', w: 56, x: 38, y: 28, rot: -8 }, { v: 'tempuraShrimp', w: 56, x: 40, y: 50, rot: 5 }, { v: 'tempuraShrimp', w: 56, x: 38, y: 72, rot: -4 },
+        { v: 'tempuraVeg', w: 24, x: 80, y: 34 }, { v: 'tempuraVeg', w: 24, x: 82, y: 56 }, { v: 'tempuraDip', w: 26, x: 74, y: 79 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'bento', sp: 'a bento box', name: 'Bento Box', icon: '🍱', cat: 'Japanese',
+    steps: [
+      { t: 'add', on: 'pan', say: 'Chicken and teriyaki sauce!', w: 36, items: [{ v: 'teriyaki', at: 'center', w: 84, z: 2 }, { v: 'chickenRaw', n: 3, as: 'teriyakiChicken', raw: true }] },
+      { t: 'cook', on: 'pan', flip: true, say: 'Cook the chicken!' },
+      { t: 'add', on: 'bento', say: 'Fill the lunch box!', items: [
+        { v: 'rice', as: 'riceMound', pos: { x: 30, y: 50 }, w: 41 },
+        { v: 'teriyakiChicken', n: 3, spots: [[63, 25], [81, 26], [72, 39]], w: 17 },
+        { v: 'broccoli', n: 2, spots: [[63, 62], [64, 77]], w: 15 },
+        { v: 'tamago', n: 2, spots: [[81, 62], [81, 77]], w: 15 }] },
+      { t: 'eat', on: 'bento' },
+    ],
+  },
+
+  /* ---------------- Thai ---------------- */
+  {
+    id: 'padthai', sp: 'pad thai', eat: 'slurp', name: 'Pad Thai', icon: '🍜', art: 'padThai', cat: 'Thai',
+    steps: [
+      { t: 'chop', say: 'Chop the green onion!', items: [{ v: 'scallion', out: 'scallionBits' }] },
+      { t: 'add', on: 'pan', say: 'Everything in the pan!', w: 38, items: [{ v: 'noodleBox', w: 50 }, { v: 'shrimp', n: 2, raw: true, w: 28 }, 'egg', 'scallionBits', 'padThaiSauce'] },
+      { t: 'cook', on: 'pan', say: 'Cook the pad thai!', out: [{ v: 'padThai', w: 96 }] },
+      { t: 'add', on: 'plate', seq: 1, say: 'Peanuts and lime on top!', items: [{ v: 'padThai', at: 'center', w: 90 }, 'peanuts', { v: 'lime', n: 2, at: 'free', w: 22, max: 34 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'greencurry', sp: 'green curry', name: 'Green Curry', icon: '🍛', art: 'greenCurry', cat: 'Thai',
+    steps: [
+      { t: 'chop', say: 'Chop the veggies!', items: [{ v: 'eggplant', out: 'eggplantCoins' }, { v: 'pepper', out: 'pepperStrips' }] },
+      { t: 'add', on: 'pot', say: 'Everything in the pot!', w: 34, items: ['coconut', 'curryPaste', { v: 'chickenRaw', n: 2, raw: true, w: 28 }, 'eggplantCoins', 'pepperStrips', { v: 'basil', w: 24 }] },
+      { t: 'cook', on: 'pot', say: 'Cook the curry!', out: [{ v: 'greenCurryFill', w: 100, z: 1 }, { v: 'chickenRaw', w: 28, x: 30, y: 36 }, { v: 'chickenRaw', w: 28, x: 68, y: 64 }, { v: 'eggplantCoins', w: 36, x: 66, y: 32 }, { v: 'pepperStrips', w: 36, x: 32, y: 68 }, { v: 'basil', w: 22, x: 50, y: 50 }] },
+      { t: 'add', on: 'bowl2', keep: true, say: 'A scoop of rice on top!', items: [{ v: 'rice', at: 'center', w: 42 }] },
+      { t: 'eat', on: 'bowl2' },
+    ],
+  },
+  {
+    id: 'tomyum', sp: 'tom yum soup', eat: 'slurp', name: 'Tom Yum Soup', icon: '🍲', art: 'tomYum', cat: 'Thai',
+    steps: [
+      { t: 'chop', say: 'Chop the mushroom and the tomato!', items: [{ v: 'mushroom', out: 'mushroomSlices' }, { v: 'tomato', out: 'tomatoBits' }] },
+      { t: 'add', on: 'pot', say: 'Everything in the pot!', w: 34, items: ['water', { v: 'shrimp', n: 3, raw: true, w: 28 }, 'mushroomSlices', 'tomatoBits', { v: 'lemongrass', w: 30 }, { v: 'lime', w: 24 }] },
+      { t: 'cook', on: 'pot', say: 'Cook the tom yum soup!', turn: { waterFill: 'tomYumBroth' } },
+      { t: 'eat', on: 'bowl2' },
+    ],
+  },
+  {
+    id: 'satay', sp: 'chicken satay', name: 'Chicken Satay', icon: '🍢', art: 'satayPlate', cat: 'Thai',
+    steps: [
+      { t: 'add', on: 'board', seq: 1, say: 'Put the chicken on the sticks!', items: [
+        { v: 'skewer', n: 3, spots: [[50, 28], [50, 50], [50, 72]], w: 84 },
+        { v: 'chickenRaw', n: 3, as: 'satay', raw: true, spots: [[50, 28], [50, 50], [50, 72]], w: 84 }] },
+      { t: 'cook', on: 'pan', flip: true, say: 'Cook the satay!', out: [{ v: 'satay', w: 70, x: 42, y: 28, rot: -5 }, { v: 'satay', w: 70, x: 42, y: 48, rot: 4 }, { v: 'satay', w: 70, x: 42, y: 68, rot: -3 }] },
+      { t: 'add', on: 'plate', keep: true, say: 'Peanut sauce for dipping!', items: [{ v: 'peanutSauce', pos: { x: 76, y: 78 }, w: 28 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'mangorice', sp: 'mango sticky rice', name: 'Mango Sticky Rice', icon: '🥭', art: 'mangoRice', cat: 'Thai',
+    steps: [
+      { t: 'chop', say: 'Slice the mango!', items: [{ v: 'mango', out: 'mangoSlices' }] },
+      { t: 'add', on: 'pot', say: 'Rice, coconut milk and sugar!', items: [{ v: 'coconut' }, { v: 'rice', as: 'riceGrains', at: 'center', w: 84 }, 'sugar'] },
+      { t: 'cook', on: 'pot', say: 'Cook the sticky rice!', out: [{ v: 'stickyRice', w: 84 }] },
+      { t: 'add', on: 'plate', seq: true, say: 'Leaf first! Then rice, mango and coconut milk!', items: [{ v: 'bananaLeaf', at: 'center', w: 96, z: 2 }, { v: 'stickyRice', pos: { x: 36, y: 52 }, w: 50 }, { v: 'mangoSlices', pos: { x: 70, y: 50 }, w: 40 }, { v: 'coconut', as: 'coconutDrizzle', pos: { x: 36, y: 52 }, w: 36 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+
+  /* ---------------- Chinese ---------------- */
+  {
+    id: 'dumplings', sp: 'dumplings', name: 'Dumplings', icon: '🥟', cat: 'Chinese',
+    steps: [
+      { t: 'add', on: 'board', seq: true, say: 'Wrapper first! Then the filling!', items: [{ v: 'roundWrapper', at: 'center', w: 92 }, { v: 'porkMix', as: 'porkMix', at: 'center', w: 44 }] },
+      { t: 'rub', on: 'board', tool: 'hands', say: 'Fold, fold, fold the dumplings!', out: [{ v: 'dumpling', w: 32, x: 50, y: 24, raw: true }, { v: 'dumpling', w: 32, x: 77, y: 50, raw: true }, { v: 'dumpling', w: 32, x: 50, y: 77, raw: true }, { v: 'dumpling', w: 32, x: 23, y: 50, raw: true }] },
+      { t: 'add', on: 'steamer', say: 'Put the dumplings in the steamer!', items: [{ v: 'dumpling', n: 4, raw: true, spots: [[50, 24], [77, 50], [50, 77], [23, 50]], w: 32 }] },
+      { t: 'cook', on: 'steamer', say: 'Steam the dumplings!' },
+      { t: 'add', on: 'plate', keep: true, say: 'Soy sauce for dipping!', items: [{ v: 'soy', as: 'soyDip', pos: { x: 50, y: 50 }, w: 24 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'friedrice', sp: 'fried rice', name: 'Fried Rice', icon: '🍚', art: 'friedRice', cat: 'Chinese',
+    steps: [
+      { t: 'chop', say: 'Chop the veggies!', items: [{ v: 'carrot', out: 'carrotCoins' }, { v: 'scallion', out: 'scallionBits' }] },
+      { t: 'add', on: 'pan', say: 'Everything in the pan!', w: 34, items: [{ v: 'egg', n: 2 }, { v: 'rice', as: 'riceGrains', at: 'center', w: 84 }, 'carrotCoins', 'peas', 'scallionBits', 'soy'] },
+      { t: 'cook', on: 'pan', say: 'Cook the fried rice!' },
+      { t: 'rub', on: 'pan', tool: 'spoon', say: 'Stir it up!', out: [{ v: 'friedRice', w: 96 }] },
+      { t: 'eat', on: 'bowl2' },
+    ],
+  },
+  {
+    id: 'chowmein', sp: 'chow mein', eat: 'slurp', name: 'Chow Mein', icon: '🍜', art: 'chowMein', cat: 'Chinese',
+    steps: [
+      { t: 'chop', say: 'Slice the pepper and the cabbage!', items: [{ v: 'pepper', out: 'pepperStrips' }, { v: 'cabbage', out: 'cabbageBits' }] },
+      { t: 'add', on: 'pot', say: 'Water and noodles in the pot!', w: 44, items: ['water', { v: 'noodleBox', n: 2 }] },
+      { t: 'cook', on: 'pot', say: 'Boil the noodles!', out: [{ v: 'chowNoodles', w: 92 }] },
+      { t: 'add', on: 'pan', say: 'Everything in the pan!', w: 34, items: [{ v: 'chowNoodles', at: 'center', w: 88 }, { v: 'chickenRaw', n: 2, raw: true, w: 28 }, 'pepperStrips', 'cabbageBits', 'soy'] },
+      { t: 'cook', on: 'pan', say: 'Cook the chow mein!', out: [{ v: 'chowMein', w: 96 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'sweetsour', sp: 'sweet and sour chicken', name: 'Sweet & Sour Chicken', icon: '🍍', art: 'sweetSour', cat: 'Chinese',
+    steps: [
+      { t: 'chop', say: 'Chop the pepper and the pineapple!', items: [{ v: 'pepper', out: 'pepperBits' }, { v: 'pineapple', out: 'pineappleChunks' }] },
+      { t: 'add', on: 'pot', seq: 1, say: 'Oil first! Then the chicken!', w: 30, items: [{ v: 'oil', as: 'oilFill', at: 'fill' }, { v: 'chickenRaw', n: 4, as: 'crispyChicken', raw: true }] },
+      { t: 'cook', on: 'pot', fry: true, say: 'Fry the chicken!', out: [{ v: 'crispyChicken', w: 30, x: 32, y: 32 }, { v: 'crispyChicken', w: 30, x: 68, y: 34 }, { v: 'crispyChicken', w: 30, x: 34, y: 68 }, { v: 'crispyChicken', w: 30, x: 68, y: 68 }] },
+      { t: 'add', on: 'pan', say: 'Chicken, veggies and sauce in the pan!', w: 30, items: ['ssSauce', { v: 'crispyChicken', n: 4 }, 'pepperBits', 'pineappleChunks'] },
+      { t: 'cook', on: 'pan', say: 'Cook it in the sauce!', out: [{ v: 'sweetSour', w: 96 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'eggdrop', sp: 'egg drop soup', eat: 'slurp', name: 'Egg Drop Soup', icon: '🥣', art: 'eggDrop', cat: 'Chinese',
+    steps: [
+      { t: 'chop', say: 'Chop the green onion!', items: [{ v: 'scallion', out: 'scallionBits' }] },
+      { t: 'add', on: 'pot', say: 'Chicken broth, corn and green onion!', w: 40, items: ['chickenBroth', { v: 'corn', as: 'cornBits' }, 'scallionBits'] },
+      { t: 'cook', on: 'pot', say: 'Heat up the soup!' },
+      { t: 'add', on: 'pot', keep: true, say: 'Crack in the eggs!', w: 36, items: [{ v: 'egg', n: 2 }] },
+      { t: 'rub', on: 'pot', tool: 'spoon', say: 'Stir, stir! Make egg ribbons!', out: [{ v: 'eggDrop', w: 100 }] },
+      { t: 'eat', on: 'bowl2' },
     ],
   },
 ];

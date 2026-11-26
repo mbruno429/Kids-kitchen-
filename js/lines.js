@@ -19,7 +19,7 @@
       knife: 'Knives are sharp! Ask a grown-up to help!',
     },
     // the food is cooked: time to turn off the heat / take it out
-    ready: { cook: 'It is ready! Turn off the heat!', bake: 'Ding! It is ready! Take it out!' },
+    ready: { cook: 'It is ready! Turn off the heat!', bake: 'Ding! It is ready! Take it out!', cold: 'Brrr! All frozen! Take it out!' },
     hot: 'Uh oh! Too hot!',
     oops: { crispy: 'Oops! A little bit crispy! That is okay!', spill: 'Oops! It bubbled over! That is okay!' },
     // said when a step is finished
@@ -30,6 +30,7 @@
       chop: ['Chop, chop, chop! Good job!', 'Wow! Great chopping!'],
       cook: ['Ding! All cooked! Good job!', 'Yay! That smells so good!'],
       bake: ['Ding! It is ready! Good job!', 'Wow! That smells so yummy!'],
+      cold: ['Brrr! So cold! Good job!', 'Wow! Frozen and yummy!'],
     },
     // said while the friend eats
     bites: ['Yum, yum, yum!', 'Munch, munch, munch!', 'So yummy!', 'All gone! Delicious!'],

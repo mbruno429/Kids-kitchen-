@@ -78,6 +78,7 @@ svg { display: block; }
 .cat.cat-breakfast { background: #ff9f1c; } .cat.cat-lunch { background: var(--mint); }
 .cat.cat-dinner { background: var(--tomato); } .cat.cat-treats { background: var(--grape); }
 .cat.cat-texmex { background: #e8590c; } .cat.cat-cajun { background: #2e9e5b; } .cat.cat-filipino { background: #2f6fe0; }
+.cat.cat-japanese { background: #e64980; } .cat.cat-thai { background: #0c8599; } .cat.cat-chinese { background: #c92a2a; }
 .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
 .card {
   position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
@@ -87,6 +88,7 @@ svg { display: block; }
 .card.cat-breakfast { --c: #ffc56b; --c2: #f09a1c; } .card.cat-lunch { --c: #86e3d1; --c2: #2fb198; }
 .card.cat-dinner { --c: #ff9a92; --c2: #e2483d; } .card.cat-treats { --c: #c3a6ff; --c2: #8257e6; }
 .card.cat-texmex { --c: #ffb37a; --c2: #d9500a; } .card.cat-cajun { --c: #8fd9aa; --c2: #23834a; } .card.cat-filipino { --c: #9dbcf7; --c2: #2459c0; }
+.card.cat-japanese { --c: #f7a8c4; --c2: #d6336c; } .card.cat-thai { --c: #7fd1dc; --c2: #0b7285; } .card.cat-chinese { --c: #f29b9b; --c2: #b02525; }
 .card:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--c2); }
 .card-pic { width: 92px; height: 92px; }
 .card-pic svg { width: 100%; height: 100%; }
@@ -137,7 +139,7 @@ svg { display: block; }
 .vessel.v-iron::before { background: none; border: 0; box-shadow: none; }
 .v-art, .v-food, .v-fx { position: absolute; inset: 0; }
 .v-fx > svg { width: 100%; height: 100%; overflow: visible; }
-.vessel.v-glass { width: min(92vw, 48vh); width: min(94cqw, 86cqh); margin-top: 2%; }
+.vessel.v-glass, .vessel.v-stand { width: min(92vw, 48vh); width: min(94cqw, 86cqh); margin-top: 2%; }
 .v-art svg { width: 100%; height: 100%; overflow: visible; }
 .v-in { position: absolute; }
 .v-fx { pointer-events: none; }
@@ -157,6 +159,7 @@ svg { display: block; }
 .v-iron .glow { opacity: 0; transition: opacity .5s; }
 .v-iron.hot .glow { opacity: .28; }
 .hot .lamp, .oven.on .lamp { fill: #ff4d3d; }
+.oven.freezer.on .lamp { fill: #4dc3ff; }
 .hot .v-in { animation: jiggle .22s linear infinite; }
 @keyframes jiggle { 25% { translate: .6px -.6px; } 75% { translate: -.6px .6px; } }
 

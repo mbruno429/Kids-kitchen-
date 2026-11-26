@@ -1,7 +1,7 @@
 /* Kids Kitchen — the game. */
 (function () {
   'use strict';
-  const { V, VESSEL, OVEN, chef, E } = window.ART;
+  const { V, VESSEL, OVEN, FREEZER, chef, E } = window.ART;
   const RECIPES = window.RECIPES;
   const SFX = window.SFX;
   const LINES = window.LINES;
@@ -129,7 +129,7 @@
     const text = s.say || DEFAULT_SAY[s.t] || '';
     const lead = G.opening || []; G.opening = null;
     // kitchen safety: the first time a recipe uses the stove, the oven or the knife
-    const kind = TIP[s.t], tip = kind && STORE.opts.tips && !G.tipped[kind] ? LINES.tips[kind] : null;
+    const kind = s.cold ? null : TIP[s.t], tip = kind && STORE.opts.tips && !G.tipped[kind] ? LINES.tips[kind] : null;
     if (tip) G.tipped[kind] = true;
     setSay(text, lead.concat(text, tip || []));
     $$('#dots i').forEach((d, k) => { d.className = k < i ? 'done' : k === i ? 'now' : ''; });
@@ -143,7 +143,7 @@
     SFX.play(oops ? 'pop' : 'yay');
     if (!oops) sparkle(stage, 50, 45, 9);
     const s = G.r.steps[G.i];
-    const said = setSay(oops || pickOne(LINES.praise[s.t === 'rub' ? s.tool : s.t] || LINES.praise.add));
+    const said = setSay(oops || pickOne(LINES.praise[s.cold ? 'cold' : s.t === 'rub' ? s.tool : s.t] || LINES.praise.add));
     $$('#dots i')[G.i].className = 'done';
     // move on once the chef has finished cheering (but never keep a child waiting long)
     Promise.all([pause(1250 * FAST), FAST < 1 ? null : Promise.race([said, pause(3400)])])
@@ -584,7 +584,7 @@
   STEPS.cook = (s, tok) => {
     const ves = mkVessel(s.on), bar = mkBar();
     paint(ves);
-    const boil = s.on === 'pot', dur = 4400 * FAST, hiss = boil && !s.fry ? 'boil' : 'sizzle', spill = hiss === 'boil';
+    const boil = s.on === 'pot', steamy = s.on === 'steamer', dur = 4400 * FAST, hiss = steamy || (boil && !s.fry) ? 'boil' : 'sizzle', spill = hiss === 'boil';
     const start = G.pieces.map(p => p.cook);
     let prog = 0, state = 'idle', flipped = false, last = 0, raf = 0, fx = 0, spat = null, off = null, wait = 0, warned = false;
     const fire = mkTile(V.fire.h);
@@ -602,7 +602,7 @@
       raf = requestAnimationFrame(tick);
       fx = setInterval(() => {
         if (state === 'on') puff(ves, boil ? 'bub' : 'steam');
-        else if (state === 'ready') puff(ves, !warned ? (boil ? 'bub' : 'steam') : spill ? 'bub big' : 'smoke');
+        else if (state === 'ready') puff(ves, !warned ? (boil ? 'bub' : 'steam') : steamy ? 'steam' : spill ? 'bub big' : 'smoke');
       }, boil ? 150 : 300);
     }
     function tick(now) {
@@ -700,9 +700,9 @@
     ves.classList.add('carry');
     ves.setAttribute('role', 'button');
     ves.setAttribute('tabindex', '0');
-    ves.setAttribute('aria-label', 'Put it in the oven');
+    ves.setAttribute('aria-label', s.cold ? 'Put it in the freezer' : 'Put it in the oven');
     paint(ves);
-    const oven = el(`<div class="oven open" role="button" aria-label="Oven">${OVEN}</div>`);
+    const oven = el(`<div class="oven open${s.cold ? ' freezer' : ''}" role="button" aria-label="${s.cold ? 'Freezer' : 'Oven'}">${s.cold ? FREEZER : OVEN}</div>`);
     stage.append(oven);
     const dur = 4600 * FAST;
     let state = 'idle', raf = 0, last = 0, t = 0, wait = 0, warned = false;
@@ -742,9 +742,9 @@
           if (!STORE.opts.crispy) { takeOut(false); return; }
           state = 'ready'; wait = 0;
           oven.classList.add('ready');
-          setSay(LINES.ready.bake);
+          setSay(LINES.ready[s.cold ? 'cold' : 'bake']);
         }
-      } else if (state === 'ready') {
+      } else if (state === 'ready' && !s.cold) { // nothing burns in the freezer
         wait += dt;
         if (wait > GRACE) {
           if (!warned) { warned = true; SFX.play('uhoh'); setSay(LINES.hot); oven.classList.add('toohot'); }

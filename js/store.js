@@ -7,7 +7,8 @@ window.STORE = (function () {
 
   // cookbook sections: [name, picture, short key]
   const CATS = [['Breakfast', '☀️', 'breakfast'], ['Lunch', '🥪', 'lunch'], ['Dinner', '🍽️', 'dinner'], ['Tex-Mex', '🌮', 'texmex'],
-    ['Cajun & Creole', '🦞', 'cajun'], ['Filipino', '🥟', 'filipino'], ['Treats', '🧁', 'treats']];
+    ['Cajun & Creole', '🦞', 'cajun'], ['Filipino', '🥟', 'filipino'], ['Japanese', '🍣', 'japanese'], ['Thai', '🍛', 'thai'],
+    ['Chinese', '🥡', 'chinese'], ['Treats', '🧁', 'treats']];
 
   // the friends who come to eat. `at` = how many different dishes must be cooked before they visit
   const FRIENDS = [
@@ -18,12 +19,13 @@ window.STORE = (function () {
     { id: 'piggy', name: 'Piggy', face: '🐷', at: 16 }, { id: 'lion', name: 'Lion', face: '🦁', at: 20 },
     { id: 'tiger', name: 'Tiger', face: '🐯', at: 24 }, { id: 'koala', name: 'Koala', face: '🐨', at: 28 },
     { id: 'unicorn', name: 'Unicorn', face: '🦄', at: 32 }, { id: 'dragon', name: 'Dragon', face: '🐲', at: 36 },
+    { id: 'penguin', name: 'Penguin', face: '🐧', at: 44 }, { id: 'zebra', name: 'Zebra', face: '🦓', at: 52 },
   ];
 
   const BADGES = [
     { id: 'n1', icon: '🥄', name: 'First dish', need: 1 }, { id: 'n5', icon: '🥉', name: '5 dishes', need: 5 },
     { id: 'n10', icon: '🥈', name: '10 dishes', need: 10 }, { id: 'n20', icon: '🥇', name: '20 dishes', need: 20 },
-    { id: 'all', icon: '🏆', name: 'Every dish', need: RECIPES.length || 36 },
+    { id: 'n40', icon: '💎', name: '40 dishes', need: 40 }, { id: 'all', icon: '🏆', name: 'Every dish', need: RECIPES.length || 56 },
   ].concat(CATS.map(c => ({ id: 'cat-' + c[2], icon: c[1], name: 'All of ' + c[0], cat: c[0] })));
 
   const blankOpts = () => ({ voice: true, sfx: true, music: true, wash: true, tips: true, crispy: true, hide: {} });

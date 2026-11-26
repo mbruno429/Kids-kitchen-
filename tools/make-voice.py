@@ -79,6 +79,11 @@ SAY = {
     'sinigang': 'sˌiniɡˈɑŋ',      # see-nee-GAHNG
     'pancit': 'pɑnsˈɪt',          # pahn-SIT
     'flan': 'flˈɑn',              # flahn
+    'mein': 'mˈAn',               # chow MAYN
+    'broccoli': 'bɹˈɑkəli',       # BROK-uh-lee
+    'donuts': 'dˈOnʌts',          # DOH-nuts
+    'donut': 'dˈOnʌt',            # DOH-nut
+    'brrr': 'bɹˈɜɹ',              # brrr (it is cold)
 }
 SAY_RE = re.compile(r'(?<!\w)(' + '|'.join(sorted(SAY, key=len, reverse=True)) + r')(?!\w)', re.IGNORECASE)
 

@@ -10,18 +10,18 @@ No reading needed: the chef says every instruction out loud and a pointing hand 
 if a child gets stuck. Nothing can really go wrong — the worst that happens is a burger that is
 "a little bit crispy".
 
-## The 36 dishes
+## The 56 dishes
 
 | Breakfast | Lunch | Dinner | Treats |
 | --- | --- | --- | --- |
 | Pancakes | PB & J | Cheeseburger | Chocolate Chip Cookies |
 | Waffles | Grilled Cheese | French Fries | Cupcakes |
 | Bacon & Eggs | Hot Dog | Pizza | Apple Pie |
-| | Mac & Cheese | Spaghetti & Meatballs | |
-| | Chicken Noodle Soup | Tacos | |
-| | Garden Salad | Chicken Nuggets | |
-| | | Corn on the Cob | |
-| | | Baked Potato | |
+| | Mac & Cheese | Spaghetti & Meatballs | Ice Cream Cone |
+| | Chicken Noodle Soup | Tacos | Ice Pops |
+| | Garden Salad | Chicken Nuggets | Strawberry Milkshake |
+| | | Corn on the Cob | Donuts |
+| | | Baked Potato | Brownies |
 
 | Tex-Mex | Cajun & Creole | Filipino |
 | --- | --- | --- |
@@ -32,6 +32,14 @@ if a child gets stuck. Nothing can really go wrong — the worst that happens is
 | Chili | Beignets | Pancit |
 | | | Halo-Halo |
 
+| Japanese | Thai | Chinese |
+| --- | --- | --- |
+| Sushi Rolls | Pad Thai | Dumplings |
+| Onigiri | Green Curry | Fried Rice |
+| Ramen | Tom Yum Soup | Chow Mein |
+| Tempura | Chicken Satay | Sweet & Sour Chicken |
+| Bento Box | Mango Sticky Rice | Egg Drop Soup |
+
 The Cajun & Creole dishes come from the Breaux Bridge area of Louisiana (the "crawfish capital of the
 world"); the Filipino dishes are family favourites of the Filipino community in Sacramento.
 
@@ -41,14 +49,17 @@ Everything is one tap — no dragging, no swiping.
 
 - **Wash hands:** every recipe starts at the sink — tap the soap, then the water.
 - **Add:** tap an ingredient and it hops into the bowl, pot, pan, tray or plate.
-- **Choose:** some dishes let the child decide — pizza toppings, cupcake frosting, waffle, burger,
-  baked potato and nacho toppings. The tiles with a dashed purple border are the choices.
+- **Choose:** some dishes let the child decide — pizza toppings, cupcake and donut frosting, ice cream
+  scoops, waffle, burger, baked potato and nacho toppings. The tiles with a dashed purple border are
+  the choices.
 - **Stir / roll:** tap, tap, tap the spoon or rolling pin (or the bowl).
 - **Chop:** tap, tap, tap the knife (or the food).
 - **Cook:** tap the 🔥 to turn on the stove, tap the spatula to flip, and tap the crossed-out 🔥 to
   turn the heat off when the food is ready. Left on too long, it gets a little crispy (or the pot
   bubbles over) — and the game carries on.
 - **Bake:** tap the tray and it slides into the oven; tap the oven to take it out when it dings.
+- **Steam / freeze:** dumplings cook in a bamboo steamer, and ice pops go into the freezer the same
+  way a tray goes into the oven (nothing can burn in there).
 - **Feed your friend:** tap the finished dish and the friend gobbles it up.
 
 The chef also reminds children that a grown-up helps with the stove, the oven and knives.
@@ -57,9 +68,9 @@ The chef also reminds children that a grown-up helps with the stove, the oven an
 
 - **Friends:** an animal friend comes to eat every dish. One of them is always waiting in the cookbook
   with an order ("Bunny wants Pizza!"); cooking it earns two hearts instead of one. Four friends are
-  there from the start and ten more arrive as more different dishes are cooked.
-- **Sticker book** (📒): one sticker per dish, the friends and their hearts, and twelve badges
-  (first dish, 5, 10 and 20 dishes, every dish, and one for finishing each cookbook section).
+  there from the start and twelve more arrive as more different dishes are cooked.
+- **Sticker book** (📒): one sticker per dish, the friends and their hearts, and sixteen badges
+  (first dish, 5, 10, 20 and 40 dishes, every dish, and one for finishing each cookbook section).
 
 ## For grown-ups
 
@@ -76,7 +87,7 @@ Everything is kept on the device. There are no accounts, ads, purchases or track
 
 ## Playing without internet
 
-The first time the game is opened it saves itself and the chef's recordings (about 4 MB) on the device.
+The first time the game is opened it saves itself and the chef's recordings (about 5 MB) on the device.
 After that it works with no connection — in the car, on a plane — including from the Home Screen.
 When there is a connection, the newest version is loaded automatically. (`sw.js` does this;
 `tools/check.js` makes sure every file the page loads is on its list.)
