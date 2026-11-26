@@ -78,7 +78,7 @@ svg { display: block; }
 .cat.cat-breakfast { background: #ff9f1c; } .cat.cat-lunch { background: var(--mint); }
 .cat.cat-dinner { background: var(--tomato); } .cat.cat-treats { background: var(--grape); }
 .cat.cat-texmex { background: #e8590c; } .cat.cat-cajun { background: #2e9e5b; } .cat.cat-filipino { background: #2f6fe0; }
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
 .card {
   position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
   background: #fff; border-radius: 26px; padding: 10px 8px 12px; min-height: 152px;
@@ -353,7 +353,8 @@ svg { display: block; }
 .book-head { background: var(--sky); box-shadow: 0 5px 0 #3b8fd0; }
 .book-head h2, .grown-head h2 { color: #fff; }
 .book-total { flex: none; padding: 7px 13px; background: #fff; border-radius: 99px; font-size: 18px; }
-.pals, .stickers, .badges { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; }
+.pals, .stickers, .badges { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
+.pal, .sticker, .badge { min-width: 0; }
 .pal { display: flex; flex-direction: column; align-items: center; padding: 8px 2px 6px; background: #fff; border: 3px solid #86e3d1; border-radius: 20px; }
 .pal-face { font-size: 40px; line-height: 1.12; }
 .pal-name { font-size: 13px; line-height: 1.2; }
@@ -361,9 +362,10 @@ svg { display: block; }
 .pal.locked { background: #fbf3e2; border: 3px dashed #d9cbb0; }
 .pal.locked .pal-face { filter: grayscale(1); opacity: .45; }
 .stickers { gap: 12px; }
-.sticker { position: relative; aspect-ratio: 1; padding: 12%; background: #fff; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 0 0 2.5px #e7c98d, 0 5px 0 #0002; rotate: var(--tilt, 0deg); }
-.sticker span { display: block; width: 100%; height: 100%; }
-.sticker svg { width: 100%; height: 100%; }
+/* a square that does not lean on aspect-ratio: Safari sizes a button with aspect-ratio and a picture inside it differently */
+.sticker { position: relative; display: block; width: 100%; padding: 0; background: #fff; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 0 0 2.5px #e7c98d, 0 5px 0 #0002; rotate: var(--tilt, 0deg); }
+.sticker span { position: relative; display: block; width: 100%; height: 0; padding-top: 100%; }
+.sticker svg { position: absolute; left: 14%; top: 14%; width: 72%; height: 72%; }
 .sticker b { position: absolute; right: -7px; bottom: -4px; padding: 1px 7px; background: var(--tomato); color: #fff; border-radius: 99px; font-size: 12px; }
 .sticker.empty { background: #f5ebd6; border: 3px dashed #d9cbb0; box-shadow: none; rotate: 0deg; }
 .sticker.empty span { filter: grayscale(1) brightness(1.4) opacity(.25); }
