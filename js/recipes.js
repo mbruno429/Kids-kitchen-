@@ -350,6 +350,43 @@ window.RECIPES = [
       { t: 'eat', on: 'bowl2' },
     ],
   },
+  {
+    id: 'burrito', sp: 'a burrito', name: 'Burrito', icon: '🌯', art: 'burritoPlate', cat: 'Tex-Mex',
+    steps: [
+      { t: 'add', on: 'pan', say: 'Put the meat in the pan!', w: 50, items: [{ v: 'beef', n: 2 }, 'spice'] },
+      { t: 'cook', on: 'pan', say: 'Cook the meat!' },
+      { t: 'add', on: 'board', seq: 1, say: 'Tortilla first! Then fill it up!', items: [
+        { v: 'tortilla', at: 'center', w: 96 },
+        { v: 'rice', as: 'burritoRice', pos: { x: 50, y: 37 }, w: 70 },
+        { v: 'beans', as: 'burritoBeans', pos: { x: 50, y: 47 }, w: 68 },
+        { v: 'groundBeef', as: 'burritoBeef', pos: { x: 50, y: 57 }, w: 68 },
+        { v: 'cheese', as: 'burritoCheese', pos: { x: 50, y: 50 }, w: 62 }] },
+      { t: 'rub', on: 'board', tool: 'hands', fx: 'mix', say: 'Roll, roll, roll the burrito!', out: [{ v: 'burrito', w: 88 }] },
+      { t: 'add', on: 'plate', seq: 1, say: 'Add salsa and guacamole!', items: [{ v: 'burrito', as: 'burritoCut', pos: { x: 50, y: 40 }, w: 94 }, { v: 'salsa', pos: { x: 29, y: 78 }, w: 27 }, { v: 'guac', pos: { x: 71, y: 78 }, w: 27 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'guacamole', sp: 'guacamole and chips', eat: 'crunch', name: 'Guacamole & Chips', icon: '🥑', art: 'guacChips', cat: 'Tex-Mex',
+    steps: [
+      { t: 'chop', say: 'Chop the veggies!', items: [{ v: 'avocado', out: 'guacAvocado' }, { v: 'tomato', out: 'tomatoBits' }, { v: 'onion', out: 'onionBits' }] },
+      { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', w: 34, items: [{ v: 'guacAvocado', n: 2 }, 'tomatoBits', 'onionBits', 'cilantro', 'lime', 'salt'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Mash, mash, mash!', out: [{ v: 'guacMash', w: 96 }] },
+      { t: 'add', on: 'plate', seq: 1, say: 'Guacamole and chips on the plate!', items: [{ v: 'guacServe', at: 'center', w: 54 }, { v: 'chipBag', n: 4, as: 'tortillaChips', spots: [[22, 25], [78, 25], [22, 75], [78, 75]], w: 34 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'churros', sp: 'churros', eat: 'crunch', name: 'Churros', icon: '🥖', art: 'churros', cat: 'Tex-Mex',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['flour', 'water', 'butter', 'sugar'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'dough', w: 96 }] },
+      { t: 'add', on: 'pot', seq: 1, say: 'Oil first! Then the dough!', items: [{ v: 'oil', as: 'oilFill', at: 'fill' }, { v: 'churroBag', n: 3, as: 'churro', raw: true, spots: [[50, 28], [50, 50], [50, 72]], w: 62 }] },
+      { t: 'cook', on: 'pot', fry: true, say: 'Fry the churros!', out: [{ v: 'churro', w: 64, x: 42, y: 27, rot: -8 }, { v: 'churro', w: 64, x: 44, y: 48, rot: 5 }, { v: 'churro', w: 64, x: 42, y: 69, rot: -3 }] },
+      { t: 'add', on: 'plate', keep: true, seq: true, say: 'Cinnamon sugar and chocolate sauce!', items: ['churroSugar', { v: 'churroChoc', pos: { x: 78, y: 79 }, w: 28 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
 
   /* ---------------- Cajun & Creole (Breaux Bridge, Louisiana: the crawfish capital) ---------------- */
   {
@@ -401,6 +438,45 @@ window.RECIPES = [
       { t: 'add', on: 'pot', seq: 1, say: 'Oil first! Then the dough!', w: 32, items: [{ v: 'oil', as: 'oilFill', at: 'fill' }, { v: 'doughBall', n: 4, as: 'beignet', raw: true }] },
       { t: 'cook', on: 'pot', fry: true, say: 'Fry the beignets!', out: [{ v: 'beignet', w: 36, x: 32, y: 32, rot: -8 }, { v: 'beignet', w: 36, x: 68, y: 34, rot: 10 }, { v: 'beignet', w: 36, x: 34, y: 68, rot: 6 }, { v: 'beignet', w: 36, x: 68, y: 68, rot: -12 }] },
       { t: 'add', on: 'plate', keep: true, say: 'Lots of powdered sugar on top!', items: [{ v: 'powderSugar', n: 2 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'redbeans', sp: 'red beans and rice', name: 'Red Beans & Rice', icon: '🫘', art: 'redBeansRice', cat: 'Cajun & Creole',
+    steps: [
+      { t: 'chop', say: 'Chop the veggies!', items: [{ v: 'onion', out: 'onionBits' }, { v: 'celery', out: 'celeryBits' }] },
+      { t: 'add', on: 'pot', say: 'Everything in the pot!', w: 30, items: ['water', { v: 'redBeansBag', w: 40 }, { v: 'andouille', n: 2 }, 'onionBits', 'celeryBits', 'cajun'] },
+      { t: 'cook', on: 'pot', say: 'Cook the red beans!', turn: { waterFill: 'redBeansBroth' } },
+      { t: 'rub', on: 'pot', tool: 'spoon', say: 'Stir it up!', out: [{ v: 'redBeans', w: 96 }] },
+      { t: 'add', on: 'bowl2', seq: true, say: 'Rice first! Then the red beans!', items: [{ v: 'rice', at: 'center', w: 88 }, { v: 'redBeans', at: 'center', w: 62 }] },
+      { t: 'eat', on: 'bowl2' },
+    ],
+  },
+  {
+    id: 'poboy', sp: 'a shrimp po boy', name: "Shrimp Po' Boy", icon: '🥖', art: 'poboy', cat: 'Cajun & Creole',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Shrimp, egg and crumbs in the bowl!', items: [{ v: 'shrimp', n: 3 }, 'egg', 'crumbs'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Mix it all up!', out: [{ v: 'poboyShrimp', w: 30, raw: true, x: 32, y: 34 }, { v: 'poboyShrimp', w: 30, raw: true, x: 68, y: 34, rot: 40 }, { v: 'poboyShrimp', w: 30, raw: true, x: 50, y: 62, rot: -30 }, { v: 'poboyShrimp', w: 28, raw: true, x: 26, y: 66, rot: 80 }, { v: 'poboyShrimp', w: 28, raw: true, x: 74, y: 66, rot: 120 }] },
+      { t: 'add', on: 'pot', seq: 1, say: 'Oil first! Then the shrimp!', w: 30, items: [{ v: 'oil', as: 'oilFill', at: 'fill' }, { v: 'poboyShrimp', n: 5, raw: true }] },
+      { t: 'cook', on: 'pot', fry: true, say: 'Fry the shrimp!' },
+      { t: 'add', on: 'side', seq: true, say: 'Build your sandwich!', w: 84, items: [
+        { v: 'poboyLoaf', as: 'poboyBottom' }, { v: 'poboySauce' }, { v: 'lettuce', as: 'lettuceSide' }, { v: 'tomato', as: 'tomatoSide' },
+        { v: 'poboyShrimp', as: 'poboyShrimpSide' }, { v: 'poboyLoaf', as: 'poboyTop' }] },
+      { t: 'eat', on: 'side' },
+    ],
+  },
+  {
+    id: 'kingcake', sp: 'a king cake', name: 'King Cake', icon: '👑', art: 'kingCake', cat: 'Cajun & Creole',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['flour', 'sugar', 'butter', 'egg', 'cinnamon'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'dough', w: 96 }] },
+      { t: 'rub', on: 'sheet', tool: 'hands', say: 'Roll it into a big ring!', out: [{ v: 'kingCakeRing', w: 92, raw: true }] },
+      { t: 'bake', on: 'sheet', say: 'Bake the king cake!' },
+      { t: 'add', on: 'sheet', keep: true, seq: 1, say: 'Icing first! Then purple, green and gold!', items: [
+        { v: 'kingIcingBag', as: 'kingIcing', at: 'center', w: 92 },
+        { v: 'kcPurple', n: 2, spots: [[50, 21.5], [50, 78.5]], w: 30 },
+        { v: 'kcGreen', n: 2, spots: [[74.7, 35.8], [25.3, 64.2]], w: 30 },
+        { v: 'kcGold', n: 2, spots: [[74.7, 64.2], [25.3, 35.8]], w: 30 }] },
       { t: 'eat', on: 'plate' },
     ],
   },
@@ -463,6 +539,27 @@ window.RECIPES = [
       { t: 'add', on: 'glass', seq: true, say: 'Fill the glass all the way up!', w: 44, items: ['sweetBeans', 'gulaman', 'ice', { v: 'milk', as: 'hhMilk', w: 46 }, { v: 'ube', w: 40 }, { v: 'flan', w: 24 }] },
       { t: 'rub', on: 'glass', tool: 'spoon', fx: 'mix', say: 'Mix, mix, mix! Halo-halo!', out: [{ v: 'haloMixed', w: 45, x: 50, y: 68.5 }] },
       { t: 'eat', on: 'glass' },
+    ],
+  },
+  {
+    id: 'pandesal', sp: 'pandesal', name: 'Pandesal', icon: '🍞', art: 'pandesalBasket', cat: 'Filipino',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['flour', 'sugar', 'milk', 'butter'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'dough', w: 96 }] },
+      { t: 'rub', on: 'board', tool: 'hands', say: 'Roll, roll, roll little balls!', out: [{ v: 'pandesal', w: 25, x: 23, y: 32, raw: true }, { v: 'pandesal', w: 25, x: 50, y: 32, raw: true }, { v: 'pandesal', w: 25, x: 77, y: 32, raw: true }, { v: 'pandesal', w: 25, x: 23, y: 68, raw: true }, { v: 'pandesal', w: 25, x: 50, y: 68, raw: true }, { v: 'pandesal', w: 25, x: 77, y: 68, raw: true }] },
+      { t: 'add', on: 'sheet', seq: 1, say: 'Put them on the tray! Then the crumbs!', items: [{ v: 'pandesal', n: 6, raw: true, w: 25, spots: [[23, 32], [50, 32], [77, 32], [23, 68], [50, 68], [77, 68]] }, { v: 'crumbs', as: 'pandesalCrumbs', at: 'center', w: 96 }] },
+      { t: 'bake', on: 'sheet', say: 'Bake them in the oven!' },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'champorado', sp: 'champorado', eat: 'slurp', name: 'Champorado', icon: '🍫', art: 'champoradoBowl', cat: 'Filipino',
+    steps: [
+      { t: 'add', on: 'pot', say: 'Everything in the pot!', w: 36, items: ['water', { v: 'rice', as: 'riceGrains', at: 'center', w: 84 }, 'champChoc', 'sugar'] },
+      { t: 'cook', on: 'pot', say: 'Cook the champorado!', out: [{ v: 'champCook', w: 100 }] },
+      { t: 'rub', on: 'pot', tool: 'spoon', say: 'Stir it up!', out: [{ v: 'champFill', w: 100 }] },
+      { t: 'add', on: 'bowl2', keep: true, say: 'A swirl of milk on top!', items: [{ v: 'milk', as: 'champMilk', at: 'center', w: 72 }] },
+      { t: 'eat', on: 'bowl2' },
     ],
   },
 
@@ -736,6 +833,318 @@ window.RECIPES = [
       { t: 'add', on: 'sheet', keep: true, say: 'Put in the fortunes!', items: [{ v: 'fortunePaper', n: 4, spots: [[29, 29], [71, 29], [29, 71], [71, 71]], w: 30 }] },
       { t: 'rub', on: 'sheet', tool: 'hands', say: 'Fold, fold, fold the cookies!', out: [[29, 30], [71, 30], [29, 72], [71, 72]].map(p => ({ v: 'fortuneCookie', w: 40, x: p[0], y: p[1] })) },
       { t: 'eat', on: 'plate', say: 'Your fortune says: you are a super chef! Tap, tap, tap to feed your friend!' },
+    ],
+  },
+
+  /* ---------------- French ---------------- */
+  {
+    id: 'crepes', sp: 'crêpes', name: 'Crêpes', icon: '🥞', art: 'crepePlate', cat: 'French',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['flour', { v: 'egg', n: 2 }, 'milk', 'butter'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'batter', w: 96 }] },
+      { t: 'add', on: 'pan', say: 'Pour the batter in the pan!', items: [{ v: 'batterBowl', as: 'crepe', at: 'center', w: 94, raw: true }] },
+      { t: 'cook', on: 'pan', flip: true, say: 'Turn on the heat!' },
+      { t: 'add', on: 'plate', seq: 1, pick: 2, say: 'Fold the crêpe! Then pick two toppings!', items: [
+        { v: 'crepe', as: 'crepeFolded', at: 'center', w: 92 },
+        { v: 'strawberry', n: 3, at: 'free', w: 20, box: [32, 36, 66, 68], z: 30, opt: true },
+        { v: 'banana', n: 3, as: 'bananaCoin', at: 'free', w: 17, box: [32, 36, 66, 68], z: 30, opt: true },
+        { v: 'crepeChocSauce', at: 'center', w: 62, z: 20, opt: true },
+        { v: 'powderSugar', at: 'center', w: 64, z: 40, opt: true }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'croissants', sp: 'croissants', name: 'Croissants', icon: '🥐', cat: 'French',
+    steps: [
+      { t: 'add', on: 'board', say: 'Put the dough on the board!', items: [{ v: 'doughBall', at: 'center', w: 44 }] },
+      { t: 'rub', on: 'board', tool: 'pin', fx: 'grow', say: 'Roll, roll, roll the dough!', out: [{ v: 'croissantSheet', w: 96 }] },
+      { t: 'rub', on: 'board', tool: 'hands', fx: 'mix', say: 'Roll, roll, roll the croissants!', out: [{ v: 'croissant', w: 42, x: 30, y: 30, rot: -8, raw: true }, { v: 'croissant', w: 42, x: 71, y: 33, rot: 10, raw: true }, { v: 'croissant', w: 42, x: 50, y: 68, rot: -2, raw: true }] },
+      { t: 'bake', on: 'sheet', say: 'Bake the croissants!' },
+      { t: 'add', on: 'plate', keep: true, say: 'Add butter and jam!', items: [{ v: 'butter', pos: { x: 24, y: 64 }, w: 20 }, { v: 'croissantJam', pos: { x: 77, y: 66 }, w: 26 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'frenchtoast', sp: 'french toast', name: 'French Toast', icon: '🍞', art: 'frenchToastPlate', cat: 'French',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: [{ v: 'egg', n: 2 }, 'milk', 'cinnamon'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'frenchToastMix', w: 96 }] },
+      { t: 'add', on: 'pan', say: 'Dip the bread and put it in the pan!', items: [{ v: 'slice', as: 'frenchToast', n: 2, raw: true, spots: [[31, 50], [69, 50]], w: 44 }] },
+      { t: 'cook', on: 'pan', flip: true, say: 'Cook it until it is golden!' },
+      { t: 'add', on: 'plate', seq: 1, pick: 2, say: 'Pick two yummy toppings!', items: [
+        { v: 'frenchToast', n: 2, spots: [[40, 44], [60, 58]], w: 58 },
+        { v: 'powderSugar', at: 'center', w: 72, z: 40, opt: true },
+        { v: 'syrup', as: 'syrupPool', at: 'center', w: 58, z: 30, opt: true },
+        { v: 'strawberry', n: 3, at: 'free', w: 20, max: 26, z: 50, opt: true },
+        { v: 'blueberry', n: 3, at: 'free', w: 18, max: 26, z: 50, opt: true }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'omelette', sp: 'an omelette', name: 'Omelette', icon: '🍳', art: 'omelettePlate', cat: 'French',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Crack the eggs in the bowl!', items: [{ v: 'egg', n: 3 }, 'salt'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'omeletteEggs', w: 96 }] },
+      { t: 'add', on: 'pan', seq: true, say: 'Butter first! Then the eggs!', items: [{ v: 'butter', as: 'butterMelt', at: 'center', w: 84 }, { v: 'omeletteBowl', as: 'omeletteDisc', at: 'center', w: 96, raw: true }] },
+      { t: 'cook', on: 'pan', say: 'Turn on the heat!' },
+      { t: 'add', on: 'pan', keep: true, pick: 2, say: 'Pick two fillings!', items: [
+        { v: 'cheese', as: 'cheeseShreds', n: 2, at: 'free', w: 38, max: 22, opt: true },
+        { v: 'ham', n: 2, at: 'free', w: 34, max: 22, opt: true },
+        { v: 'mushroom', as: 'mushroomSlices', n: 2, at: 'free', w: 36, max: 22, opt: true },
+        { v: 'spinach', n: 2, at: 'free', w: 36, max: 22, opt: true }] },
+      { t: 'rub', on: 'pan', tool: 'spatula', fx: 'mix', say: 'Fold the omelette!', out: [{ v: 'omeletteFolded', w: 92 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'quiche', sp: 'a quiche', name: 'Quiche', icon: '🥧', art: 'quiche', cat: 'French',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: [{ v: 'egg', n: 2 }, 'milk', 'cheese'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'quicheMix', w: 96 }] },
+      { t: 'add', on: 'pie', seq: 2, pick: 2, say: 'Crust first! Then pick two fillings!', items: [
+        { v: 'doughBall', as: 'pieCrust', at: 'center', w: 104, raw: true },
+        { v: 'omeletteBowl', as: 'quicheFill', at: 'center', w: 84, raw: true },
+        { v: 'ham', n: 2, at: 'free', w: 34, max: 24, opt: true },
+        { v: 'spinach', n: 2, at: 'free', w: 36, max: 24, opt: true },
+        { v: 'mushroom', as: 'mushroomSlices', n: 2, at: 'free', w: 34, max: 24, opt: true },
+        { v: 'tomato', as: 'tomatoBits', n: 2, at: 'free', w: 32, max: 24, opt: true }] },
+      { t: 'bake', on: 'pie', say: 'Bake the quiche!' },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'ratatouille', sp: 'ratatouille', name: 'Ratatouille', icon: '🍆', art: 'ratatouille', cat: 'French',
+    steps: [
+      { t: 'chop', say: 'Chop the veggies!', items: [{ v: 'zucchini', out: 'zucchiniCoins' }, { v: 'eggplant', out: 'eggplantCoins' }, { v: 'tomato', out: 'ratTomatoes' }] },
+      { t: 'add', on: 'pie', seq: 1, say: 'Sauce first! Then the veggies, round and round!', items: [
+        { v: 'sauce', at: 'center', w: 98 },
+        { v: 'zucchiniCoins', as: 'ratZucchini', n: 4, raw: true, spots: [[50, 17], [78.6, 66.5], [21.4, 66.5], [50, 37]], w: 24 },
+        { v: 'eggplantCoins', as: 'ratEggplant', n: 4, raw: true, spots: [[71.2, 24.7], [61.3, 81], [17.5, 44.3], [61.3, 56.5]], w: 24 },
+        { v: 'ratTomatoes', as: 'ratTomato', n: 4, raw: true, spots: [[82.5, 44.3], [38.7, 81], [28.8, 24.7], [38.7, 56.5]], w: 24 }] },
+      { t: 'bake', on: 'pie', say: 'Bake the ratatouille!' },
+      { t: 'add', on: 'pie', keep: true, say: 'A little basil on top!', items: [{ v: 'basil', n: 2, at: 'free', w: 17, max: 20, z: 60 }] },
+      { t: 'eat', on: 'pie' },
+    ],
+  },
+  {
+    id: 'macarons', sp: 'macarons', name: 'Macarons', icon: '🍬', art: 'macarons', cat: 'French',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['macAlmond', 'sugar', { v: 'egg', n: 2 }, 'macPink'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'macBatter', w: 96 }] },
+      { t: 'add', on: 'sheet', say: 'Make little circles on the tray!', items: [{ v: 'macBag', as: 'macShell', n: 6, raw: true, spots: [[22, 32], [50, 32], [78, 32], [22, 68], [50, 68], [78, 68]], w: 25 }] },
+      { t: 'bake', on: 'sheet', say: 'Bake the macarons!' },
+      { t: 'add', on: 'side', seq: 'ends', pick: 1, say: 'Build a macaron! Pick a filling!', items: [
+        { v: 'macShell', as: 'macBottom', w: 76 },
+        { v: 'frostChoc', as: 'macFillChoc', w: 68, opt: true },
+        { v: 'whip', as: 'macFillCream', w: 68, opt: true },
+        { v: 'croissantJam', as: 'macFillJam', w: 68, opt: true },
+        { v: 'macShell', as: 'macTop', w: 76 }] },
+      { t: 'eat', on: 'side' },
+    ],
+  },
+  {
+    id: 'eclairs', sp: 'chocolate éclairs', name: 'Éclairs', icon: '🍫', art: 'eclairs', cat: 'French',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['flour', { v: 'egg', n: 2 }, 'butter', 'milk'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'dough', w: 96 }] },
+      { t: 'add', on: 'sheet', say: 'Make long lines on the tray!', items: [{ v: 'eclairBag', as: 'eclair', n: 3, raw: true, spots: [[50, 24], [50, 50], [50, 76]], w: 76 }] },
+      { t: 'bake', on: 'sheet', say: 'Bake the éclairs!' },
+      { t: 'add', on: 'plate', keep: true, say: 'Chocolate on top!', items: [{ v: 'frostChoc', as: 'eclairChoc', n: 3, spots: [[50, 24], [50, 50], [50, 76]], w: 76 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+
+  /* ---------------- Italian ---------------- */
+  {
+    id: 'lasagna', sp: 'lasagna', name: 'Lasagna', icon: '🍝', art: 'lasagna', cat: 'Italian',
+    steps: [
+      { t: 'add', on: 'dish', seq: true, say: 'Make the layers! Sauce, noodles, cheese!', items: [
+        { v: 'sauce', as: 'lasagnaSauce', at: 'center', w: 100 },
+        { v: 'lasagnaNoodle', as: 'lasagnaLayer', at: 'center', w: 100, raw: true },
+        { v: 'ricotta', as: 'ricottaDollops', at: 'center', w: 100 },
+        { v: 'lasagnaNoodle', as: 'lasagnaLayer', at: 'center', w: 100, raw: true },
+        { v: 'sauce', as: 'lasagnaSauce', at: 'center', w: 100 },
+        { v: 'cheese', as: 'lasagnaCheese', at: 'center', w: 100, raw: true }] },
+      { t: 'bake', on: 'dish', say: 'Bake the lasagna!' },
+      { t: 'add', on: 'plate', seq: 1, say: 'Put a big piece on the plate!', items: [{ v: 'lasagnaSlice', at: 'center', w: 78 }, { v: 'basil', as: 'capreseBasil', pos: { x: 52, y: 28 }, w: 15 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'ravioli', sp: 'ravioli', name: 'Ravioli', icon: '🥟', art: 'ravioli', cat: 'Italian',
+    steps: [
+      { t: 'add', on: 'board', seq: true, say: 'Pasta, cheese, then more pasta!', items: [
+        { v: 'raviSheet', at: 'center', w: 96 },
+        { v: 'ricotta', as: 'ricottaBlob', n: 4, spots: [[30, 30], [70, 30], [30, 70], [70, 70]], w: 20 },
+        { v: 'raviSheet', as: 'raviTop', at: 'center', w: 96 }] },
+      { t: 'rub', on: 'board', tool: 'hands', fx: 'mix', say: 'Press, press, press the ravioli!', out: [{ v: 'raviolo', w: 38, x: 30, y: 30, raw: true }, { v: 'raviolo', w: 38, x: 70, y: 30, raw: true }, { v: 'raviolo', w: 38, x: 30, y: 70, raw: true }, { v: 'raviolo', w: 38, x: 70, y: 70, raw: true }] },
+      { t: 'add', on: 'pot', seq: 1, say: 'Water and ravioli in the pot!', w: 36, items: ['water', { v: 'raviolo', n: 4, raw: true }] },
+      { t: 'cook', on: 'pot', say: 'Boil the ravioli!' },
+      { t: 'add', on: 'plate', seq: 1, say: 'Sauce, ravioli and cheese!', items: [{ v: 'sauce', at: 'center', w: 84 }, { v: 'raviolo', n: 4, spots: [[33, 34], [67, 34], [33, 67], [67, 67]], w: 34 }, { v: 'parmesan', at: 'center', w: 66 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'alfredo', sp: 'fettuccine Alfredo', eat: 'slurp', name: 'Fettuccine Alfredo', icon: '🍝', art: 'alfredo', cat: 'Italian',
+    steps: [
+      { t: 'add', on: 'pot', say: 'Water and noodles in the pot!', w: 44, items: ['water', { v: 'fettuccineBox', n: 2 }, 'salt'] },
+      { t: 'cook', on: 'pot', say: 'Boil the noodles!', out: [{ v: 'fettuccine', w: 92 }] },
+      { t: 'add', on: 'pan', seq: 1, say: 'Noodles, butter, cream and cheese!', w: 40, items: [{ v: 'fettuccine', at: 'center', w: 86 }, { v: 'butter', as: 'butterMelt' }, 'cream', 'parmesan'] },
+      { t: 'rub', on: 'pan', tool: 'spoon', say: 'Stir it up!', out: [{ v: 'alfredo', w: 96 }] },
+      { t: 'add', on: 'plate', keep: true, pick: 1, say: 'Pick a yummy topping!', items: [
+        { v: 'alfredoChicken', n: 3, at: 'free', w: 26, max: 26, opt: true }, { v: 'broccoli', n: 3, at: 'free', w: 22, max: 26, opt: true }, { v: 'peas', n: 2, at: 'free', w: 28, max: 24, opt: true }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'minestrone', sp: 'minestrone soup', eat: 'slurp', name: 'Minestrone', icon: '🥣', art: 'minestrone', cat: 'Italian',
+    steps: [
+      { t: 'chop', say: 'Chop the veggies!', items: [{ v: 'carrot', out: 'carrotCoins' }, { v: 'zucchini', out: 'zucchiniCoins' }, { v: 'tomato', out: 'tomatoBits' }] },
+      { t: 'add', on: 'pot', say: 'Everything in the pot!', w: 34, items: ['water', 'beans', 'carrotCoins', 'zucchiniCoins', 'tomatoBits', { v: 'macBox', w: 40 }] },
+      { t: 'cook', on: 'pot', say: 'Cook the soup!', turn: { waterFill: 'minestroneBroth' } },
+      { t: 'add', on: 'bowl2', keep: true, say: 'Cheese on top!', items: [{ v: 'parmesan', at: 'center', w: 56 }] },
+      { t: 'eat', on: 'bowl2' },
+    ],
+  },
+  {
+    id: 'calzone', sp: 'a calzone', name: 'Calzone', icon: '🥟', art: 'calzonePlate', cat: 'Italian',
+    steps: [
+      { t: 'add', on: 'board', say: 'Put the dough on the board!', items: [{ v: 'doughBall', at: 'center', w: 44 }] },
+      { t: 'rub', on: 'board', tool: 'pin', fx: 'grow', say: 'Roll, roll, roll the dough!', out: [{ v: 'crust', w: 100, raw: true }] },
+      { t: 'add', on: 'board', keep: true, seq: 2, pick: 2, say: 'Sauce and cheese! Then pick two toppings!', items: [{ v: 'sauce', at: 'center', w: 80 }, { v: 'cheese', as: 'pizzaCheese', at: 'center', w: 76, raw: true },
+        { v: 'pepperoni', n: 5, at: 'free', w: 18, max: 34, opt: true }, { v: 'ham', n: 3, at: 'free', w: 30, max: 30, opt: true },
+        { v: 'mushroom', n: 4, at: 'free', w: 17, max: 34, opt: true }, { v: 'spinach', n: 3, at: 'free', w: 30, max: 30, opt: true }] },
+      { t: 'rub', on: 'board', tool: 'hands', fx: 'mix', say: 'Fold it in half!', out: [{ v: 'calzone', w: 88, x: 48, y: 46, raw: true }] },
+      { t: 'bake', on: 'sheet', say: 'Bake the calzone!' },
+      { t: 'add', on: 'plate', keep: true, say: 'Tomato sauce for dipping!', items: [{ v: 'sauce', as: 'calzoneDip', pos: { x: 77, y: 79 }, w: 28 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'caprese', sp: 'a caprese salad', name: 'Caprese Salad', icon: '🍅', art: 'caprese', cat: 'Italian',
+    steps: [
+      { t: 'chop', say: 'Slice the tomato and the cheese!', items: [{ v: 'tomato', out: 'capreseTomatoes' }, { v: 'mozzarella', out: 'mozzSlices' }] },
+      { t: 'add', on: 'plate', say: 'Make a circle! Tomato, cheese, tomato, cheese!', items: [
+        { v: 'capreseTomatoes', as: 'capreseTomato', n: 4, spots: [[50, 24], [76, 50], [50, 76], [24, 50]], w: 33 },
+        { v: 'mozzSlices', as: 'mozzSlice', n: 4, spots: [[68.4, 31.6], [68.4, 68.4], [31.6, 68.4], [31.6, 31.6]], w: 33 }] },
+      { t: 'add', on: 'plate', keep: true, say: 'Basil and olive oil on top!', items: [{ v: 'basil', as: 'capreseBasil', n: 4, spots: [[60, 27], [73, 60], [40, 73], [27, 40]], w: 17 }, { v: 'oil', as: 'capreseOil', at: 'center', w: 74 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'focaccia', sp: 'focaccia', name: 'Focaccia', icon: '🍞', art: 'focacciaCard', cat: 'Italian',
+    steps: [
+      { t: 'add', on: 'sheet', seq: 1, say: 'Dough and oil on the tray!', items: [{ v: 'doughBall', as: 'focacciaDough', at: 'center', w: 94 }, { v: 'oil', at: 'center', w: 60 }] },
+      { t: 'rub', on: 'sheet', tool: 'hands', fx: 'mix', say: 'Poke, poke, poke!', out: [{ v: 'focaccia', w: 94, raw: true }] },
+      { t: 'add', on: 'sheet', keep: true, pick: 2, say: 'Pick two yummy toppings!', items: [
+        { v: 'focacciaTomatoes', as: 'focacciaTomato', n: 4, at: 'free', w: 15, opt: true }, { v: 'olives', as: 'focacciaOlive', n: 4, at: 'free', w: 12, opt: true },
+        { v: 'rosemary', as: 'focacciaRosemary', n: 4, at: 'free', w: 18, opt: true }, 'salt'] },
+      { t: 'bake', on: 'sheet', say: 'Bake the focaccia!' },
+      { t: 'eat', on: 'board' },
+    ],
+  },
+  {
+    id: 'cannoli', sp: 'cannoli', eat: 'crunch', name: 'Cannoli', icon: '🍰', art: 'cannoli', cat: 'Italian',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: [{ v: 'ricotta', w: 46 }, 'sugar', 'cinnamon'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'cannoliCream', w: 96 }] },
+      { t: 'add', on: 'plate', seq: true, say: 'Fill the shells with cream!', items: [
+        { v: 'cannoliShell', n: 3, spots: [[50, 27], [50, 50], [50, 73]], w: 80 },
+        { v: 'cannoliBag', n: 3, spots: [[50, 27], [50, 50], [50, 73]], w: 80 }] },
+      { t: 'add', on: 'plate', keep: true, pick: 1, say: 'Pick a yummy topping!', items: [
+        { v: 'chocolate', as: 'cannoliChoc', n: 3, spots: [[50, 27], [50, 50], [50, 73]], w: 80, opt: true },
+        { v: 'cannoliPistachios', as: 'cannoliNuts', n: 3, spots: [[50, 27], [50, 50], [50, 73]], w: 80, opt: true },
+        { v: 'cherry', as: 'cannoliCherry', n: 3, spots: [[50, 27], [50, 50], [50, 73]], w: 80, opt: true }, 'powderSugar'] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+
+  /* ---------------- Indian ---------------- */
+  {
+    id: 'butterchicken', sp: 'butter chicken', name: 'Butter Chicken', icon: '🍛', art: 'butterChickenBowl', cat: 'Indian',
+    steps: [
+      { t: 'add', on: 'pan', say: 'Everything in the pan!', w: 32, items: [{ v: 'butter', as: 'butterMelt', at: 'center', w: 86 }, { v: 'chickenRaw', n: 3, raw: true, w: 30 }, 'ginger', 'masala'] },
+      { t: 'cook', on: 'pan', say: 'Cook the chicken!' },
+      { t: 'add', on: 'pan', keep: true, say: 'Now the tomato sauce and cream!', items: [{ v: 'sauce', as: 'bcSauce', at: 'center', w: 100, z: 25 }, { v: 'cream', as: 'bcCream', at: 'center', w: 74, z: 26 }] },
+      { t: 'rub', on: 'pan', tool: 'spoon', say: 'Stir it up!', out: [{ v: 'butterChicken', w: 96 }] },
+      { t: 'add', on: 'bowl2', keep: true, say: 'A scoop of rice on top!', items: [{ v: 'rice', at: 'center', w: 42 }] },
+      { t: 'eat', on: 'bowl2' },
+    ],
+  },
+  {
+    id: 'naan', sp: 'naan', name: 'Naan', icon: '🫓', art: 'naanCard', cat: 'Indian',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['flour', 'yogurt', 'water'] },
+      { t: 'rub', on: 'bowl', tool: 'hands', say: 'Squish, squish! Make the dough!', out: [{ v: 'doughBall', w: 54 }] },
+      { t: 'rub', on: 'board', tool: 'pin', fx: 'grow', say: 'Roll, roll, roll the dough!', out: [{ v: 'naan', w: 84, raw: true }] },
+      { t: 'cook', on: 'pan', flip: true, say: 'Cook the naan!' },
+      { t: 'add', on: 'plate', keep: true, say: 'Butter and cilantro on top!', items: [{ v: 'butter', as: 'naanButter', at: 'center', w: 60 }, { v: 'cilantro', at: 'center', w: 62 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'samosas', sp: 'samosas', eat: 'crunch', name: 'Samosas', icon: '🥟', art: 'samosaPlate', cat: 'Indian',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put the filling in the bowl!', w: 34, items: [{ v: 'potato', n: 2 }, 'peas', 'masala'] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Mix it all up!', out: [{ v: 'samosaMix', w: 94 }] },
+      { t: 'add', on: 'board', seq: true, say: 'Wrapper first! Then the filling!', items: [{ v: 'roundWrapper', at: 'center', w: 92 }, { v: 'samosaMix', at: 'center', w: 46 }] },
+      { t: 'rub', on: 'board', tool: 'hands', say: 'Fold, fold, fold the samosas!', out: [{ v: 'samosa', w: 40, x: 50, y: 28, raw: true }, { v: 'samosa', w: 40, x: 28, y: 68, raw: true }, { v: 'samosa', w: 40, x: 72, y: 68, raw: true }] },
+      { t: 'add', on: 'pot', seq: 1, say: 'Oil first! Then the samosas!', items: [{ v: 'oil', as: 'oilFill', at: 'fill' }, { v: 'samosa', n: 3, raw: true, w: 40, spots: [[50, 30], [29, 67], [71, 67]] }] },
+      { t: 'cook', on: 'pot', fry: true, say: 'Fry the samosas!', out: [{ v: 'samosa', w: 40, x: 34, y: 30, rot: -8 }, { v: 'samosa', w: 40, x: 66, y: 34, rot: 10 }, { v: 'samosa', w: 40, x: 38, y: 68, rot: 4 }, { v: 'mintChutney', w: 30, x: 74, y: 72 }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'dal', sp: 'dal', eat: 'slurp', name: 'Dal', icon: '🍲', art: 'dalBowl', cat: 'Indian',
+    steps: [
+      { t: 'chop', say: 'Chop the veggies!', items: [{ v: 'onion', out: 'onionBits' }, { v: 'tomato', out: 'tomatoBits' }] },
+      { t: 'add', on: 'pot', say: 'Everything in the pot!', w: 36, items: ['water', 'lentils', 'turmeric', 'onionBits', 'tomatoBits'] },
+      { t: 'cook', on: 'pot', say: 'Cook the dal!', out: [{ v: 'dalCook', w: 100 }] },
+      { t: 'rub', on: 'pot', tool: 'spoon', say: 'Stir it up!', out: [{ v: 'dal', w: 100 }] },
+      { t: 'add', on: 'bowl2', keep: true, say: 'Cilantro on top!', items: [{ v: 'cilantro', at: 'center', w: 56 }] },
+      { t: 'eat', on: 'bowl2' },
+    ],
+  },
+  {
+    id: 'biryani', sp: 'biryani', name: 'Biryani', icon: '🍚', art: 'biryaniPlate', cat: 'Indian',
+    steps: [
+      { t: 'add', on: 'pot', seq: 'ends', say: 'Chicken first! Then rice on top!', w: 30, items: [{ v: 'chickenRaw', n: 3, raw: true }, { v: 'yogurt', w: 40 }, 'masala', { v: 'rice', as: 'biryaniRice', at: 'center', w: 96 }] },
+      { t: 'cook', on: 'pot', say: 'Cook the biryani!', out: [{ v: 'biryani', w: 100 }] },
+      { t: 'add', on: 'plate', keep: true, pick: 2, say: 'Pick two yummy toppings!', items: [
+        { v: 'biryaniOnions', at: 'center', w: 76, opt: true }, { v: 'cilantro', at: 'center', w: 68, opt: true }, { v: 'egg', n: 2, as: 'eggHalf', at: 'free', w: 24, max: 30, opt: true }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'lassi', sp: 'a mango lassi', eat: 'slurp', name: 'Mango Lassi', icon: '🥭', art: 'lassiGlass', cat: 'Indian',
+    steps: [
+      { t: 'add', on: 'glass', seq: true, say: 'Fill the glass all the way up!', items: [{ v: 'mango', n: 2, as: 'lassiMango', w: 44 }, { v: 'yogurt', n: 2, as: 'lassiYogurt', w: 46 }, { v: 'ice', as: 'hhIce', w: 47 }] },
+      { t: 'rub', on: 'glass', tool: 'spoon', fx: 'mix', say: 'Mix, mix, mix the lassi!', out: [{ v: 'lassiMixed', w: 45, x: 50, y: 68.5 }] },
+      { t: 'add', on: 'glass', keep: true, say: 'A slice of mango on top!', items: [{ v: 'mango', as: 'lassiTop', pos: { x: 63, y: 33, z: 30 }, w: 28 }] },
+      { t: 'eat', on: 'glass' },
+    ],
+  },
+  {
+    id: 'dosa', sp: 'a dosa', eat: 'crunch', name: 'Dosa', icon: '🌯', art: 'dosaPlate', cat: 'Indian',
+    steps: [
+      { t: 'add', on: 'pan', say: 'Pour the batter in the pan!', items: [{ v: 'batterBowl', as: 'dosaCrepe', at: 'center', w: 98, raw: true }] },
+      { t: 'cook', on: 'pan', say: 'Cook the dosa!' },
+      { t: 'add', on: 'pan', keep: true, say: 'Potato filling in the middle!', items: [{ v: 'dosaPotato', at: 'center', w: 52 }] },
+      { t: 'rub', on: 'plate', tool: 'hands', say: 'Roll up the dosa!', out: [{ v: 'dosaRoll', w: 92, x: 50, y: 55, rot: 6 }] },
+      { t: 'add', on: 'plate', keep: true, pick: 2, say: 'Pick two dipping sauces!', items: [
+        { v: 'coconutChutney', spots: [[28, 19]], w: 28, opt: true }, { v: 'sambar', spots: [[72, 19]], w: 28, opt: true }, { v: 'tomatoChutney', spots: [[50, 86]], w: 28, opt: true }] },
+      { t: 'eat', on: 'plate' },
+    ],
+  },
+  {
+    id: 'gulabjamun', sp: 'gulab jamun', name: 'Gulab Jamun', icon: '🍡', art: 'gulabJamun', cat: 'Indian',
+    steps: [
+      { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['flour', 'milk', 'butter', 'sugar'] },
+      { t: 'rub', on: 'bowl', tool: 'hands', say: 'Roll, roll, roll little balls!', out: [{ v: 'jamunBall', w: 30, x: 32, y: 34, raw: true }, { v: 'jamunBall', w: 30, x: 68, y: 34, raw: true }, { v: 'jamunBall', w: 30, x: 50, y: 56, raw: true }, { v: 'jamunBall', w: 30, x: 31, y: 74, raw: true }, { v: 'jamunBall', w: 30, x: 69, y: 74, raw: true }] },
+      { t: 'add', on: 'pot', seq: 1, say: 'Oil first! Then the dough!', items: [{ v: 'oil', as: 'oilFill', at: 'fill' }, { v: 'jamunBall', n: 5, raw: true, w: 28, spots: [[32, 32], [68, 32], [50, 52], [32, 72], [68, 72]] }] },
+      { t: 'cook', on: 'pot', fry: true, say: 'Fry the gulab jamun!', out: [{ v: 'jamunBall', w: 28, x: 32, y: 32 }, { v: 'jamunBall', w: 28, x: 68, y: 32 }, { v: 'jamunBall', w: 28, x: 50, y: 52 }, { v: 'jamunBall', w: 28, x: 32, y: 72 }, { v: 'jamunBall', w: 28, x: 68, y: 72 }] },
+      { t: 'add', on: 'bowl2', keep: true, say: 'Pour on the sweet syrup!', items: ['jamunSyrup'] },
+      { t: 'eat', on: 'bowl2' },
     ],
   },
 ];

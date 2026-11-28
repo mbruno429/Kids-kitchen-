@@ -86,6 +86,18 @@ SAY = {
     'brrr': 'bɹˈɜɹ',              # brrr (it is cold)
     'omurice': 'ˈOmuɹˌIs',        # OH-moo-rice
     'mochi': 'mˈOʧi',             # MOH-chee
+    'crêpe': 'kɹˈAp',             # KRAYP
+    'crêpes': 'kɹˈAps',           # KRAYPS
+    'éclair': 'Aklˈɛɹ',           # ay-KLAIR
+    'éclairs': 'Aklˈɛɹz',         # ay-KLAIRS
+    'croissant': 'kɹəsˈɑnt',      # kruh-SAHNT (the American way)
+    'croissants': 'kɹəsˈɑnts',    # kruh-SAHNTS
+    'dosa': 'dˈOsə',              # DOH-suh
+    'gulab': 'ɡʊlˈɑb',            # guh-LAHB
+    'jamun': 'ʤˈɑmʊn',            # JAH-mun
+    'pandesal': 'pˌɑndəsˈɑl',     # pahn-deh-SAHL
+    'champorado': 'ʧˌɑmpOɹˈɑdO',  # chahm-poh-RAH-doh
+    'lassi': 'lˈʌsi',             # LUH-see
 }
 SAY_RE = re.compile(r'(?<!\w)(' + '|'.join(sorted(SAY, key=len, reverse=True)) + r')(?!\w)', re.IGNORECASE)
 

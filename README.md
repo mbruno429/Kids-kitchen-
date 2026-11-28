@@ -10,7 +10,7 @@ No reading needed: the chef says every instruction out loud and a pointing hand 
 if a child gets stuck. Nothing can really go wrong — the worst that happens is a burger that is
 "a little bit crispy".
 
-## The 56 dishes
+## The 97 dishes
 
 | Breakfast | Lunch | Dinner | Treats |
 | --- | --- | --- | --- |
@@ -23,6 +23,8 @@ if a child gets stuck. Nothing can really go wrong — the worst that happens is
 | | | Corn on the Cob | Donuts |
 | | | Baked Potato | Brownies |
 
+Nine kitchens from around the world, eight dishes each:
+
 | Tex-Mex | Cajun & Creole | Filipino |
 | --- | --- | --- |
 | Quesadilla | Crawfish Étouffée | Lumpia |
@@ -30,7 +32,9 @@ if a child gets stuck. Nothing can really go wrong — the worst that happens is
 | Cheese Enchiladas | Gumbo | Sinigang |
 | Fajitas | Jambalaya | Chicken Adobo |
 | Chili | Beignets | Pancit |
-| | | Halo-Halo |
+| Burrito | Red Beans & Rice | Halo-Halo |
+| Guacamole & Chips | Shrimp Po' Boy | Pandesal |
+| Churros | King Cake | Champorado |
 
 | Japanese | Thai | Chinese |
 | --- | --- | --- |
@@ -39,6 +43,22 @@ if a child gets stuck. Nothing can really go wrong — the worst that happens is
 | Ramen | Tom Yum Soup | Chow Mein |
 | Tempura | Chicken Satay | Sweet & Sour Chicken |
 | Bento Box | Mango Sticky Rice | Egg Drop Soup |
+| Miso Soup | Pineapple Fried Rice | Bao Buns |
+| Omurice | Banana Roti | Egg Tarts |
+| Mochi | Coconut Ice Cream | Fortune Cookies |
+
+| French | Indian | Italian |
+| --- | --- | --- |
+| Crêpes | Butter Chicken | Lasagna |
+| Croissants | Naan | Ravioli |
+| French Toast | Samosas | Fettuccine Alfredo |
+| Omelette | Dal | Minestrone |
+| Quiche | Biryani | Calzone |
+| Ratatouille | Mango Lassi | Caprese Salad |
+| Macarons | Dosa | Focaccia |
+| Éclairs | Gulab Jamun | Cannoli |
+
+A row of section buttons above the cookbook jumps straight to a section, and the chef says its name.
 
 The Cajun & Creole dishes come from the Breaux Bridge area of Louisiana (the "crawfish capital of the
 world"); the Filipino dishes are family favourites of the Filipino community in Sacramento.
@@ -49,17 +69,19 @@ Everything is one tap — no dragging, no swiping.
 
 - **Wash hands:** every recipe starts at the sink — tap the soap, then the water.
 - **Add:** tap an ingredient and it hops into the bowl, pot, pan, tray or plate.
-- **Choose:** some dishes let the child decide — pizza toppings, cupcake and donut frosting, ice cream
-  scoops, waffle, burger, baked potato and nacho toppings. The tiles with a dashed purple border are
-  the choices.
+- **Choose:** some dishes let the child decide — pizza, calzone and focaccia toppings, cupcake and donut
+  frosting, ice cream scoops, mochi colours, the macaron filling, omelette and quiche fillings, dosa
+  dips, and the toppings for waffles, crêpes, French toast, burgers, baked potatoes, nachos, Alfredo,
+  biryani, banana roti, coconut ice cream and cannoli. The tiles with a dashed purple border are the
+  choices.
 - **Stir / roll:** tap, tap, tap the spoon or rolling pin (or the bowl).
 - **Chop:** tap, tap, tap the knife (or the food).
 - **Cook:** tap the 🔥 to turn on the stove, tap the spatula to flip, and tap the crossed-out 🔥 to
   turn the heat off when the food is ready. Left on too long, it gets a little crispy (or the pot
   bubbles over) — and the game carries on.
 - **Bake:** tap the tray and it slides into the oven; tap the oven to take it out when it dings.
-- **Steam / freeze:** dumplings cook in a bamboo steamer, and ice pops go into the freezer the same
-  way a tray goes into the oven (nothing can burn in there).
+- **Steam / freeze:** dumplings, bao buns and mochi cook in a bamboo steamer, and ice pops and coconut
+  ice cream go into the freezer the same way a tray goes into the oven (nothing can burn in there).
 - **Feed your friend:** tap the finished dish and the friend gobbles it up.
 
 The chef also reminds children that a grown-up helps with the stove, the oven and knives.
@@ -68,9 +90,9 @@ The chef also reminds children that a grown-up helps with the stove, the oven an
 
 - **Friends:** an animal friend comes to eat every dish. One of them is always waiting in the cookbook
   with an order ("Bunny wants Pizza!"); cooking it earns two hearts instead of one. Four friends are
-  there from the start and twelve more arrive as more different dishes are cooked.
-- **Sticker book** (📒): one sticker per dish, the friends and their hearts, and sixteen badges
-  (first dish, 5, 10, 20 and 40 dishes, every dish, and one for finishing each cookbook section).
+  there from the start and sixteen more arrive as more different dishes are cooked.
+- **Sticker book** (📒): one sticker per dish, the friends and their hearts, and twenty-one badges
+  (first dish, 5, 10, 20, 40, 60 and 80 dishes, every dish, and one for finishing each cookbook section).
 
 ## For grown-ups
 
