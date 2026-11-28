@@ -45,7 +45,7 @@
     CATS.forEach(([cat, icon, key]) => {
       const list = STORE.visible().filter(r => r.cat === cat);
       if (!list.length) return;
-      box.append(el(`<h3 class="cat cat-${key}"><span>${icon}</span>${cat}</h3>`));
+      box.append(el(`<h3 class="cat cat-${key}" data-k="${key}"><span>${icon}</span>${cat}</h3>`));
       const grid = el('<div class="grid"></div>');
       list.forEach(r => {
         const b = el(`<button class="card cat-${key}${STORE.save.stars[r.id] ? ' done' : ''}${r === o.dish ? ' wanted' : ''}" data-id="${r.id}" aria-label="${r.name}">
@@ -56,13 +56,47 @@
       box.append(grid);
     });
     box.scrollTop = 0;
+    buildJump(box, o);
     return o;
   }
+  // the row of section buttons above the cookbook: tap one to jump to that section (the chef says its name)
+  function buildJump(box, o) {
+    const jump = $('#jump');
+    jump.innerHTML = '';
+    const top = el(`<button class="jump-top" data-k="" aria-label="${o.friend.name} wants ${o.dish.name}">${o.friend.face}</button>`);
+    top.addEventListener('click', () => { SFX.unlock(); SFX.play('pick'); box.scrollTo({ top: 0, behavior: 'smooth' }); });
+    jump.append(top);
+    $$('h3.cat', box).forEach(h => {
+      const c = CATS.find(x => x[2] === h.dataset.k);
+      const b = el(`<button class="cat-${c[2]}" data-k="${c[2]}" aria-label="${c[0]}">${c[1]}</button>`);
+      b.addEventListener('click', () => {
+        SFX.unlock(); SFX.play('pick'); SFX.say(LINES.section(c[0]));
+        box.scrollTo({ top: h.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop - 6, behavior: 'smooth' });
+      });
+      jump.append(b);
+    });
+    jumpOn = null;
+    SFX.preload(CATS.map(c => LINES.section(c[0])));
+  }
+  let jumpRaf = 0, jumpOn = null;
+  function markJump() {
+    jumpRaf = 0;
+    const box = $('#dishes'), jump = $('#jump'), lim = box.getBoundingClientRect().top + 70;
+    let cur = '';
+    $$('h3.cat', box).forEach(h => { if (h.getBoundingClientRect().top <= lim) cur = h.dataset.k; });
+    if (cur === jumpOn) return;
+    jumpOn = cur;
+    $$('button', jump).forEach(b => b.classList.toggle('on', b.dataset.k === cur));
+    const on = $('button.on', jump);
+    if (on) jump.scrollTo({ left: on.offsetLeft - (jump.clientWidth - on.offsetWidth) / 2, behavior: 'smooth' });
+  }
+  $('#dishes').addEventListener('scroll', () => { if (!jumpRaf) jumpRaf = requestAnimationFrame(markJump); }, { passive: true });
   function toMenu(lines) {
     endStep(); G.run++;
     $('#win').hidden = true; stopConfetti();
     const o = buildMenu();
     show('menu');
+    markJump();
     SFX.say((lines || []).concat(LINES.hungry(o.friend)));
   }
   function toHome() {
@@ -895,7 +929,7 @@
   /* ---------- keep iOS from zooming / scrolling the page while playing ---------- */
   ['gesturestart', 'gesturechange', 'dblclick'].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive: false }));
   document.addEventListener('contextmenu', e => e.preventDefault());
-  document.addEventListener('touchmove', e => { if (!e.target.closest || !e.target.closest('.dishes')) e.preventDefault(); }, { passive: false });
+  document.addEventListener('touchmove', e => { if (!e.target.closest || !e.target.closest('.dishes, .jump')) e.preventDefault(); }, { passive: false });
 
   // shared with js/screens.js (and handy for tests)
   window.__KK = { G, RECIPES, startRecipe, toMenu, toHome, show, buildMenu, dishPic, el, $, $$, wobble, sparkle, paintSnd, tappable };

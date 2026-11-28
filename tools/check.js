@@ -29,7 +29,7 @@ for (const r of window.RECIPES) {
 }
 
 // voice
-const lines = window.LINES.all(window.RECIPES, V, window.STORE.FRIENDS);
+const lines = window.LINES.all(window.RECIPES, V, window.STORE.FRIENDS, window.STORE.CATS);
 for (const l of lines) {
   const f = window.VOICE[l];
   if (!f) console.warn('No recording yet (the phone voice will read it): ' + l);

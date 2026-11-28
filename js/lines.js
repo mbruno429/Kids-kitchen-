@@ -45,6 +45,8 @@
     intro: (r) => `Let's make ${r.sp || r.name.toLowerCase()}!`,
     win: (r) => `Yay! You made ${r.sp || r.name.toLowerCase()}! Good job!`,
     name: (n) => cap(n) + '!',
+    // the cookbook section buttons: "Breakfast!", "Italian food!"
+    section: (cat) => ({ Breakfast: 'Breakfast!', Lunch: 'Lunch!', Dinner: 'Dinner!', Treats: 'Yummy treats!' })[cat] || cap(cat.replace(/ & /g, ' and ')) + ' food!',
     // lines used all the time: kept ready so they never lag
     common() {
       return [L.hello, L.flip, L.eat, L.wash, L.scrub, L.clean, L.hot, L.sticker, L.friend, L.badge, L.name('soap'), L.name('water')]
@@ -61,8 +63,8 @@
       return [...new Set(out)];
     },
     // every line in the whole game (used by the recording script)
-    all(RECIPES, V, FRIENDS) {
-      const out = L.common().concat(L.book);
+    all(RECIPES, V, FRIENDS, CATS) {
+      const out = L.common().concat(L.book, (CATS || []).map(c => L.section(c[0])));
       RECIPES.forEach((r) => out.push(...L.forRecipe(r, V)));
       Object.values(V).forEach((v) => { if (v.n) out.push(L.name(v.n)); });
       (FRIENDS || []).forEach((f) => { out.push(L.hungry(f), L.thanks(f)); if (f.at > 0) out.push(L.meet(f)); });

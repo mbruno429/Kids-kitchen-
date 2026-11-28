@@ -73,12 +73,20 @@ svg { display: block; }
   flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y;
   padding: 6px 14px calc(var(--sab) + 28px); overscroll-behavior: contain;
 }
-.cat { display: inline-flex; align-items: center; gap: 8px; margin: 18px 0 10px; padding: 6px 16px 6px 10px; border-radius: 99px; font-size: 19px; color: #fff; }
+.cat { display: inline-flex; align-items: center; gap: 8px; margin: 18px 0 10px; padding: 6px 16px 6px 10px; border-radius: 99px; font-size: 19px; color: #fff; background: var(--cc, var(--sun)); }
 .cat span { font-size: 22px; }
-.cat.cat-breakfast { background: #ff9f1c; } .cat.cat-lunch { background: var(--mint); }
-.cat.cat-dinner { background: var(--tomato); } .cat.cat-treats { background: var(--grape); }
-.cat.cat-texmex { background: #e8590c; } .cat.cat-cajun { background: #2e9e5b; } .cat.cat-filipino { background: #2f6fe0; }
-.cat.cat-japanese { background: #e64980; } .cat.cat-thai { background: #0c8599; } .cat.cat-chinese { background: #c92a2a; }
+/* each section's colour, used by its heading and its jump button */
+.cat-breakfast { --cc: #ff9f1c; } .cat-lunch { --cc: var(--mint); } .cat-dinner { --cc: var(--tomato); } .cat-treats { --cc: var(--grape); }
+.cat-texmex { --cc: #e8590c; } .cat-cajun { --cc: #2e9e5b; } .cat-filipino { --cc: #2f6fe0; }
+.cat-japanese { --cc: #e64980; } .cat-thai { --cc: #0c8599; } .cat-chinese { --cc: #c92a2a; }
+.cat-french { --cc: #3b5bdb; } .cat-indian { --cc: #e67700; } .cat-italian { --cc: #5c940d; }
+/* the row of section buttons above the cookbook: tap one to jump to that section */
+.jump { position: relative; flex: none; display: flex; gap: 9px; padding: 12px 14px 6px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; touch-action: pan-x; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+.jump::-webkit-scrollbar { display: none; }
+.jump button { flex: none; width: 50px; height: 50px; padding: 0; border-radius: 50%; background: var(--cc, #fff); border: 3px solid #fff; box-shadow: 0 4px 0 #0002; font-size: 25px; line-height: 44px; text-align: center; transition: transform .15s, box-shadow .15s; }
+.jump button.jump-top { --cc: var(--sun); background: #fff; border-color: var(--sun); }
+.jump button.on { transform: translateY(-2px) scale(1.08); box-shadow: 0 0 0 3px var(--cc), 0 5px 0 #0002; }
+.jump button:active { transform: translateY(3px); box-shadow: 0 1px 0 #0002; }
 .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
 .card {
   position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
@@ -89,6 +97,7 @@ svg { display: block; }
 .card.cat-dinner { --c: #ff9a92; --c2: #e2483d; } .card.cat-treats { --c: #c3a6ff; --c2: #8257e6; }
 .card.cat-texmex { --c: #ffb37a; --c2: #d9500a; } .card.cat-cajun { --c: #8fd9aa; --c2: #23834a; } .card.cat-filipino { --c: #9dbcf7; --c2: #2459c0; }
 .card.cat-japanese { --c: #f7a8c4; --c2: #d6336c; } .card.cat-thai { --c: #7fd1dc; --c2: #0b7285; } .card.cat-chinese { --c: #f29b9b; --c2: #b02525; }
+.card.cat-french { --c: #b4c3f7; --c2: #2f47b5; } .card.cat-indian { --c: #ffd08a; --c2: #c96a00; } .card.cat-italian { --c: #c3e08f; --c2: #4f7f0b; }
 .card:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--c2); }
 .card-pic { width: 92px; height: 92px; }
 .card-pic svg { width: 100%; height: 100%; }
@@ -408,6 +417,8 @@ svg { display: block; }
 
 /* short screens (Safari with its toolbars showing) */
 @media (max-height: 700px) {
+  .jump { padding-top: 9px; gap: 8px; }
+  .jump button { width: 44px; height: 44px; font-size: 22px; line-height: 38px; }
   .bubble { min-height: 52px; margin-bottom: 4px; }
   .bubble-chef { width: 42px; height: 42px; }
   .bubble-txt { font-size: 18px; }

@@ -738,6 +738,46 @@
     brownies: { h: S(put(brownieSq, 6, 30, 0.46, -6) + put(brownieSq, 46, 34, 0.46, 8) + put(brownieSq, 26, 4, 0.46, 3)) },
   });
 
+  /* ---------- shared by several of the world kitchens (French, Italian, Indian ...) ---------- */
+  {
+    const carton = (c, top, ch) => S(`<rect x="26" y="36" width="48" height="58" rx="4" fill="${c}" stroke="${sh(top, -0.3)}" stroke-width="3"/>
+      <path d="M24 38 L50 14 L76 38Z" fill="${top}" stroke="${sh(top, -0.3)}" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="40" y="6" width="20" height="10" rx="2" fill="${top}" stroke="${sh(top, -0.3)}" stroke-width="2.5"/>${label(ch, 50, 66, 26)}`);
+    const tub = (c, lid, ch) => S(`<path d="M22 32 H78 L72 88 Q71 94 65 94 H35 Q29 94 28 88Z" fill="${c}" stroke="${sh(c, -0.25)}" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="16" y="20" width="68" height="15" rx="7" fill="${lid}" stroke="${sh(lid, -0.25)}" stroke-width="3"/>${label(ch, 50, 63, 26)}`);
+    const spinachArt = S(`<g fill="none" stroke="#7fb86a" stroke-width="4" stroke-linecap="round"><path d="M50 94 L36 56"/><path d="M50 94 L50 50"/><path d="M50 94 L64 56"/></g>
+      <g stroke="#2c6e2a" stroke-width="3" stroke-linejoin="round"><path d="M36 58 Q8 52 12 26 Q22 6 40 16 Q50 30 36 58Z" fill="#3c9a3a"/>
+      <path d="M64 58 Q92 52 88 26 Q78 6 60 16 Q50 30 64 58Z" fill="#3c9a3a"/><path d="M50 54 Q30 40 38 16 Q50 2 62 16 Q70 40 50 54Z" fill="#4fae44"/></g>
+      <g fill="none" stroke="#7fcf6a" stroke-width="2.5" stroke-linecap="round" opacity=".8"><path d="M36 56 Q24 38 28 22"/><path d="M64 56 Q76 38 72 22"/><path d="M50 52 V18"/></g>`);
+    const zucchiniArt = S(`<g transform="rotate(-35 50 50)"><rect x="8" y="36" width="82" height="28" rx="14" fill="#3f8a2e" stroke="#2a5f1e" stroke-width="3"/>
+      <path d="M20 44 H74" stroke="#8cc56a" stroke-width="4" stroke-linecap="round" opacity=".7"/><rect x="86" y="44" width="10" height="12" rx="3" fill="#6b8f3a" stroke="#4a6a24" stroke-width="2"/>
+      <circle cx="13" cy="50" r="5" fill="#cfe58a" stroke="#6f9a3a" stroke-width="2"/></g>`);
+    const hamArt = S(`<path d="M50 8 C76 6 94 26 92 50 C94 76 74 94 50 92 C24 94 6 74 8 50 C6 24 26 8 50 8Z" fill="#fbd3cf" stroke="#d9827d" stroke-width="3"/>
+      <path d="M50 18 C70 16 84 32 82 50 C84 70 68 84 50 82 C30 84 16 70 18 50 C16 30 32 18 50 18Z" fill="#f48c8c"/>
+      <g fill="#f9c4c0" opacity=".9"><ellipse cx="38" cy="40" rx="9" ry="4" transform="rotate(-20 38 40)"/><ellipse cx="62" cy="60" rx="9" ry="4" transform="rotate(15 62 60)"/></g>`);
+    const cilantroArt = S(`<g fill="none" stroke="#5a9e3a" stroke-width="4" stroke-linecap="round"><path d="M50 96 Q48 70 34 40"/><path d="M50 96 Q52 66 66 36"/><path d="M50 96 V30"/></g>
+      ${[[30, 36, -30], [38, 22, -60], [22, 50, -10], [50, 22, -90], [58, 10, -80], [42, 10, -110], [70, 32, -150], [64, 46, 170], [78, 20, -130]].map((p, i) => leaf(['#3f9d3a', '#58b84a'], 0.75)(p[0], p[1], p[2], i)).join('')}`);
+    const gingerArt = S(`<path d="M14 62 Q10 46 24 44 Q26 30 40 34 Q44 20 58 26 Q70 18 76 32 Q90 34 88 50 Q94 64 80 68 Q70 82 56 74 Q44 84 34 74 Q18 78 14 62Z" fill="#e8c98a" stroke="#b48a4a" stroke-width="3" stroke-linejoin="round"/>
+      <g stroke="#c9a362" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M30 56 Q36 52 42 56"/><path d="M54 48 Q60 44 66 48"/><path d="M48 64 Q54 60 60 64"/></g>`);
+    Object.assign(V, {
+      cream: { s: 'pour', n: 'cream', h: carton('#fdfbf3', '#7cc7ff', '🐄'), d: { as: 'creamPuddle' } },
+      creamPuddle: { h: puddle('#fffaf0', 0.97) },
+      yogurt: { s: 'splat', n: 'yogurt', h: tub('#f2f7ff', '#5cb8ff', '🥄'), d: { as: 'yogurtDollop' } },
+      yogurtDollop: { h: dollop('#fffdf8') },
+      spinach: { n: 'spinach', h: spinachArt, d: { as: 'spinachLeaves' } },
+      spinachLeaves: { n: 'spinach', h: S(spread(9, 191, 30, leaf(['#3c9a3a', '#4fae44', '#2f8a35'], 1.3))) },
+      zucchini: { n: 'zucchini', h: zucchiniArt, d: { as: 'zucchiniCoins' } },
+      zucchiniCoins: { n: 'zucchini', h: S(spread(7, 193, 28, coin('#3f8a2e', '#eef5cf', 10))) },
+      ham: { s: 'thud', n: 'ham', h: hamArt, d: { as: 'hamBits' } },
+      hamBits: { n: 'ham', h: S(spread(9, 195, 28, dice(['#f48c8c', '#f7a5a1'], 11))) },
+      hamSide: { h: L(`<path d="M6 10 Q30 2 60 8 T120 8 T194 10 L194 22 Q170 30 140 24 T80 24 T6 22Z" fill="#f48c8c" stroke="#d9727a" stroke-width="3" stroke-linejoin="round"/>`, 30), ar: 0.15, sink: 0.3 },
+      cilantro: { n: 'cilantro', h: cilantroArt, d: { as: 'cilantroBits' } },
+      cilantroBits: { n: 'cilantro', h: S(spread(12, 197, 30, leaf(['#4fae44', '#3f9d3a'], 0.6))) },
+      ginger: { n: 'ginger', h: gingerArt, d: { as: 'gingerBits' } },
+      gingerBits: { n: 'ginger', h: S(spread(9, 199, 26, dice(['#f3dba6', '#e8c98a'], 8))) },
+    });
+  }
+
   /* ---------- pots, pans, plates ----------
      box = [left%, top%, size%] of the square where food goes */
   const A = (inner) => `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" overflow="visible">${inner}</svg>`;
@@ -863,6 +903,15 @@
       <path d="M30 62 Q60 46 110 44" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none" opacity=".6"/>`),
     box: [0, 0, 100], round: false,
     slots: [[20, 50], [40, 50], [60, 50], [80, 50]],
+  };
+  // a deep baking dish with handles, seen from above (lasagna)
+  VESSEL.dish = {
+    art: A(`<rect x="18" y="34" width="264" height="252" rx="36" fill="#000" opacity=".12"/>
+      <rect x="0" y="112" width="40" height="76" rx="16" fill="#e8743f" stroke="#b4532a" stroke-width="4"/><rect x="260" y="112" width="40" height="76" rx="16" fill="#e8743f" stroke="#b4532a" stroke-width="4"/>
+      <rect x="18" y="24" width="264" height="252" rx="36" fill="#e8743f" stroke="#b4532a" stroke-width="4"/>
+      <rect x="36" y="42" width="228" height="216" rx="22" fill="#fdf1e2" stroke="#e7cdb0" stroke-width="3"/>
+      <path d="M40 76 Q62 52 108 46" stroke="#fff" stroke-width="7" stroke-linecap="round" fill="none" opacity=".6"/>`),
+    box: [13, 14, 74], round: false,
   };
 
   // the freezer: built like the oven (same door, glow and lamp) so the bake step can use either

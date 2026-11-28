@@ -4,4 +4,4 @@ require('../js/art.js');
 require('../js/recipes.js');
 require('../js/lines.js');
 require('../js/store.js');
-process.stdout.write(JSON.stringify(window.LINES.all(window.RECIPES, window.ART.V, window.STORE.FRIENDS)));
+process.stdout.write(JSON.stringify(window.LINES.all(window.RECIPES, window.ART.V, window.STORE.FRIENDS, window.STORE.CATS)));
