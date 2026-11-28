@@ -109,7 +109,7 @@ Everything is kept on the device. There are no accounts, ads, purchases or track
 
 ## Playing without internet
 
-The first time the game is opened it saves itself and the chef's recordings (about 5 MB) on the device.
+The first time the game is opened it saves itself and the chef's recordings (about 7 MB) on the device.
 After that it works with no connection — in the car, on a plane — including from the Home Screen.
 When there is a connection, the newest version is loaded automatically. (`sw.js` does this;
 `tools/check.js` makes sure every file the page loads is on its list.)

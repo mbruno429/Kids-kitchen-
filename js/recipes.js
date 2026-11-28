@@ -371,7 +371,7 @@ window.RECIPES = [
     steps: [
       { t: 'chop', say: 'Chop the veggies!', items: [{ v: 'avocado', out: 'guacAvocado' }, { v: 'tomato', out: 'tomatoBits' }, { v: 'onion', out: 'onionBits' }] },
       { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', w: 34, items: [{ v: 'guacAvocado', n: 2 }, 'tomatoBits', 'onionBits', 'cilantro', 'lime', 'salt'] },
-      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Mash, mash, mash!', out: [{ v: 'guacMash', w: 96 }] },
+      { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Mash up the avocado!', out: [{ v: 'guacMash', w: 96 }] },
       { t: 'add', on: 'plate', seq: 1, say: 'Guacamole and chips on the plate!', items: [{ v: 'guacServe', at: 'center', w: 54 }, { v: 'chipBag', n: 4, as: 'tortillaChips', spots: [[22, 25], [78, 25], [22, 75], [78, 75]], w: 34 }] },
       { t: 'eat', on: 'plate' },
     ],
@@ -636,7 +636,7 @@ window.RECIPES = [
       { t: 'cook', on: 'pan', say: 'Cook the rice!', out: [{ v: 'ketchupRice', w: 96 }] },
       { t: 'add', on: 'pan', say: 'Crack in the eggs!', items: [{ v: 'egg', n: 2, as: 'omuEgg', at: 'center', w: 88, raw: true }] },
       { t: 'cook', on: 'pan', say: 'Turn on the heat!' },
-      { t: 'add', on: 'plate', seq: true, say: 'Rice, then the egg, then a ketchup heart!', items: [
+      { t: 'add', on: 'plate', seq: true, say: 'Rice, then the egg! Then draw a heart!', items: [
         { v: 'ketchupRice', as: 'omuRice', at: 'center', w: 84 }, { v: 'omuEgg', as: 'omuBlanket', at: 'center', w: 74 }, { v: 'ketchup', as: 'ketchupHeart', pos: { x: 50, y: 50 }, w: 32 }] },
       { t: 'eat', on: 'plate' },
     ],
@@ -803,7 +803,7 @@ window.RECIPES = [
     steps: [
       { t: 'add', on: 'bowl', say: 'Put it all in the bowl!', items: ['flour', 'sugar', 'milk'] },
       { t: 'rub', on: 'bowl', tool: 'spoon', say: 'Stir, stir, stir!', out: [{ v: 'dough', w: 96 }] },
-      { t: 'add', on: 'board', seq: 1, say: 'Dough first! Then the filling!', items: [
+      { t: 'add', on: 'board', seq: 1, say: 'First the dough! Then the filling!', items: [
         { v: 'doughBall', n: 4, as: 'roundWrapper', spots: [[29, 29], [71, 29], [29, 71], [71, 71]], w: 38 },
         { v: 'porkMix', n: 4, as: 'porkMix', spots: [[29, 29], [71, 29], [29, 71], [71, 71]], w: 17 }] },
       { t: 'rub', on: 'board', tool: 'hands', say: 'Pinch, pinch, pinch the buns!', out: [[29, 29], [71, 29], [29, 71], [71, 71]].map(p => ({ v: 'baoBun', w: 36, x: p[0], y: p[1], raw: true })) },

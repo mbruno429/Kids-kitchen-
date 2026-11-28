@@ -187,7 +187,6 @@ window.VOICE = {
  "Donut!": "5fa5354d56.mp3",
  "Dosa!": "aa20274bc7.mp3",
  "Dough and oil on the tray!": "d4ce593239.mp3",
- "Dough first! Then the filling!": "1315fe3223.mp3",
  "Dough!": "a1411e9a7e.mp3",
  "Dragon is hungry!": "6d11778e38.mp3",
  "Dragon says, thank you!": "0d8d4643f6.mp3",
@@ -214,6 +213,7 @@ window.VOICE = {
  "Fill your taco!": "0b61d2e77e.mp3",
  "Fill your tortilla!": "391bafae4e.mp3",
  "Filling!": "bc59dbf7fa.mp3",
+ "First the dough! Then the filling!": "1a6be1e6d5.mp3",
  "First, wash your hands!": "b99d13b58e.mp3",
  "Fish cake!": "faad6d8aa7.mp3",
  "Flan!": "8dfad79ab3.mp3",
@@ -404,7 +404,7 @@ window.VOICE = {
  "Make the batter!": "04ba08a3b6.mp3",
  "Make the layers! Sauce, noodles, cheese!": "406cc901b9.mp3",
  "Mango!": "a8938839ca.mp3",
- "Mash, mash, mash!": "e6fd649e55.mp3",
+ "Mash up the avocado!": "67117e4af2.mp3",
  "Meatball!": "c2f5ee75b9.mp3",
  "Melt the cheese in the oven!": "04a3aee7a3.mp3",
  "Milk!": "7094947545.mp3",
@@ -523,7 +523,7 @@ window.VOICE = {
  "Rice flour!": "fca2bdb5ad.mp3",
  "Rice!": "d7cf63bcc5.mp3",
  "Rice, coconut milk and sugar!": "b011098c65.mp3",
- "Rice, then the egg, then a ketchup heart!": "0896eb434e.mp3",
+ "Rice, then the egg! Then draw a heart!": "39db66eb52.mp3",
  "Ricotta!": "539ae0ea82.mp3",
  "Roll it into a big ring!": "99fd4efb81.mp3",
  "Roll them up! Then sauce and cheese!": "af3347310e.mp3",
@@ -784,4 +784,4 @@ window.VOICE = {
  "Éclair!": "7b27a16e7a.mp3",
  "Étouffée!": "33eefca3b8.mp3"
 };
-window.VOICE_V = "03057cf6e5";
+window.VOICE_V = "6893a3aaa1";
