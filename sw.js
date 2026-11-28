@@ -22,11 +22,13 @@ self.addEventListener('activate', (e) => {
 
 const clean = (url) => { const u = new URL(url); return u.origin + u.pathname; }; // ignore things like ?fast
 
-// game files: the network first, the saved copy when offline (or when the network is very slow)
+// game files: the network first, the saved copy when offline (or when the network is very slow).
+// `no-cache` asks the server every time (a quick "not changed" when nothing is new), so right after an
+// update the phone never mixes old and new game files from the browser's own short-term cache.
 async function shell(req) {
   const cache = await caches.open(SHELL), key = clean(req.url);
   const saved = await cache.match(key);
-  const fresh = fetch(req).then((res) => {
+  const fresh = fetch(req, { cache: 'no-cache' }).then((res) => {
     if (res.ok && res.type === 'basic') cache.put(key, res.clone());
     return res.ok || !saved ? res : saved;
   });
