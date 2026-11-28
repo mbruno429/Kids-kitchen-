@@ -778,6 +778,134 @@
     });
   }
 
+  /* ---------- more Japanese, Thai and Chinese: miso soup, omurice, mochi, pineapple fried rice, banana roti,
+     coconut ice cream, bao buns, egg tarts, fortune cookies ---------- */
+  {
+    // Japanese
+    const tofuArt = S(`<path d="M16 38 L50 24 L86 36 L52 52Z" fill="#fffef8" stroke="#cfc6b0" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M16 38 L52 52 L52 88 L16 72Z" fill="#f3ede0" stroke="#cfc6b0" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M52 52 L86 36 L86 70 L52 88Z" fill="#e8e0cc" stroke="#cfc6b0" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M30 39 L50 31" stroke="#fff" stroke-width="4" stroke-linecap="round"/>`);
+    const tofuDice = dice(['#fffdf4', '#f6f0df'], 14);
+    const misoTop = spread(8, 215, 34, dot(['#efd3a0', '#c99a54'], 3.4));
+    const misoSoup = fillPic('#e2bd7c', misoTop + spread(5, 219, 33, leaf(['#2f5a3b', '#3d6e47'], 0.85)) + spread(6, 261, 24, dice(['#fffdf4', '#f6f0df'], 16)) + spread(7, 131, 35, ringlet('#58b84a', '#d9f2c2', 3)));
+    const omuRice = S(`<path d="M5 52 Q7 22 50 16 Q93 22 95 52 Q93 82 50 88 Q7 82 5 52Z" fill="#e4573b" stroke="#b9381f" stroke-width="3"/>${spread(22, 227, 32, grain('#f7a58b'))}`);
+    const omuBlanket = S(`<path d="M8 52 Q12 24 50 18 Q88 24 92 52 Q88 80 50 86 Q12 80 8 52Z" fill="#ffd23f" stroke="#e3a20f" stroke-width="3"/>
+      <path d="M22 44 Q34 28 58 27" stroke="#fff3b0" stroke-width="6" stroke-linecap="round" fill="none" opacity=".85"/>
+      <path d="M24 66 Q50 78 76 66" stroke="#f0b21c" stroke-width="3" stroke-linecap="round" fill="none" opacity=".7"/>`);
+    const ketchupHeart = S(`<path d="M50 88 C30 72 8 58 10 35 C12 18 31 12 42 22 Q48 27 50 33 Q52 27 58 22 C69 12 88 18 90 35 C92 58 70 72 50 88Z" fill="#e23d2e" stroke="#b92a1d" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M22 36 Q26 25 37 26" stroke="#ff9a8c" stroke-width="5" stroke-linecap="round" fill="none"/>`);
+    const eggPool = S(`<path d="M50 6 C74 4 96 24 94 50 C96 76 74 96 50 94 C26 96 4 76 6 50 C4 24 26 4 50 6Z" fill="#ffd84a" opacity=".72" stroke="#f0b21c" stroke-width="2"/>
+      <path d="M26 38 Q34 22 52 20" stroke="#fff6c2" stroke-width="5" stroke-linecap="round" fill="none" opacity=".8"/>`);
+    const mochiBall = (c) => S(`<ellipse cx="50" cy="56" rx="43" ry="38" fill="${c}" stroke="${sh(c, -0.22)}" stroke-width="3"/>
+      <ellipse cx="50" cy="51" rx="35" ry="28" fill="${sh(c, 0.3)}" opacity=".65"/>
+      <path d="M27 42 Q35 29 53 29" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none" opacity=".8"/>${spread(7, 231, 25, dot(['#ffffff'], 2))}`);
+    const mochiW = mochiBall('#fbf7ef'), mochiP = mochiBall('#ffb0c8'), mochiG = mochiBall('#9fd468'), mochiY = mochiBall('#ffe07a');
+
+    // Thai
+    const cashewAt = (x, y, rot, k) => `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${rot}) scale(${k})"><path d="M-11 1 C-12 -8 -4 -12 4 -10 C11 -8 13 0 10 6 C8 10 3 11 1 7 C0 4 -2 3 -5 5 C-8 7 -10 5 -11 1Z" fill="#f3dba8" stroke="#c99a52" stroke-width="2.2" stroke-linejoin="round"/><path d="M-7 -3 Q-4 -8 3 -8" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none" opacity=".7"/></g>`;
+    const pineRice = blob('#f2c14e', spread(26, 237, 34, grain('#fff3c4')) + spread(5, 239, 28, dice(['#ffe680'], 11)) + spread(5, 241, 30, dot(['#5cbf45'], 3.8))
+      + spread(3, 243, 24, shrimpArc) + spread(4, 245, 30, (x, y, rot) => cashewAt(x, y, rot, 0.62)));
+    const canArt = (c, ch) => S(`<rect x="22" y="18" width="56" height="74" rx="8" fill="${c}" stroke="${sh(c, -0.25)}" stroke-width="3"/>
+      <ellipse cx="50" cy="19" rx="28" ry="7" fill="#d5dbe2" stroke="#8792a0" stroke-width="3"/>
+      <path d="M23 32 H77 M23 80 H77" stroke="${sh(c, -0.18)}" stroke-width="3"/>${label(ch, 50, 56, 28)}`);
+    // thin drizzled lines going back and forth across the roti
+    const zig = (c, w, deg) => S(`<g transform="rotate(${deg} 50 50)" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round">${[0, 1, 2, 3, 4].map(i => `<path d="M${18 + (i % 2) * 4} ${22 + i * 14} Q34 ${16 + i * 14} 50 ${22 + i * 14} T${82 - (i % 2) * 4} ${22 + i * 14}"/>`).join('')}</g>`);
+    const milkDrizzle = zig('#fffaf0', 4.4, -30), chocDrizzle = zig('#5a341c', 3.8, 30);
+    const rotiDisc = (c, line) => S(`<circle cx="50" cy="50" r="46" fill="${c}" stroke="${sh(c, -0.16)}" stroke-width="2.5"/>
+      <g fill="none" stroke="${line}" stroke-width="3" stroke-linecap="round" opacity=".7"><path d="M24 34 Q40 26 58 30"/><path d="M22 58 Q44 50 76 56"/><path d="M36 76 Q52 70 70 74"/></g>`);
+    const rotiFold = S(`<rect x="12" y="12" width="76" height="76" rx="10" fill="#f6ead0" stroke="#d9c59a" stroke-width="3" transform="rotate(4 50 50)"/>
+      <g fill="none" stroke="#dcc79a" stroke-width="3" stroke-linecap="round" transform="rotate(4 50 50)"><path d="M14 50 Q32 45 50 50 Q68 55 86 50"/><path d="M50 14 Q45 32 50 50 Q55 68 50 86"/></g>
+      ${spread(6, 247, 28, (x, y, r, i) => `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${4 + i % 3}" ry="3" fill="#fff8e6" opacity=".8"/>`)}`);
+    const rotiCut = S(`<g transform="rotate(4 50 50)">${[0, 1, 2].map(i => [0, 1, 2].map(j => `<rect x="${12 + i * 26}" y="${12 + j * 26}" width="24" height="24" rx="4" fill="#e9b25a" stroke="#b97a2a" stroke-width="2.5"/>
+      <ellipse cx="${20 + i * 26 + (j % 2) * 6}" cy="${21 + j * 26}" rx="4" ry="2.6" fill="#c98a3a" opacity=".55"/>`).join('')).join('')}</g>`);
+    const shellCut = '#e9dabb';
+    const coconutTop = S(`<circle cx="50" cy="50" r="44" fill="#fffbf2" stroke="#c9bd9c" stroke-width="3"/>
+      <path d="M18 56 Q28 66 42 61 Q55 73 69 63 Q79 61 84 50" fill="none" stroke="#e6dcc2" stroke-width="4" stroke-linecap="round"/>
+      <path d="M27 37 Q35 22 54 20" stroke="#fff" stroke-width="7" stroke-linecap="round" fill="none"/>`);
+    const fibers = (cx, cy, r1, r2, n) => Array.from({ length: n }, (_, i) => { const a = i * 6.2832 / n + 0.1; return `<path d="M${(cx + Math.cos(a) * r1).toFixed(1)} ${(cy + Math.sin(a) * r1).toFixed(1)} L${(cx + Math.cos(a + 0.08) * r2).toFixed(1)} ${(cy + Math.sin(a + 0.08) * r2).toFixed(1)}"/>`; }).join('');
+    const ringDots = (cx, cy, rx, ry, n, rad) => Array.from({ length: n }, (_, i) => { const a = i * 6.2832 / n; return `<circle cx="${(cx + Math.cos(a) * rx).toFixed(1)}" cy="${(cy + Math.sin(a) * ry).toFixed(1)}" r="${rad}"/>`; }).join('');
+    const coconutHalf = (inside) => S(`<circle cx="50" cy="52" r="47" fill="#7a4a28" stroke="#4f2e17" stroke-width="2.5"/><g stroke="#a06a3c" stroke-width="1.6" stroke-linecap="round">${fibers(50, 52, 42, 46, 26)}</g>
+      <circle cx="50" cy="52" r="39" fill="#fffaf0" stroke="#e0d2b0" stroke-width="1.5"/><circle cx="50" cy="52" r="34" fill="${shellCut}"/>${inside}`);
+    const mangoCubes = S(spread(7, 253, 26, dice(['#ffb829', '#ffc94d'], 13)));
+
+    // Chinese
+    const baoArt = (c, r, line) => S(`<ellipse cx="52" cy="58" rx="${r}" ry="${r * 0.92}" fill="#000" opacity=".1"/><circle cx="50" cy="52" r="${r}" fill="${c}" stroke="${line}" stroke-width="3"/>
+      <g fill="none" stroke="${line}" stroke-width="2.6" stroke-linecap="round" opacity=".75">${[0, 1, 2, 3, 4, 5, 6, 7].map(i => { const a = i * 0.785; return `<path d="M50 50 Q${(50 + Math.cos(a + 0.45) * r * 0.42).toFixed(1)} ${(50 + Math.sin(a + 0.45) * r * 0.42).toFixed(1)} ${(50 + Math.cos(a) * r * 0.7).toFixed(1)} ${(50 + Math.sin(a) * r * 0.7).toFixed(1)}"/>`; }).join('')}</g>
+      <circle cx="50" cy="50" r="4.5" fill="${line}" opacity=".7"/><path d="M${50 - r * 0.56} ${50 - r * 0.16} Q${50 - r * 0.42} ${50 - r * 0.56} ${50 - r * 0.06} ${50 - r * 0.66}" stroke="#fff" stroke-width="5" stroke-linecap="round" fill="none" opacity=".9"/>`);
+    const bao = baoArt('#fffdf7', 45, '#d3c7a8');
+    const tartShell = (c) => {
+      let sc = '';
+      for (let i = 0; i < 14; i++) { const a = i * Math.PI / 7; sc += `<circle cx="${(50 + Math.cos(a) * 40).toFixed(1)}" cy="${(50 + Math.sin(a) * 40).toFixed(1)}" r="8" fill="${c}" stroke="${sh(c, -0.22)}" stroke-width="2"/>`; }
+      return S(`${sc}<circle cx="50" cy="50" r="40" fill="${c}"/><circle cx="50" cy="50" r="32" fill="${sh(c, -0.12)}"/>`);
+    };
+    const custardTop = S(`<circle cx="50" cy="50" r="46" fill="#ffd23f" stroke="#e3a20f" stroke-width="2.5"/>
+      ${spread(6, 255, 28, (x, y, r, i) => `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${7 + i % 3}" ry="${5 + i % 2}" fill="#c9741c" opacity=".5"/>`)}
+      <path d="M24 38 Q32 22 52 20" stroke="#fff6c2" stroke-width="6" stroke-linecap="round" fill="none" opacity=".9"/>`);
+    const eggTart = S(inner(tartShell('#e6a94f')) + put(custardTop, 18, 18, 0.64));
+    const fortuneFold = S(`<path d="M6 64 Q8 20 50 16 Q92 20 94 64 Q86 74 74 68 Q62 56 50 56 Q38 56 26 68 Q14 74 6 64Z" fill="#e6a94f" stroke="#b5772a" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M26 68 Q38 56 50 56 Q62 56 74 68 Q64 82 50 84 Q36 82 26 68Z" fill="#c9852f" stroke="#b5772a" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M50 20 Q45 38 50 56" stroke="#b5772a" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <g transform="rotate(16 64 74)"><rect x="54" y="68" width="34" height="11" rx="1.5" fill="#fff" stroke="#cfc8b8" stroke-width="1.5"/><path d="M59 73.5 H82" stroke="#e23d2e" stroke-width="2.2" stroke-linecap="round"/></g>
+      <path d="M18 46 Q24 32 40 28 M60 28 Q76 32 82 44" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none" opacity=".45"/>`);
+
+    Object.assign(V, {
+      // Japanese
+      tofu: { s: 'thud', n: 'tofu', h: tofuArt },
+      tofuCubes: { n: 'tofu', h: S(spread(8, 211, 28, tofuDice)) },
+      miso: { s: 'splat', n: 'miso', h: jar('#d9a052', '#8a5a2b', '🫘'), d: { as: 'misoDollop' } },
+      misoDollop: { h: dollop('#c98a3c') },
+      wakame: { n: 'seaweed', h: S(spread(7, 213, 28, leaf(['#2f5a3b', '#3d6e47', '#24472e'], 1.1))) },
+      misoSoup: { h: misoSoup },
+      ketchupRice: { n: 'rice', h: blob('#e4573b', spread(26, 221, 34, grain('#f7a58b')) + spread(6, 223, 30, dot(['#6ccb4b'], 4)) + spread(5, 225, 28, dice(['#f3dcae'], 9))) },
+      omuEgg: { s: 'thud', n: 'egg', h: disc('#ffd23f', '#ffe486', 34), r: eggPool },
+      omuRice: { h: omuRice },
+      omuBlanket: { h: omuBlanket },
+      ketchupHeart: { h: ketchupHeart },
+      omurice: { h: S(inner(omuRice) + put(omuBlanket, 6, 7, 0.88) + put(ketchupHeart, 29, 28, 0.42)) },
+      riceFlour: { s: 'poof', n: 'rice flour', h: sack('#f7f3ea', '🍙'), d: { as: 'flourPile' } },
+      mochiDough: { h: blob('#fffefa', swirl('#ece4d3') + '<path d="M60 24 Q74 28 80 42" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none"/>'), r: blob('#eee7d8', swirl('#d9cfba') + spread(8, 229, 28, dot(['#fbf8f1'], 2.6))) },
+      mochiWhite: { s: 'thud', h: mochiW },
+      mochiPink: { s: 'thud', n: 'pink', h: mochiP },
+      mochiGreen: { s: 'thud', n: 'green', h: mochiG },
+      mochiYellow: { s: 'thud', n: 'yellow', h: mochiY },
+      mochiPlate: { h: S(put(mochiG, 25, 2, 0.52) + put(mochiP, 2, 40, 0.52) + put(mochiW, 46, 42, 0.52)) },
+
+      // Thai
+      cashews: { s: 'shake', n: 'cashews', h: S(spread(5, 233, 22, (x, y, rot) => cashewAt(x, y, rot, 1.9))), d: { as: 'cashewBits' } },
+      cashewBits: { n: 'cashews', h: S(spread(8, 235, 28, (x, y, rot) => cashewAt(x, y, rot, 1))) },
+      pineappleRice: { s: 'thud', n: 'fried rice', h: pineRice },
+      pineappleBoatDish: { h: S(`<g fill="#3f9d3a" stroke="#2c7a28" stroke-width="2" stroke-linejoin="round"><path d="M50 30 L36 2 L46 26Z"/><path d="M50 30 L64 2 L54 26Z"/><path d="M50 30 L50 0 L56 24 L44 24Z"/><path d="M48 32 L24 10 L42 32Z"/><path d="M52 32 L76 10 L58 32Z"/></g>
+        <ellipse cx="50" cy="62" rx="42" ry="36" fill="#c98a2e" stroke="#8f5a16" stroke-width="2.5"/><g fill="#a26a1c">${ringDots(50, 62, 38.5, 32.5, 22, 1.8)}</g>
+        <ellipse cx="50" cy="62" rx="35" ry="29" fill="#ffe066" stroke="#e6b422" stroke-width="2"/>${put(pineRice, 19, 36, 0.62)}`) },
+      sweetMilk: { s: 'squirt', n: 'sweet milk', h: canArt('#5cb8ff', '🥛'), d: { as: 'sweetMilkDrizzle' } },
+      sweetMilkDrizzle: { h: milkDrizzle },
+      chocSauce: { s: 'squirt', n: 'chocolate sauce', h: bottle('#5a341c', '#e23d2e', '🍫'), d: { as: 'chocDrizzle' } },
+      chocDrizzle: { h: chocDrizzle },
+      rotiDisc: { n: 'dough', h: rotiDisc('#e9b25a', '#c98a3a'), r: rotiDisc('#f6ead0', '#e6d4ac') },
+      rotiSquare: { s: 'thud', h: rotiCut, r: rotiFold },
+      rotiPlate: { h: S(inner(rotiCut) + inner(milkDrizzle) + inner(chocDrizzle)) },
+      coconutMix: { h: blob('#fbf6e6', swirl('#e6dcc2')) },
+      coconutFrozen: { h: blob('#fffdf6', `<g fill="none" stroke="#e3dac4" stroke-width="4" stroke-linecap="round"><path d="M24 40 Q40 30 56 40"/><path d="M40 62 Q56 52 72 62"/><path d="M24 66 Q32 60 40 66"/></g>` + spread(9, 251, 30, dot(['#bfe3ff', '#ffffff'], 2.6))) },
+      coconutScoop: { s: 'splat', n: 'coconut ice cream', h: scoopArt('#fffaf0'), d: { as: 'coconutScoopTop' } },
+      coconutScoopTop: { h: coconutTop },
+      mangoCubes: { n: 'mango', h: mangoCubes },
+      coconutIceCream: { h: coconutHalf(put(coconutTop, 22, 22, 0.36) + put(coconutTop, 44, 26, 0.36) + put(coconutTop, 32, 44, 0.36) + put(S(spread(8, 143, 30, dot(['#d9a85a', '#b98238'], 3.6))), 22, 24, 0.56) + put(mangoCubes, 26, 30, 0.5)) },
+
+      // Chinese
+      baoBun: { s: 'thud', n: 'bun', h: bao, r: baoArt('#f2ecdd', 40, '#d6cbb0'), ar: 1 },
+      baoPlate: { h: S(put(bao, 25, 2, 0.52) + put(bao, 2, 42, 0.52) + put(bao, 46, 44, 0.52)) },
+      custardMix: { h: blob('#ffe08a', swirl('#f2c94c')) },
+      custardBowl: { s: 'pour', n: 'custard', h: bowlOf('#ffe08a') },
+      tartShell: { s: 'thud', h: tartShell('#e6a94f'), r: tartShell('#f6e6c0') },
+      tartCustard: { h: custardTop, r: S(`<circle cx="50" cy="50" r="46" fill="#ffe9a0" stroke="#f3cf68" stroke-width="2.5"/><path d="M24 38 Q32 22 52 20" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none" opacity=".8"/>`) },
+      eggTarts: { h: S(put(eggTart, 25, 2, 0.52) + put(eggTart, 2, 42, 0.52) + put(eggTart, 46, 44, 0.52)) },
+      fortuneDisc: { s: 'splat', n: 'cookie', h: disc('#e3a94e', '#ecbd6c', 36), r: disc('#f6e7c4', '#fbf0d8', 36) },
+      fortunePaper: { s: 'pop', n: 'fortune', h: S(`<g transform="rotate(-14 50 50)"><rect x="6" y="36" width="88" height="28" rx="3" fill="#fff" stroke="#cfc8b8" stroke-width="2.5"/><g stroke="#e23d2e" stroke-width="3.4" stroke-linecap="round"><path d="M16 46 H72"/><path d="M16 55 H56"/></g></g>`) },
+      fortuneCookie: { s: 'thud', h: fortuneFold },
+    });
+  }
+
   /* ---------- pots, pans, plates ----------
      box = [left%, top%, size%] of the square where food goes */
   const A = (inner) => `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" overflow="visible">${inner}</svg>`;
@@ -913,6 +1041,41 @@
       <path d="M40 76 Q62 52 108 46" stroke="#fff" stroke-width="7" stroke-linecap="round" fill="none" opacity=".6"/>`),
     box: [13, 14, 74], round: false,
   };
+  {
+    // a pineapple cut in half and hollowed out, seen from above (pineapple fried rice)
+    const leafy = (d) => `<path d="${d}" fill="#3f9d3a" stroke="#2c7a28" stroke-width="4" stroke-linejoin="round"/>`;
+    const dia = [];
+    for (let i = 0; i < 30; i++) { const a = i * 6.2832 / 30; dia.push(`<path transform="translate(${(150 + Math.cos(a) * 118).toFixed(1)} ${(186 + Math.sin(a) * 104).toFixed(1)}) rotate(${(a * 57.3 + 90).toFixed(0)})" d="M0 -7 L6 0 L0 7 L-6 0Z"/>`); }
+    VESSEL.pineappleBoat = {
+      art: A(`<ellipse cx="150" cy="196" rx="134" ry="112" fill="#000" opacity=".12"/>
+        ${leafy('M150 80 L112 4 L138 72Z')}${leafy('M150 80 L188 4 L162 72Z')}${leafy('M150 82 L150 -6 L166 66 L134 66Z')}${leafy('M146 86 L72 30 L126 86Z')}${leafy('M154 86 L228 30 L174 86Z')}
+        <ellipse cx="150" cy="186" rx="134" ry="118" fill="#c98a2e" stroke="#8f5a16" stroke-width="4"/>
+        <g fill="#a26a1c" stroke="#8f5a16" stroke-width="1.5">${dia.join('')}</g>
+        <ellipse cx="150" cy="186" rx="106" ry="92" fill="#ffe066" stroke="#e6b422" stroke-width="4"/>
+        <ellipse cx="150" cy="190" rx="92" ry="78" fill="#fff1a8"/>
+        <path d="M70 160 Q88 118 136 106" stroke="#fff" stroke-width="7" stroke-linecap="round" fill="none" opacity=".6"/>`),
+      box: [23, 36, 54], round: true,
+    };
+    // half a coconut shell used as a bowl (coconut ice cream)
+    const fib = [];
+    for (let i = 0; i < 40; i++) { const a = i * 6.2832 / 40 + 0.05; fib.push(`<path d="M${(150 + Math.cos(a) * 124).toFixed(1)} ${(150 + Math.sin(a) * 124).toFixed(1)} L${(150 + Math.cos(a + 0.06) * 138).toFixed(1)} ${(150 + Math.sin(a + 0.06) * 138).toFixed(1)}"/>`); }
+    VESSEL.coconutShell = {
+      art: A(`<circle cx="150" cy="158" r="142" fill="#000" opacity=".12"/><circle cx="150" cy="150" r="142" fill="#7a4a28" stroke="#4f2e17" stroke-width="4"/>
+        <g stroke="#a06a3c" stroke-width="3.5" stroke-linecap="round">${fib.join('')}</g>
+        <circle cx="150" cy="150" r="118" fill="#fffaf0" stroke="#e0d2b0" stroke-width="3"/><circle cx="150" cy="150" r="104" fill="#e9dabb"/>
+        <path d="M58 104 Q82 58 134 44" stroke="#fff" stroke-width="7" stroke-linecap="round" fill="none" opacity=".6"/>`),
+      box: [15, 15, 70], round: true,
+    };
+    // a tin of six fluted tart cups (egg tarts)
+    const flute = (x, y) => Array.from({ length: 16 }, (_, i) => { const a = i * Math.PI / 8; return `<circle cx="${(x + Math.cos(a) * 34).toFixed(1)}" cy="${(y + Math.sin(a) * 34).toFixed(1)}" r="6.5"/>`; }).join('');
+    VESSEL.tartTin = {
+      art: A(`<rect x="8" y="52" width="284" height="214" rx="26" fill="#000" opacity=".12"/><rect x="8" y="42" width="284" height="214" rx="26" fill="#aab3bd" stroke="#7d8793" stroke-width="4"/>
+        ${[102, 196].map(y => [62, 150, 238].map(x => `<circle cx="${x}" cy="${y}" r="41" fill="#7d8793"/><g fill="#c3ccd6" stroke="#8792a0" stroke-width="2">${flute(x, y)}</g><circle cx="${x}" cy="${y}" r="33" fill="#c3ccd6"/><circle cx="${x}" cy="${y}" r="26" fill="#dfe5ec"/>`).join('')).join('')}
+        <path d="M28 66 Q58 50 104 48" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none" opacity=".45"/>`),
+      box: [0, 0, 100], round: false,
+      slots: [[20.7, 34], [50, 34], [79.3, 34], [20.7, 65.3], [50, 65.3], [79.3, 65.3]],
+    };
+  }
 
   // the freezer: built like the oven (same door, glow and lamp) so the bake step can use either
   const FREEZER = `<svg viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg" overflow="visible">

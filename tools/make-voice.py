@@ -84,6 +84,8 @@ SAY = {
     'donuts': 'dˈOnʌts',          # DOH-nuts
     'donut': 'dˈOnʌt',            # DOH-nut
     'brrr': 'bɹˈɜɹ',              # brrr (it is cold)
+    'omurice': 'ˈOmuɹˌIs',        # OH-moo-rice
+    'mochi': 'mˈOʧi',             # MOH-chee
 }
 SAY_RE = re.compile(r'(?<!\w)(' + '|'.join(sorted(SAY, key=len, reverse=True)) + r')(?!\w)', re.IGNORECASE)
 
